@@ -1,0 +1,18 @@
+'use client';
+
+import { useScroll, useSpring } from 'framer-motion';
+import { useRef } from 'react';
+
+/**
+ * Returns a spring-smoothed scroll progress (0–1) for the whole page.
+ * Used by the Playhead component to drive the timeline scrubber.
+ */
+export function useScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+  return { raw: scrollYProgress, smooth: smoothProgress };
+}
