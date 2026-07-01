@@ -1,6 +1,7 @@
 'use client';
 
 import { Discipline } from '../../../content/projects';
+import { ScrambleHover } from '@/components/ui/ScrambleText';
 
 interface FilterBarProps {
   active: Discipline | 'all';
@@ -17,6 +18,7 @@ const filters: { value: Discipline | 'all'; label: string }[] = [
 /**
  * FilterBar — discipline filter for the work section.
  * Keyboard navigable, ARIA-compliant.
+ * Filter labels use a quick hover-scramble (250ms) via ScrambleHover.
  */
 export function FilterBar({ active, onChange }: FilterBarProps) {
   return (
@@ -33,7 +35,8 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
           className={`filter-bar__btn ${active === f.value ? 'filter-bar__btn--active' : ''}`}
           onClick={() => onChange(f.value)}
         >
-          {f.label}
+          {/* ScrambleHover wraps the label; button semantics unaffected */}
+          <ScrambleHover text={f.label} duration={250} />
         </button>
       ))}
     </div>

@@ -2,17 +2,28 @@
 
 import { motion } from 'framer-motion';
 import { HeadingReveal } from '@/components/ui/HeadingReveal';
+import { StatusReadout } from '@/components/ui/StatusReadout';
 import { duration, ease } from '@/lib/motionConfig';
-
 
 /**
  * Hero — the opening thesis.
  * Confident, specific, no clichés.
- * Structure: timecode meta → large heading → role spine → scroll cue
+ * Structure: status readout (top-right) → timecode meta → heading → spine → scroll cue
  */
 export function Hero() {
   return (
     <section className="hero" id="hero" aria-label="Introduction">
+      {/* Status readout — upper right; absolutely positioned so it
+          doesn't displace the bottom-aligned main content */}
+      <motion.div
+        className="hero__status"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: duration.base, ease, delay: 0.1 }}
+      >
+        <StatusReadout />
+      </motion.div>
+
       <div className="hero__inner">
         {/* Timecode meta — section 00 */}
         <motion.div
@@ -75,7 +86,6 @@ export function Hero() {
             onClick={() => {
               const el = document.getElementById('work');
               if (el) {
-                 
                 const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element) => void } }).lenis;
                 if (lenis) lenis.scrollTo(el);
                 else el.scrollIntoView({ behavior: 'smooth' });

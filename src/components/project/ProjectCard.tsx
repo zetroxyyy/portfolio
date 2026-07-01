@@ -41,10 +41,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         {/* Cover */}
         <div className="project-card__cover">
           {isPlaceholder ? (
-            <PlaceholderCover
-              disciplines={project.disciplines}
-              index={index}
-            />
+            <PlaceholderCover disciplines={project.disciplines} />
           ) : (
             <Image
               src={project.cover}
@@ -82,21 +79,19 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
 /**
  * PlaceholderCover — shown when no real cover image is available.
- * Uses a text-based composition with the project index as a visual anchor.
- * Looks intentional, clearly a placeholder, not a broken image.
+ * Dark matte surface with discipline label. No ghost index numbers
+ * (they were meaningless sequence markers — removed per §4).
+ *
+ * Optional: to render year in the ghost position later, uncomment
+ * the year prop and render it with .placeholder-cover__index styles.
  */
 function PlaceholderCover({
   disciplines,
-  index,
 }: {
   disciplines: string[];
-  index: number;
 }) {
-  const n = String(index + 1).padStart(2, '0');
-
   return (
     <div className="placeholder-cover" aria-hidden="true">
-      <div className="placeholder-cover__index">{n}</div>
       <div className="placeholder-cover__label">
         {disciplines.join(' · ')}
       </div>

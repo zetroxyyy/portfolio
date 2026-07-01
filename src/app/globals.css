@@ -105,6 +105,13 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Hide native scrollbar — Playhead is the scroll indicator */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* legacy Edge */
+}
+html::-webkit-scrollbar {       /* Chrome / Safari */
+  width: 0;
+  display: none;
 }
 
 body {
@@ -440,7 +447,13 @@ ul, ol {
 .heading-reveal__word-wrap {
   overflow: hidden;
   display: inline-block;
-  /* vertical clip so words slide up from hidden position */
+  /*
+   * Descender fix: pad below to reveal g, y, p, j, q tails;
+   * negative margin cancels the added space so line-height is unchanged.
+   * Range: 0.12–0.2em — 0.18em is the sweet spot for Cabinet Grotesk at 800w.
+   */
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
 }
 
 .heading-reveal__word {
@@ -465,6 +478,63 @@ ul, ol {
   margin: 0 auto;
   width: 100%;
   padding-top: calc(var(--nav-h) + var(--space-48));
+}
+
+/* Status readout — positioned absolutely in the upper hero region.
+ * Doesn't affect the bottom-aligned main content flow. */
+.hero__status {
+  position: absolute;
+  top: calc(var(--nav-h) + var(--space-8));
+  right: var(--page-px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Status readout component ─────────────────────────────── */
+.status-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.status-readout__line {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--mist);
+  letter-spacing: var(--tracking-wider);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.status-readout__time {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--fog);
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status-readout__tz {
+  color: var(--mist);
+  opacity: 0.6;
+}
+
+.status-readout__clock {
+  font-variant-numeric: tabular-nums;
+  /* Tabular nums prevents layout shift as digits change width */
+}
+
+/* Hide status readout on smallest phones to avoid nav overlap */
+@media (max-width: 480px) {
+  .hero__status {
+    display: none;
+  }
 }
 
 .hero__meta {
@@ -538,22 +608,25 @@ ul, ol {
   color: var(--mist);
   letter-spacing: var(--tracking-wide);
   text-transform: lowercase;
-  transition: color 0.25s, gap 0.35s var(--ease-expo);
+  transition: color 0.25s;
+  /* No gap transition — it moved the arrow diagonally */
 }
 
 .hero__scroll-cue:hover {
   color: var(--ink);
-  gap: var(--space-4);
+  /* gap unchanged — only the arrow moves, straight down */
 }
 
 .scroll-cue__arrow {
   display: inline-block;
+  /* Y-only — translateX must stay 0 */
   transition: transform 0.35s var(--ease-expo);
   font-size: 0.875rem;
+  transform: translateY(0);
 }
 
 .hero__scroll-cue:hover .scroll-cue__arrow {
-  transform: translateY(4px);
+  transform: translateY(6px);
 }
 
 /* Thin vertical rule — right edge, decorative hint of the playhead on the right */

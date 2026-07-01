@@ -5,11 +5,13 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { site } from '../../../content/site';
 import { ease, duration } from '@/lib/motionConfig';
+import { ScrambleHover } from '@/components/ui/ScrambleText';
 
 /**
  * Nav — minimal fixed navigation.
  * Shows the wordmark on the left, nav links on the right.
  * Fades in on load. Transitions to hairline bg on scroll.
+ * Nav links use a quick hover-scramble (250ms) via ScrambleHover.
  */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -38,7 +40,6 @@ export function Nav() {
       const id = href.replace('/#', '');
       const el = document.getElementById(id);
       if (el) {
-         
         const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
         if (lenis) {
           lenis.scrollTo(el, { offset: -80 });
@@ -60,7 +61,7 @@ export function Nav() {
           {site.name}
         </Link>
 
-        {/* Desktop links */}
+        {/* Desktop links — hover scramble via ScrambleHover */}
         <ul className="nav__links" role="list">
           {site.nav.map((item) => (
             <li key={item.href}>
@@ -69,7 +70,8 @@ export function Nav() {
                 onClick={() => handleNavClick(item.href)}
                 aria-label={`Navigate to ${item.label}`}
               >
-                {item.label}
+                {/* ScrambleHover wraps the label text only; button handles click */}
+                <ScrambleHover text={item.label} duration={250} />
               </button>
             </li>
           ))}
@@ -109,6 +111,7 @@ export function Nav() {
                     className="nav__mobile-link"
                     onClick={() => handleNavClick(item.href)}
                   >
+                    {/* No scramble on mobile — touch users don't hover */}
                     {item.label}
                   </button>
                 </motion.li>
