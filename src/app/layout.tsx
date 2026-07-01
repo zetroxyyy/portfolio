@@ -65,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={martianMono.variable}>
+    <html lang="en" className={martianMono.variable} data-scroll-behavior="smooth">
       <head>
         {/* Preconnect for Fontshare CDN */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
