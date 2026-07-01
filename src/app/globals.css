@@ -646,18 +646,9 @@ ul, ol {
 /* ════════════════════════════════════════════════════════════
    PROJECT CARD
    ════════════════════════════════════════════════════════════ */
-.project-card {
-  grid-column: span 6;
-}
-
-.project-card--featured {
-  grid-column: span 8;
-}
-
-/* Non-featured after a featured — fill remaining 4 cols */
-.project-card--featured ~ .project-card:not(.project-card--featured) {
-  grid-column: span 4;
-}
+/* Grid column spans are set via inline styles on motion.div wrappers in Work.tsx
+ * (span 8 for featured, span 4 for the card after featured, span 6 for standard)
+ * CSS selectors cannot target .project-card because it's nested inside motion.div grid items. */
 
 .project-card__link {
   display: block;
@@ -1157,26 +1148,15 @@ ul, ol {
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════════════════════
+   NOTE: Project card grid spans are handled via inline styles in
+   Work.tsx → getGridSpan(). Responsive overrides happen there
+   via window.matchMedia or by clamping the span values.
    ════════════════════════════════════════════════════════════ */
 
-/* Large — up to 1200px */
-@media (max-width: 1200px) {
-  .project-card--featured ~ .project-card:not(.project-card--featured) {
-    grid-column: span 6;
-  }
-}
 
 /* Medium — tablets */
 @media (max-width: 1024px) {
-  .project-card {
-    grid-column: span 6;
-  }
-  .project-card--featured {
-    grid-column: 1 / -1;
-  }
-  .project-card--featured ~ .project-card:not(.project-card--featured) {
-    grid-column: span 6;
-  }
 
   .about-section__grid {
     grid-template-columns: 1fr;
@@ -1219,11 +1199,8 @@ ul, ol {
     display: flex;
   }
 
-  .project-card,
-  .project-card--featured,
-  .project-card--featured ~ .project-card:not(.project-card--featured) {
-    grid-column: 1 / -1;
-  }
+  /* Grid spans handled in Work.tsx via inline styles on mobile:
+     getGridSpan returns 'span 12' equivalent via 1/-1 */
 
   .media-block--half {
     grid-column: 1 / -1;
