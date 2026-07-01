@@ -1,3 +1,5 @@
+'use client';
+
 import { useSectionTimecode } from '@/hooks/useTimecode';
 
 interface SectionMetaProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { wordReveal, ease, duration } from '@/lib/motionConfig';
+import { ease, duration } from '@/lib/motionConfig';
 
 interface HeadingRevealProps {
   text: string;
@@ -11,9 +11,12 @@ interface HeadingRevealProps {
 }
 
 /**
- * HeadingReveal — animates a heading word-by-word with a clip/mask reveal.
- * Used for the hero title and section headings.
- * Respects reduced-motion via CSS.
+ * HeadingReveal — word-by-word slide-up reveal.
+ * Each word is wrapped in an overflow:hidden clip box.
+ * Reduced-motion: words snap in immediately via CSS override.
+ *
+ * Accessibility: the heading tag carries the accessible label via aria-label.
+ * The animated inner span is aria-hidden so screen readers don't read word fragments.
  */
 export function HeadingReveal({
   text,
@@ -25,9 +28,10 @@ export function HeadingReveal({
 
   return (
     <Tag className={`heading-reveal ${className}`} aria-label={text}>
+      {/* aria-hidden: screen readers use the parent's aria-label */}
       <span className="heading-reveal__inner" aria-hidden="true">
         {words.map((word, i) => (
-          <span key={i} className="heading-reveal__word-wrap">
+          <span key={`${word}-${i}`} className="heading-reveal__word-wrap">
             <motion.span
               className="heading-reveal__word"
               initial={{ y: '110%', opacity: 0 }}
@@ -39,6 +43,7 @@ export function HeadingReveal({
               }}
             >
               {word}
+              {/* Non-breaking space preserves word spacing across wrapping flex children */}
               {i < words.length - 1 ? '\u00A0' : ''}
             </motion.span>
           </span>
