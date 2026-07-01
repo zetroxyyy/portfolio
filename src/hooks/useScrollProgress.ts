@@ -1,7 +1,6 @@
 'use client';
 
 import { useScroll, useSpring } from 'framer-motion';
-import { useRef } from 'react';
 
 /**
  * Returns a spring-smoothed scroll progress (0–1) for the whole page.

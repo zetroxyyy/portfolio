@@ -42,7 +42,6 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         <div className="project-card__cover">
           {isPlaceholder ? (
             <PlaceholderCover
-              title={project.title}
               disciplines={project.disciplines}
               index={index}
             />
@@ -87,16 +86,13 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
  * Looks intentional, clearly a placeholder, not a broken image.
  */
 function PlaceholderCover({
-  title,
   disciplines,
   index,
 }: {
-  title: string;
   disciplines: string[];
   index: number;
 }) {
   const n = String(index + 1).padStart(2, '0');
-  const shortTitle = title.replace('REPLACE_ME — ', '').slice(0, 20);
 
   return (
     <div className="placeholder-cover" aria-hidden="true">

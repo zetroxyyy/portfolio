@@ -75,7 +75,7 @@ export function Hero() {
             onClick={() => {
               const el = document.getElementById('work');
               if (el) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                 
                 const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element) => void } }).lenis;
                 if (lenis) lenis.scrollTo(el);
                 else el.scrollIntoView({ behavior: 'smooth' });

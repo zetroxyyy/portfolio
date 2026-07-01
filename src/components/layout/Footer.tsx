@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { site } from '../../../content/site';
-import { fadeIn, duration, ease } from '@/lib/motionConfig';
+import { fadeIn } from '@/lib/motionConfig';
 
 /**
  * Footer — a considered closing moment.

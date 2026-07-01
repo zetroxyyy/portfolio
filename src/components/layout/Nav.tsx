@@ -38,7 +38,7 @@ export function Nav() {
       const id = href.replace('/#', '');
       const el = document.getElementById(id);
       if (el) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
         if (lenis) {
           lenis.scrollTo(el, { offset: -80 });

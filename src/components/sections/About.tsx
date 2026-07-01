@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { SectionMeta } from '@/components/ui/SectionMeta';
 import { site } from '../../../content/site';
-import { fadeIn, sectionEntry, duration, ease } from '@/lib/motionConfig';
+import { duration, ease } from '@/lib/motionConfig';
 
 /**
  * About section — the human behind the work.

@@ -32,7 +32,7 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
     raf = requestAnimationFrame(loop);
 
     // Expose lenis on window for scroll anchors
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     (window as unknown as { lenis?: Lenis }).lenis = lenis;
 
     return () => {
