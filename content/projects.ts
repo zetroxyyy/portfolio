@@ -73,7 +73,7 @@ export const projects: Project[] = [
         span: 'full',
       },
     ],
-    // links: [{ label: 'Live', href: 'https://thedreamadventure.com' }],
+    links: [{ label: 'Live', href: 'https://thedreamadventure.com' }],
     body: [
       {
         heading: 'Context',
