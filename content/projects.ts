@@ -7,9 +7,6 @@
 // cover:       path under /public — e.g. /images/projects/my-project/cover.jpg
 // media:       ordered list of content blocks shown in the case study
 // body:        prose sections (rendered with headings + paragraphs)
-//
-// All fields marked REPLACE_ME must be updated before going live.
-// Fields left as placeholder will render a visible "[PLACEHOLDER]" reminder.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type Discipline = 'design' | 'build' | 'edit';
@@ -41,129 +38,111 @@ export interface Project {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PROJECT DATA
-// Add your real projects below. Keep slugs kebab-case.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const projects: Project[] = [
-  // ─── PROJECT 1 ─────────────────────────────────────────────────────────────
-  // REPLACE_ME: This is a placeholder. Replace every field with real content.
+  // ─── Dream Adventure ───────────────────────────────────────────────────────
   {
-    slug: 'project-one',
-    title: 'REPLACE_ME — Project Title Here', // e.g. "Meridian — Brand & Web Platform"
-    year: '2024',
-    disciplines: ['design', 'build'], // pick from: 'design' | 'build' | 'edit'
-    role: 'REPLACE_ME — e.g. "Design, Frontend Development"',
+    slug: 'dream-adventure',
+    title: 'Dream Adventure',
+    year: '2026',
+    disciplines: ['design', 'build'],
+    role: 'Solo — product design, front-end, back-end',
     summary:
-      'REPLACE_ME — One or two sentences. What was built, what problem it solved, what made it distinct. Specific over generic.',
-    cover: '/images/projects/placeholder-cover.jpg',
-    coverAlt: 'REPLACE_ME — Describe what the cover image shows for accessibility',
+      'A full booking and operations platform for an outdoor-adventure company in Minakami, Japan. A multi-step reservation flow with a live availability calendar, combo packages and bilingual JP/EN UI, backed by an admin dashboard for revenue, bookings and scheduling.',
+    cover: '/images/projects/dream-adventure/home.png',
+    coverAlt: 'Dream Adventure homepage — teal hero with Minakami gorge imagery and booking call-to-action',
     featured: true,
     media: [
-      // REPLACE_ME: Add your project images and/or video clips
       {
         type: 'image',
-        src: '/images/projects/placeholder-01.jpg',
-        alt: 'REPLACE_ME — describe this image',
+        src: '/images/projects/dream-adventure/home.png',
+        alt: 'Dream Adventure homepage — full-bleed hero and primary navigation',
         span: 'full',
       },
       {
         type: 'image',
-        src: '/images/projects/placeholder-02.jpg',
-        alt: 'REPLACE_ME — describe this image',
+        src: '/images/projects/dream-adventure/packages.png',
+        alt: 'Adventure packages grid — combo tours with pricing and availability indicators',
         span: 'half',
       },
       {
         type: 'image',
-        src: '/images/projects/placeholder-03.jpg',
-        alt: 'REPLACE_ME — describe this image',
+        src: '/images/projects/dream-adventure/date.png',
+        alt: 'Live availability calendar — date picker for multi-step reservation flow',
         span: 'half',
       },
+      {
+        type: 'image',
+        src: '/images/projects/dream-adventure/dashboard.png',
+        alt: 'Admin dashboard — revenue overview, booking timeline and scheduling tools',
+        span: 'full',
+      },
     ],
-    links: [
-      // REPLACE_ME: Add live / repo / case-study links
-      { label: 'Live site', href: 'https://REPLACE_ME.com' },
-      { label: 'GitHub', href: 'https://github.com/zetroxyyy/REPLACE_ME' },
-    ],
+    // links: [{ label: 'Live', href: 'https://thedreamadventure.com' }],
     body: [
       {
         heading: 'Context',
-        body: 'REPLACE_ME — What was the brief? Who was it for? What were the real constraints?\n\nKeep it specific. One honest sentence beats three marketing sentences.',
+        body: 'Dream Adventure runs rafting, canyoning and multi-activity tours out of Minakami, Gunma. The brief was to replace a static HTML site and offline booking process with a full reservation platform — bilingual (JP/EN), mobile-first, and operable without a developer.',
       },
       {
         heading: 'Approach',
-        body: 'REPLACE_ME — What decisions did you make and why? What did you try that didn\'t work? What does "done well" look like for this kind of problem?',
+        body: 'Designed the reservation flow as a linear step-wizard (activity → date → guests → confirmation) to reduce drop-off. The availability calendar pulls live from the backend so over-booking is impossible. The admin dashboard was kept minimal — revenue chart, booking queue, and a per-activity schedule view.',
       },
       {
         heading: 'Outcome',
-        body: 'REPLACE_ME — What shipped? What changed? Real outcomes only — no fabricated metrics.',
+        body: 'A live booking platform replacing manual email/phone reservations, with a bilingual front-end and a fully self-serve admin panel. Currently live behind a construction page ahead of the 2026 season launch.',
       },
     ],
   },
 
-  // ─── PROJECT 2 ─────────────────────────────────────────────────────────────
-  // REPLACE_ME: Video / edit-focused piece
+  // ─── Zetsteal ──────────────────────────────────────────────────────────────
   {
-    slug: 'project-two',
-    title: 'REPLACE_ME — Film / Edit Title Here', // e.g. "Solstice — Short Documentary"
-    year: '2024',
-    disciplines: ['edit'], // this one is edit-led
-    role: 'REPLACE_ME — e.g. "Cinematography, Editing, Color Grade"',
+    slug: 'zetsteal',
+    title: 'Zetsteal',
+    year: '2025',
+    disciplines: ['design'],
+    role: 'Design — store & landing UI',
     summary:
-      'REPLACE_ME — What is this film / edit? What was the subject, the mood, the intent? A sentence that makes someone want to watch it.',
-    cover: '/images/projects/placeholder-cover.jpg',
-    coverAlt: 'REPLACE_ME — describe the cover frame',
-    featured: false,
-    media: [
-      // REPLACE_ME: Replace with your real video embed or MP4
-      {
-        type: 'video',
-        src: '/images/projects/placeholder-reel.mp4', // REPLACE_ME
-        poster: '/images/projects/placeholder-cover.jpg', // REPLACE_ME
-        caption: 'REPLACE_ME — optional caption for the reel',
-      },
-    ],
-    links: [
-      // REPLACE_ME: e.g. Vimeo / YouTube link
-      { label: 'Watch on Vimeo', href: 'https://vimeo.com/REPLACE_ME' },
-    ],
-    body: [
-      {
-        heading: 'The project',
-        body: 'REPLACE_ME — What is this? Real description of the work.',
-      },
-      {
-        heading: 'Process',
-        body: 'REPLACE_ME — How did you approach the cut? Any specific techniques, pacing choices, music selection rationale.',
-      },
-    ],
-  },
-
-  // ─── PROJECT 3 ─────────────────────────────────────────────────────────────
-  // REPLACE_ME: Cross-discipline piece (design + build + edit — shows range)
-  {
-    slug: 'project-three',
-    title: 'REPLACE_ME — Cross-Discipline Project', // e.g. "Parallax — Design System & Motion Brand"
-    year: '2023',
-    disciplines: ['design', 'build', 'edit'],
-    role: 'REPLACE_ME — "Design, Development, Motion"',
-    summary:
-      'REPLACE_ME — A project that required all three disciplines. What held it together?',
-    cover: '/images/projects/placeholder-cover.jpg',
-    coverAlt: 'REPLACE_ME — describe the cover',
+      'Store and landing design for Zetsteal, a Minecraft product under Zetroxy Systems — pricing, feature and purchase flows in a dark, high-contrast game-UI style.',
+    cover: '/images/projects/zetsteal/pricing.png',
+    coverAlt: 'Zetsteal pricing page — dark high-contrast game-UI with tiered plan layout',
     featured: false,
     media: [
       {
         type: 'image',
-        src: '/images/projects/placeholder-01.jpg',
-        alt: 'REPLACE_ME',
+        src: '/images/projects/zetsteal/pricing.png',
+        alt: 'Zetsteal pricing page — tiered plans with feature comparison in dark game-UI',
+        span: 'full',
+      },
+      {
+        type: 'image',
+        src: '/images/projects/zetsteal/top.png',
+        alt: 'Zetsteal landing hero — above the fold product statement',
+        span: 'half',
+      },
+      {
+        type: 'image',
+        src: '/images/projects/zetsteal/why.png',
+        alt: 'Why Zetsteal — feature highlights and value proposition section',
+        span: 'half',
+      },
+      {
+        type: 'image',
+        src: '/images/projects/zetsteal/thumbnail.png',
+        alt: 'Zetsteal promotional thumbnail',
         span: 'full',
       },
     ],
-    links: [],
+    // links: [],
     body: [
       {
-        heading: 'Overview',
-        body: 'REPLACE_ME — Real description of this project.',
+        heading: 'Context',
+        body: 'Zetsteal is a Minecraft cheat client sold through Zetroxy Systems. The existing presence was minimal. The goal was a store and landing that felt native to the game-modding aesthetic — dark, high-contrast, dense — without tipping into generic dark-gamer cliché.',
+      },
+      {
+        heading: 'Approach',
+        body: 'Used a deep charcoal base with sharp green and white accents to match the Minecraft aesthetic while keeping the UI legible and structured. The pricing page was the primary conversion surface, so hierarchy and plan differentiation got the most attention.',
       },
     ],
   },

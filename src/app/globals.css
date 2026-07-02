@@ -745,11 +745,28 @@ ul, ol {
 
 .project-card__img {
   object-fit: cover;
-  transition: transform 0.65s var(--ease-expo);
+  /*
+   * Grayscale-by-default: unifies two very different project palettes into
+   * one cohesive grid. Source images remain in color; CSS does the work.
+   * Transition: filter and transform composite on the same element so the
+   * browser promotes to its own layer — one GPU pass.
+   */
+  filter: grayscale(1);
+  transition: transform 0.65s var(--ease-expo),
+              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .project-card__link:hover .project-card__img {
   transform: scale(1.03);
+  filter: grayscale(0);
+}
+
+/* prefers-reduced-motion: keep grayscale-by-default, but no animated transition
+ * (color can switch instantly on hover — no animated filter). */
+@media (prefers-reduced-motion: reduce) {
+  .project-card__img {
+    transition: none;
+  }
 }
 
 /* Cover overlay — appears on hover, very subtle */

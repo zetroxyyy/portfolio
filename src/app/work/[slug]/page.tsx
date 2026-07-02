@@ -90,6 +90,7 @@ export default async function ProjectPage({ params }: PageProps) {
               alt={project.coverAlt}
               fill
               sizes="(max-width: 768px) 100vw, 90vw"
+              quality={90}
               className="media-block__img"
               priority
             />

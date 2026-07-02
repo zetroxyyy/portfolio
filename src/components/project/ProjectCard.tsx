@@ -19,11 +19,28 @@ const disciplineLabels: Record<string, string> = {
 
 /**
  * ProjectCard — a single work item in the filterable grid.
- * Shows cover image (or placeholder), title, year, disciplines.
- * Hover: subtle cover scale, title dims.
+ * Shows cover image, title, year, disciplines.
+ * Hover: subtle cover scale, color reveal (grayscale → color via CSS filter).
+ *
+ * Image optimisation:
+ *   - quality={90} for UI screenshots so text stays crisp after compression
+ *   - Featured cards use a wider `sizes` hint (dominant 8/12 col at desktop)
+ *   - Standard cards use a balanced hint (4/12 – 6/12 col range)
+ *   - avif/webp served by next/image (configured in next.config.ts)
  */
 export function ProjectCard({ project, index }: ProjectCardProps) {
-  const isPlaceholder = project.cover.includes('placeholder');
+  const isPlaceholder = project.cover.startsWith('/images/projects/placeholder');
+
+  /**
+   * sizes hints for next/image:
+   * featured (8/12 cols ≈ 67vw at desktop):
+   *   mobile: 100vw, tablet: 100vw (full-width), desktop: 67vw
+   * standard (4–6/12 cols):
+   *   mobile: 100vw, tablet: 50vw, desktop: 35vw
+   */
+  const imgSizes = project.featured
+    ? '(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 67vw'
+    : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 35vw';
 
   return (
     <motion.article
@@ -47,7 +64,8 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               src={project.cover}
               alt={project.coverAlt}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+              sizes={imgSizes}
+              quality={90}
               className="project-card__img"
               priority={index < 2}
             />
@@ -79,8 +97,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
 /**
  * PlaceholderCover — shown when no real cover image is available.
- * Dark matte surface with discipline label. No ghost index numbers
- * (they were meaningless sequence markers — removed per §4).
+ * Dark matte surface with discipline label.
  *
  * Optional: to render year in the ghost position later, uncomment
  * the year prop and render it with .placeholder-cover__index styles.
