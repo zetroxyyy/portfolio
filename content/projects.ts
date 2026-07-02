@@ -56,21 +56,15 @@ export const projects: Project[] = [
     media: [
       {
         type: 'image',
-        src: '/images/projects/dream-adventure/home.png',
-        alt: 'Dream Adventure homepage — full-bleed hero and primary navigation',
-        span: 'full',
-      },
-      {
-        type: 'image',
         src: '/images/projects/dream-adventure/packages.png',
         alt: 'Adventure packages grid — combo tours with pricing and availability indicators',
-        span: 'half',
+        span: 'full',
       },
       {
         type: 'image',
         src: '/images/projects/dream-adventure/date.png',
         alt: 'Live availability calendar — date picker for multi-step reservation flow',
-        span: 'half',
+        span: 'full',
       },
       {
         type: 'image',
@@ -111,21 +105,15 @@ export const projects: Project[] = [
     media: [
       {
         type: 'image',
-        src: '/images/projects/zetsteal/pricing.png',
-        alt: 'Zetsteal pricing page — tiered plans with feature comparison in dark game-UI',
-        span: 'full',
-      },
-      {
-        type: 'image',
         src: '/images/projects/zetsteal/top.png',
         alt: 'Zetsteal landing hero — above the fold product statement',
-        span: 'half',
+        span: 'full',
       },
       {
         type: 'image',
         src: '/images/projects/zetsteal/why.png',
         alt: 'Why Zetsteal — feature highlights and value proposition section',
-        span: 'half',
+        span: 'full',
       },
       {
         type: 'image',
