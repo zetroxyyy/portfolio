@@ -126,7 +126,7 @@ export const projects: Project[] = [
     body: [
       {
         heading: 'Context',
-        body: 'Zetsteal is a Minecraft cheat client sold through Zetroxy Systems. The existing presence was minimal. The goal was a store and landing that felt native to the game-modding aesthetic — dark, high-contrast, dense — without tipping into generic dark-gamer cliché.',
+        body: 'Zetsteal is a Minecraft server setup sold through Zetroxy Systems. The existing presence was minimal. The goal was a store and landing that felt native to the game-modding aesthetic — dark, high-contrast, dense — without tipping into generic dark-gamer cliché.',
       },
       {
         heading: 'Approach',
