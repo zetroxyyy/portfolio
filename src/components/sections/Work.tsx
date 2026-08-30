@@ -1,5 +1,7 @@
 import { getClientProjects, getIndependentProjects } from '../../../content/projects';
+import { sideProjects } from '../../../content/sideProjects';
 import { ProjectBand } from '@/components/project/ProjectBand';
+import { SideProjectCard } from '@/components/project/SideProjectCard';
 
 export function Work() {
   const clientProjects = getClientProjects();
@@ -50,6 +52,28 @@ export function Work() {
                 project={project}
                 index={index + clientProjects.length}
               />
+            ))}
+          </div>
+        </div>
+
+        {/* Side projects — source-available tools, run locally rather than visited.
+            Presented as a compact grid, deliberately lighter than the bands above:
+            no screenshot, no live dot, no case study. */}
+        <div className="work-group work-group--side" aria-labelledby="side-projects-heading">
+          <header className="work-group__header">
+            <span className="work-group__eyebrow">03 / TOOLS</span>
+            <h2 id="side-projects-heading" className="work-group__title">
+              Side Projects
+            </h2>
+            <p className="work-group__qualifier">
+              Things built to solve my own problems. Source is public — clone the repo and run
+              them yourself.
+            </p>
+          </header>
+
+          <div className="side-grid">
+            {sideProjects.map((project, index) => (
+              <SideProjectCard key={project.slug} project={project} index={index} />
             ))}
           </div>
         </div>

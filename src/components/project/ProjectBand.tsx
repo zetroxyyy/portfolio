@@ -82,7 +82,7 @@ export function ProjectBand({ project, index }: ProjectBandProps) {
               aria-label={`Read case study for ${project.title}`}
             >
               <span>Read the case study</span>
-              <span aria-hidden="true">→</span>
+              <span className="arrow" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>

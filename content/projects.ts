@@ -75,8 +75,15 @@ export const projects: Project[] = [
     ],
     built: [
       {
-        heading: 'Public Booking Flow & Experience Pages',
-        body: 'A frictionless, linear booking wizard guiding customers from tour selection to date picking, party size, and instant confirmation. Tour activity pages present detailed difficulty levels, gear requirements, and safety briefings.',
+        heading: 'Public Booking Flow',
+        body: 'A linear six-step wizard — activity, date, time, party size, details, confirmation — that never asks for more than one decision at a time. Availability is read live from the database at the date and time steps, so a departure that is already full cannot be selected. The combo package is surfaced first because it is the highest-value booking.',
+        image: '/images/projects/dream-adventure/booking.webp',
+        imageAlt: 'Dream Adventure booking wizard — step one of six, choosing between the rafting and canyoning combo package or a single activity',
+        caption: 'Step one of the reservation wizard — combo package surfaced above the single-activity options, with per-adult and per-child pricing shown inline.',
+      },
+      {
+        heading: 'Activity & Experience Pages',
+        body: 'Each activity gets a dedicated page carrying the detail a guest needs before committing: difficulty rating, minimum age, what to bring, departure times, and what is included in the price.',
         image: '/images/projects/dream-adventure/rafting.webp',
         imageAlt: 'Dream Adventure rafting activity page with tour specifications and booking CTA',
         caption: 'Rafting activity page — overview, difficulty rating, and departure schedules.',
@@ -274,9 +281,9 @@ export const projects: Project[] = [
       {
         heading: 'Cinematic Catalog & Quick-View Modal',
         body: 'A high-performance streaming interface with real-time client-side search, category filtering, and an instant quick-view overlay that displays synopsis, runtime, cast, and trailer without breaking scroll position.',
-        image: '/images/projects/nexus-mcu/cover.webp',
-        imageAlt: 'NEXUS streaming catalog with featured media banner and title cards',
-        caption: 'Catalog browsing interface with featured spotlight and category filters.',
+        image: '/images/projects/nexus-mcu/catalog.webp',
+        imageAlt: 'NEXUS catalog — Phase 1 and Phase 2 title rows of MCU poster art in a dense grid',
+        caption: 'Catalog rows grouped by phase — strict poster aspect ratios, no borders, no drop shadows.',
       },
       {
         heading: 'Interactive Chronological Timeline',
@@ -441,9 +448,9 @@ export const projects: Project[] = [
       {
         heading: 'Editorial Storefront & Lookbook',
         body: 'High-contrast, dark-mode-first aesthetic with full-bleed photography, fluid transitions, and typography tuned for contemporary urban fashion.',
-        image: '/images/projects/didee/cover.webp',
-        imageAlt: 'Didee editorial storefront featuring new apparel arrivals',
-        caption: 'Storefront lookbook — hero drops and new seasonal collections.',
+        image: '/images/projects/didee/lookbook.webp',
+        imageAlt: 'Didee new arrivals — full-bleed photography of a graphic tee, dresses and accessories in an editorial grid',
+        caption: 'New arrivals grid — full-bleed product photography carrying the page instead of a conventional product card.',
       },
       {
         heading: 'Full-Screen Category Navigation',
@@ -463,7 +470,7 @@ export const projects: Project[] = [
         heading: 'Product Catalogue Management',
         body: 'Admin interface for adding, editing, and archiving products with image uploads, stock status flags, and category tags.',
         image: '/images/projects/didee/admin-products.webp',
-        imageAlt: 'Product catalog admin screen with inventory list',
+        imageAlt: 'My Darling Food shop grid — Buff, Sidra Peanut and Mula achar cards with photography, spice rating and price',
         caption: 'Product administration — image management, inventory tags, and visibility.',
       },
       {
@@ -534,9 +541,9 @@ export const projects: Project[] = [
       {
         heading: 'Appetite-First Storefront',
         body: 'Warm cream aesthetic designed around vivid product photography, highlighting authentic recipes, ingredient sourcing, and flavor profiles.',
-        image: '/images/projects/mydarlingfood/cover.webp',
+        image: '/images/projects/mydarlingfood/products.webp',
         imageAlt: 'My Darling Food shop hero banner with pickle jars',
-        caption: 'Storefront landing — product showcase and brand introduction.',
+        caption: 'Product grid — large photography, spice rating, and dietary tag on every card.',
       },
       {
         heading: 'Dietary & Category Filtering',

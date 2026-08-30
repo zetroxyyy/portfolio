@@ -15,7 +15,9 @@
   --paper-2:      #EFEEE9;
   --ink:          #12110F;
   --graphite:     #55534C;
-  --mist:         #76736B;
+  /* 4.88:1 on --paper. Was #76736B (4.34:1), which failed WCAG AA for normal
+     text — and --mist carries 11px copy in captions, footer and case-study meta. */
+  --mist:         #6E6B63;
   --fog:          #C7C4BA;
   --hairline:     rgba(18, 17, 15, 0.10);
   --hairline-2:   rgba(18, 17, 15, 0.05);
@@ -119,7 +121,9 @@
   --paper-2:      #EFEEE9;
   --ink:          #12110F;
   --graphite:     #55534C;
-  --mist:         #76736B;
+  /* 4.88:1 on --paper. Was #76736B (4.34:1), which failed WCAG AA for normal
+     text — and --mist carries 11px copy in captions, footer and case-study meta. */
+  --mist:         #6E6B63;
   --fog:          #C7C4BA;
   --hairline:     rgba(18, 17, 15, 0.10);
   --hairline-2:   rgba(18, 17, 15, 0.05);
@@ -598,6 +602,165 @@ button {
   gap: var(--space-24);
 }
 
+/* ── SIDE PROJECTS ────────────────────────────────────────────
+   Compact, text-first cards. These carry less visual weight than the
+   project bands on purpose — they are supporting evidence of range, not
+   the client-facing proof, and giving them equal weight would flatten
+   the hierarchy the two groups above establish.
+   ─────────────────────────────────────────────────────────── */
+.side-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.side-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--paper-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  transform: translateY(0);
+  transition:
+    transform 0.4s var(--ease-expo),
+    border-color 0.3s ease,
+    box-shadow 0.4s var(--ease-expo);
+}
+
+.side-card:hover,
+.side-card:focus-within {
+  transform: translateY(-2px);
+  border-color: var(--fog);
+  box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.20);
+}
+
+.side-card__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--mist);
+}
+
+.side-card__platform {
+  text-transform: uppercase;
+}
+
+.side-card__year {
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+.side-card__title {
+  font-size: var(--text-lg);
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.side-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretched target — the whole card is clickable, but only the title is
+   in the tab order, so keyboard users get one stop instead of three. */
+.side-card__link-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+}
+
+.side-card__summary {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.side-card__detail {
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--graphite);
+}
+
+.side-card__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.stack-chip--sm {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+}
+
+.side-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--hairline-2);
+}
+
+.side-card__runs {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--tracking-wide);
+  color: var(--mist);
+  line-height: 1.5;
+  max-width: 22ch;
+}
+
+.side-card__repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--graphite);
+  transition: color 0.25s ease;
+}
+
+.side-card:hover .side-card__repo,
+.side-card:focus-within .side-card__repo {
+  color: var(--ink);
+}
+
+.side-card__repo .arrow {
+  display: inline-block;
+  transition: transform 0.3s var(--ease-expo);
+}
+
+.side-card:hover .side-card__repo .arrow,
+.side-card:focus-within .side-card__repo .arrow {
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 1024px) {
+  .side-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .side-grid {
+    grid-template-columns: 1fr;
+  }
+  .side-card__runs {
+    max-width: none;
+  }
+}
+
 /* ── PROJECT BAND COMPONENT ───────────────────────────────── */
 .project-band {
   position: relative;
@@ -605,10 +768,17 @@ button {
   padding: var(--space-10);
   background: var(--paper-2);
   border: 1px solid var(--hairline);
-  transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
+  /* Lift is the band's own; inner elements animate on their own timings. */
+  transform: translateY(0);
+  transition:
+    transform 0.45s var(--ease-expo),
+    border-color 0.35s ease,
+    box-shadow 0.45s var(--ease-expo);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
+/* Accent wash — the project's own colour, barely there. */
 .project-band::before {
   content: '';
   position: absolute;
@@ -616,14 +786,69 @@ button {
   background: var(--project-accent, transparent);
   opacity: 0.035;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.35s ease;
 }
 
-.project-band:hover {
-  border-color: var(--fog);
+/* A hairline of the accent along the top edge, drawn on from the left.
+   This is the band's one piece of colour and it only appears on hover. */
+.project-band::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--project-accent, var(--ink));
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0.7;
+  pointer-events: none;
+  transition: transform 0.55s var(--ease-expo);
 }
-.project-band:hover::before {
-  opacity: 0.055;
+
+.project-band:hover,
+.project-band:focus-within {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--project-accent, var(--fog)) 28%, var(--fog));
+  box-shadow:
+    0 18px 40px -20px rgba(0, 0, 0, 0.22),
+    0 3px 10px -6px rgba(0, 0, 0, 0.10);
+}
+.project-band:hover::before,
+.project-band:focus-within::before {
+  opacity: 0.06;
+}
+.project-band:hover::after,
+.project-band:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* Index numeral picks up the project accent as the band activates. */
+.project-band:hover .project-band__index,
+.project-band:focus-within .project-band__index {
+  color: var(--project-accent, var(--ink));
+}
+
+/* The screenshot leans in very slightly. */
+.project-band:hover .browser-frame,
+.project-band:focus-within .browser-frame {
+  transform: translateY(-2px) scale(1.008);
+  box-shadow:
+    0 22px 48px -18px rgba(0, 0, 0, 0.24),
+    0 4px 12px -6px rgba(0, 0, 0, 0.10);
+  border-color: color-mix(in srgb, var(--project-accent, var(--fog)) 30%, var(--fog));
+}
+
+/* CTA responds to the whole band, not just to itself. */
+.project-band:hover .project-band__btn-study,
+.project-band:focus-within .project-band__btn-study {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+.project-band:hover .project-band__btn-study .arrow,
+.project-band:focus-within .project-band__btn-study .arrow {
+  transform: translateX(4px);
 }
 
 .project-band__grid {
@@ -707,6 +932,14 @@ button {
   border: 1px solid var(--hairline);
   border-radius: var(--radius-sm);
   white-space: nowrap;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Chips warm toward the project accent when the band is active. */
+.project-band:hover .stack-chip,
+.project-band:focus-within .stack-chip {
+  border-color: color-mix(in srgb, var(--project-accent, var(--fog)) 22%, var(--hairline));
+  color: var(--ink);
 }
 
 .project-band__status {
@@ -724,6 +957,25 @@ button {
   border-radius: 50%;
   background-color: var(--live);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--live) 20%, transparent);
+  position: relative;
+  flex: none;
+}
+
+/* Slow outward ping — the site is live, and the dot should say so on its own
+   rather than waiting for a hover the visitor may never perform. */
+.project-band__status-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: var(--live);
+  animation: live-ping 2.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes live-ping {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  70%  { transform: scale(2.8); opacity: 0; }
+  100% { transform: scale(2.8); opacity: 0; }
 }
 
 .project-band__actions {
@@ -748,11 +1000,11 @@ button {
   background: var(--paper);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-sm);
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 }
-.project-band__btn-study:hover {
-  border-color: var(--ink);
-  transform: translateX(2px);
+.project-band__btn-study .arrow {
+  display: inline-block;
+  transition: transform 0.35s var(--ease-expo);
 }
 
 .project-band__btn-live {
@@ -779,11 +1031,12 @@ button {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.browser-frame:hover {
-  border-color: var(--fog);
+  transform: translateY(0) scale(1);
+  transform-origin: center bottom;
+  transition:
+    transform 0.45s var(--ease-expo),
+    border-color 0.35s ease,
+    box-shadow 0.45s var(--ease-expo);
 }
 
 .browser-frame__bar {
@@ -1524,7 +1777,37 @@ button {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .status-readout__dot {
+  .status-readout__dot,
+  .project-band__status-dot::after {
     animation: none;
+  }
+
+  /* Keep the hover *states* — colour, border and background still communicate
+     interactivity — but drop the movement. Transforms are the part that causes
+     trouble here, not the feedback itself. */
+  .project-band,
+  .project-band:hover,
+  .project-band:focus-within,
+  .project-band:hover .browser-frame,
+  .project-band:focus-within .browser-frame,
+  .browser-frame {
+    transform: none !important;
+  }
+  .project-band::after {
+    transform: scaleX(1) !important;
+    opacity: 0;
+  }
+  .project-band:hover::after,
+  .project-band:focus-within::after {
+    opacity: 0.7;
+  }
+  .project-band__btn-study .arrow {
+    transform: none !important;
+  }
+  .side-card,
+  .side-card:hover,
+  .side-card:focus-within,
+  .side-card__repo .arrow {
+    transform: none !important;
   }
 }
