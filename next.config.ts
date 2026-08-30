@@ -2,11 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Allow next/image to serve images from the public directory
-    // Add remote domains here if using external image hosts
-    formats: ['image/avif', 'image/webp'],
+    // Disable Next.js image optimization service entirely.
+    // All local project images are pre-compressed and pre-sized WebP assets.
+    unoptimized: true,
   },
-  // Compiler options for performance
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

@@ -4,7 +4,6 @@ import { useScroll, useSpring } from 'framer-motion';
 
 /**
  * Returns a spring-smoothed scroll progress (0–1) for the whole page.
- * Used by the Playhead component to drive the timeline scrubber.
  */
 export function useScrollProgress() {
   const { scrollYProgress } = useScroll();

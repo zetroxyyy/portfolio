@@ -1,24 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { site } from '../../../content/site';
 import { ease, duration } from '@/lib/motionConfig';
-import { ScrambleHover } from '@/components/ui/ScrambleText';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
-/**
- * Nav — minimal fixed navigation.
- * Shows the wordmark on the left, nav links on the right.
- * Fades in on load. Transitions to hairline bg on scroll.
- * Nav links use a quick hover-scramble (250ms) via ScrambleHover.
- */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -35,14 +30,13 @@ export function Nav() {
 
   function handleNavClick(href: string) {
     setMenuOpen(false);
-    // If the href is an anchor, let Lenis handle it
     if (href.startsWith('/#')) {
       const id = href.replace('/#', '');
       const el = document.getElementById(id);
       if (el) {
         const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
         if (lenis) {
-          lenis.scrollTo(el, { offset: -80 });
+          lenis.scrollTo(el, { offset: -70 });
         } else {
           el.scrollIntoView({ behavior: 'smooth' });
         }
@@ -52,6 +46,7 @@ export function Nav() {
 
   return (
     <header
+      ref={navRef}
       className={`nav ${scrolled ? 'nav--scrolled' : ''}`}
       role="banner"
     >
@@ -61,32 +56,37 @@ export function Nav() {
           {site.name}
         </Link>
 
-        {/* Desktop links — hover scramble via ScrambleHover */}
-        <ul className="nav__links" role="list">
-          {site.nav.map((item) => (
-            <li key={item.href}>
-              <button
-                className="nav__link"
-                onClick={() => handleNavClick(item.href)}
-                aria-label={`Navigate to ${item.label}`}
-              >
-                {/* ScrambleHover wraps the label text only; button handles click */}
-                <ScrambleHover text={item.label} duration={250} />
-              </button>
-            </li>
-          ))}
-        </ul>
+        {/* Desktop links + Theme toggle */}
+        <div className="nav__right">
+          <ul className="nav__links" role="list">
+            {site.nav.map((item) => (
+              <li key={item.href}>
+                <button
+                  type="button"
+                  className="nav__link"
+                  onClick={() => handleNavClick(item.href)}
+                  aria-label={`Navigate to ${item.label}`}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
 
-        {/* Mobile menu toggle */}
-        <button
-          className="nav__hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-expanded={menuOpen}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        >
-          <span className={`hamburger-line ${menuOpen ? 'open' : ''}`} />
-          <span className={`hamburger-line ${menuOpen ? 'open' : ''}`} />
-        </button>
+          <ThemeToggle />
+
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className="nav__hamburger"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className={`hamburger-line ${menuOpen ? 'open' : ''}`} />
+            <span className={`hamburger-line ${menuOpen ? 'open' : ''}`} />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu overlay */}
@@ -94,9 +94,9 @@ export function Nav() {
         {menuOpen && (
           <motion.div
             className="nav__mobile-menu"
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0, transition: { duration: duration.base, ease } }}
-            exit={{ opacity: 0, y: -8, transition: { duration: duration.fast } }}
+            exit={{ opacity: 0, y: -10, transition: { duration: duration.fast } }}
             role="dialog"
             aria-label="Mobile navigation"
           >
@@ -104,14 +104,14 @@ export function Nav() {
               {site.nav.map((item, i) => (
                 <motion.li
                   key={item.href}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0, transition: { delay: i * 0.06, duration: duration.base, ease } }}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: duration.base, ease } }}
                 >
                   <button
+                    type="button"
                     className="nav__mobile-link"
                     onClick={() => handleNavClick(item.href)}
                   >
-                    {/* No scramble on mobile — touch users don't hover */}
                     {item.label}
                   </button>
                 </motion.li>

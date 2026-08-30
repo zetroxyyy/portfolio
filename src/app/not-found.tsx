@@ -2,61 +2,29 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Not found',
-  description: 'This page does not exist.',
+  title: '404 — Page Not Found',
+  description: 'The requested page could not be found.',
 };
 
 export default function NotFound() {
   return (
-    <div
-      style={{
-        minHeight: '100svh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        padding: 'var(--space-32) var(--page-px)',
-        paddingTop: 'calc(var(--space-32) + 60px)',
-      }}
-    >
-      <p
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 'var(--text-xs)',
-          color: 'var(--mist)',
-          letterSpacing: '0.1em',
-          marginBottom: 'var(--space-8)',
-        }}
-        aria-hidden="true"
-      >
-        04:04 — NOT FOUND
-      </p>
-      <h1
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(var(--text-4xl), 7vw, var(--text-5xl))',
-          letterSpacing: '-0.04em',
-          lineHeight: 1,
-          color: 'var(--ink)',
-          marginBottom: 'var(--space-8)',
-        }}
-      >
-        Page not found.
-      </h1>
-      <Link
-        href="/"
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 'var(--text-xs)',
-          color: 'var(--graphite)',
-          letterSpacing: '0.06em',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 'var(--space-2)',
-        }}
-      >
-        ← Back home
-      </Link>
+    <div className="not-found-page">
+      <div className="not-found-card">
+        <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--mist)', letterSpacing: 'var(--tracking-wider)' }}>
+          404 · PAGE NOT FOUND
+        </span>
+        <h1 style={{ fontSize: 'clamp(var(--text-3xl), 6vw, var(--text-4xl))', lineHeight: 1.1, color: 'var(--ink)' }}>
+          This page does not exist.
+        </h1>
+        <p style={{ color: 'var(--graphite)', fontSize: 'var(--text-base)' }}>
+          The link you followed may be broken or the page has been repositioned.
+        </p>
+        <div style={{ marginTop: 'var(--space-4)' }}>
+          <Link href="/" className="btn-primary">
+            <span>← Back to home</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

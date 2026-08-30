@@ -2,15 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-/**
- * StatusReadout — a live, mono status display for the hero upper region.
- * Shows availability + current Kathmandu time, ticking every second.
- *
- * Hydration-safe: nothing is rendered on the server tick — only the
- * static label renders until the component mounts on the client.
- *
- * prefers-reduced-motion: still updates (plain text, no animated glyphs).
- */
 export function StatusReadout() {
   const [time, setTime] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -24,7 +15,6 @@ export function StatusReadout() {
       hour12: false,
     });
 
-    // Tick immediately, then every second
     const tick = () => setTime(fmt.format(new Date()));
     tick();
     intervalRef.current = setInterval(tick, 1000);
@@ -35,16 +25,15 @@ export function StatusReadout() {
   }, []);
 
   return (
-    <div className="status-readout" aria-label={time ? `Available for work. Nepal time: ${time}` : 'Available for work'}>
-      <span className="status-readout__line" aria-hidden="true">
-        AVAILABLE FOR WORK
-      </span>
-      {/* Time renders only after mount to avoid hydration mismatch */}
+    <div
+      className="status-readout"
+      aria-label={time ? `Available for new projects. Nepal time: ${time}` : 'Available for new projects'}
+    >
+      <span className="status-readout__dot" aria-hidden="true" />
+      <span>AVAILABLE FOR WORK</span>
       {time && (
-        <span className="status-readout__time" aria-hidden="true">
-          <span className="status-readout__tz">KTM</span>
-          {' '}
-          <span className="status-readout__clock">{time}</span>
+        <span aria-hidden="true" style={{ color: 'var(--mist)' }}>
+          · KTM {time}
         </span>
       )}
     </div>
