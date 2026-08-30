@@ -16,7 +16,7 @@ export const site = {
   ],
 
   location: 'Nepal',
-  locationDetails: 'Based in Nepal. Working with clients in Japan and internationally.',
+  locationDetails: 'Built in Nepal. Running worldwide.',
 
   socials: {
     github: 'https://github.com/zetroxyyy',

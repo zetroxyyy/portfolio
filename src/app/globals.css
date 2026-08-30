@@ -24,9 +24,14 @@
   --live:         #16A34A;
 
   /* Frame chrome background */
-  --frame-bg:     #ECEAE4;
-  --frame-bar:    #E2DFD8;
-  --frame-pill:   #F6F5F2;
+  /* Browser chrome stays dark in BOTH themes. It is a device frame around a
+     screenshot, not a UI surface — a real window looks like a real window
+     whatever theme the reader is in. The pale beige version was light chrome
+     on a light page, which read as mush and lost the "this is a live site"
+     effect the frames exist to create. */
+  --frame-bg:     #1F1F1D;
+  --frame-bar:    #2A2A27;
+  --frame-pill:   #141413;
 
   /* Typography roles */
   --font-display: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -95,9 +100,9 @@
     --hairline:     rgba(237, 237, 234, 0.12);
     --hairline-2:   rgba(237, 237, 234, 0.06);
 
-    --frame-bg:     #1A1A18;
-    --frame-bar:    #222220;
-    --frame-pill:   #121211;
+    --frame-bg:     #1F1F1D;
+    --frame-bar:    #2A2A27;
+    --frame-pill:   #141413;
   }
 }
 
@@ -111,9 +116,9 @@
   --hairline:     rgba(237, 237, 234, 0.12);
   --hairline-2:   rgba(237, 237, 234, 0.06);
 
-  --frame-bg:     #1A1A18;
-  --frame-bar:    #222220;
-  --frame-pill:   #121211;
+  --frame-bg:     #1F1F1D;
+  --frame-bar:    #2A2A27;
+  --frame-pill:   #141413;
 }
 
 :root[data-theme="light"] {
@@ -128,9 +133,14 @@
   --hairline:     rgba(18, 17, 15, 0.10);
   --hairline-2:   rgba(18, 17, 15, 0.05);
 
-  --frame-bg:     #ECEAE4;
-  --frame-bar:    #E2DFD8;
-  --frame-pill:   #F6F5F2;
+  /* Browser chrome stays dark in BOTH themes. It is a device frame around a
+     screenshot, not a UI surface — a real window looks like a real window
+     whatever theme the reader is in. The pale beige version was light chrome
+     on a light page, which read as mush and lost the "this is a live site"
+     effect the frames exist to create. */
+  --frame-bg:     #1F1F1D;
+  --frame-bar:    #2A2A27;
+  --frame-pill:   #141413;
 }
 
 /* ── GLOBAL RESET & BASE ──────────────────────────────────── */
@@ -599,7 +609,9 @@ button {
 .work-group__list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
+  /* Zero — each band now carries its own vertical padding and a top hairline,
+     so an extra gap here would separate the rule from the content it divides. */
+  gap: 0;
 }
 
 /* ── SIDE PROJECTS ────────────────────────────────────────────
@@ -762,81 +774,69 @@ button {
 }
 
 /* ── PROJECT BAND COMPONENT ───────────────────────────────── */
+/* No card.
+   ─────────────────────────────────────────────────────────────
+   The browser frame is already a complete object — its own chrome, border,
+   background and shadow. Wrapping it in a second bordered, tinted, rounded
+   container produced a box inside a box, and neither read as the subject.
+   The band is now an open layout on the page ground: the window floats, the
+   text sits beside it, and a hairline rule plus whitespace does the
+   separating that the border used to do badly. */
 .project-band {
   position: relative;
-  border-radius: var(--radius-lg);
-  padding: var(--space-10);
-  background: var(--paper-2);
-  border: 1px solid var(--hairline);
-  overflow: hidden;
-  /* Lift is the band's own; inner elements animate on their own timings. */
-  transform: translateY(0);
-  transition:
-    transform 0.45s var(--ease-expo),
-    border-color 0.35s ease,
-    box-shadow 0.45s var(--ease-expo);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: var(--space-16) 0;
+  border-top: 1px solid var(--hairline);
 }
 
-/* Accent wash — the project's own colour, barely there. */
-.project-band::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--project-accent, transparent);
-  opacity: 0.035;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
+.project-band:first-child {
+  border-top: none;
+  padding-top: var(--space-4);
 }
 
-/* A hairline of the accent along the top edge, drawn on from the left.
-   This is the band's one piece of colour and it only appears on hover. */
-.project-band::after {
+/* Short accent rule above the text column — the band's only colour, and the
+   thing that replaces the card border as an anchor. Sits on the info column
+   rather than the band, so it stays with the text when the layout reverses. */
+.project-band__info {
+  position: relative;
+}
+
+.project-band__info::before {
   content: '';
   position: absolute;
-  top: 0;
+  top: -20px;
   left: 0;
-  right: 0;
+  width: 28px;
   height: 2px;
   background: var(--project-accent, var(--ink));
-  transform: scaleX(0);
+  opacity: 0.85;
   transform-origin: left center;
-  opacity: 0.7;
-  pointer-events: none;
+  transform: scaleX(0.55);
   transition: transform 0.55s var(--ease-expo);
 }
 
-.project-band:hover,
-.project-band:focus-within {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--project-accent, var(--fog)) 28%, var(--fog));
-  box-shadow:
-    0 18px 40px -20px rgba(0, 0, 0, 0.22),
-    0 3px 10px -6px rgba(0, 0, 0, 0.10);
-}
-.project-band:hover::before,
-.project-band:focus-within::before {
-  opacity: 0.06;
-}
-.project-band:hover::after,
-.project-band:focus-within::after {
+.project-band:hover .project-band__info::before,
+.project-band:focus-within .project-band__info::before {
   transform: scaleX(1);
 }
 
-/* Index numeral picks up the project accent as the band activates. */
+/* Index numeral is the structural anchor now that there is no box. */
+.project-band__index {
+  transition: color 0.35s ease;
+}
+
 .project-band:hover .project-band__index,
 .project-band:focus-within .project-band__index {
   color: var(--project-accent, var(--ink));
 }
 
-/* The screenshot leans in very slightly. */
+/* The window is the hero object, so it gets the whole lift. */
 .project-band:hover .browser-frame,
 .project-band:focus-within .browser-frame {
-  transform: translateY(-2px) scale(1.008);
+  transform: translateY(-6px) scale(1.012);
   box-shadow:
-    0 22px 48px -18px rgba(0, 0, 0, 0.24),
-    0 4px 12px -6px rgba(0, 0, 0, 0.10);
-  border-color: color-mix(in srgb, var(--project-accent, var(--fog)) 30%, var(--fog));
+    0 44px 80px -28px rgba(0, 0, 0, 0.50),
+    0 14px 28px -14px rgba(0, 0, 0, 0.28),
+    0 1px 0 0 rgba(255, 255, 255, 0.06) inset;
 }
 
 /* CTA responds to the whole band, not just to itself. */
@@ -854,7 +854,9 @@ button {
 .project-band__grid {
   display: grid;
   grid-template-columns: 1fr 1.35fr;
-  gap: var(--space-12);
+  /* Wider than before — with no card padding, this gap is the only thing
+     holding the text off the window. */
+  gap: clamp(var(--space-8), 5vw, var(--space-16));
   align-items: center;
   position: relative;
   z-index: 1;
@@ -884,9 +886,11 @@ button {
 
 .project-band__index {
   font-family: var(--font-mono);
-  font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+  /* Larger than it was inside the card — with the box gone this numeral is
+     what marks where one project ends and the next begins. */
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
   font-weight: 500;
-  color: var(--mist);
+  color: var(--fog);
   letter-spacing: var(--tracking-tight);
   line-height: 1;
 }
@@ -1024,29 +1028,35 @@ button {
 /* ── BROWSER CHROME FRAME ─────────────────────────────────── */
 .browser-frame {
   width: 100%;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  border: 1px solid var(--hairline);
+  /* All four corners. The squared bottom was what made this read as a panel
+     cropped by its container rather than as a window sitting on the page. */
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--frame-bg);
-  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+  /* Floats. This is now the hero object on the band, so it gets a real,
+     long-throw shadow instead of the faint one it had inside the card. */
+  box-shadow:
+    0 30px 60px -24px rgba(0, 0, 0, 0.42),
+    0 10px 22px -12px rgba(0, 0, 0, 0.24),
+    0 1px 0 0 rgba(255, 255, 255, 0.05) inset;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transform: translateY(0) scale(1);
   transform-origin: center bottom;
   transition:
-    transform 0.45s var(--ease-expo),
-    border-color 0.35s ease,
-    box-shadow 0.45s var(--ease-expo);
+    transform 0.5s var(--ease-expo),
+    box-shadow 0.5s var(--ease-expo);
 }
 
 .browser-frame__bar {
-  height: 36px;
-  min-height: 36px;
+  height: 44px;
+  min-height: 44px;
   background: var(--frame-bar);
-  border-bottom: 1px solid var(--hairline);
-  padding: 0 var(--space-3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  padding: 0 var(--space-4);
   display: grid;
-  grid-template-columns: 48px 1fr 48px;
+  grid-template-columns: 56px 1fr 56px;
   align-items: center;
   gap: var(--space-2);
 }
@@ -1054,15 +1064,17 @@ button {
 .browser-frame__dots {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .browser-frame__dot {
-  width: 8px;
-  height: 8px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--project-accent, var(--fog)) 35%, var(--mist));
-  opacity: 0.6;
+  /* Neutral greys warmed very slightly by the project accent — a nod to the
+     window controls without literally copying the traffic lights. */
+  background: color-mix(in srgb, var(--project-accent, #6E6E68) 22%, #6E6E68);
+  opacity: 0.55;
 }
 
 .browser-frame__address {
@@ -1070,31 +1082,43 @@ button {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  height: 24px;
+  height: 28px;
   background: var(--frame-pill);
-  border: 1px solid var(--hairline);
-  border-radius: 12px;
-  padding: 0 var(--space-3);
-  max-width: 420px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  padding: 0 var(--space-4);
+  max-width: 460px;
   margin: 0 auto;
   width: 100%;
   overflow: hidden;
 }
 
 .browser-frame__lock {
-  font-size: 10px;
-  color: var(--mist);
+  color: #7E7C74;
   flex-shrink: 0;
 }
 
 .browser-frame__url {
   font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--graphite);
-  letter-spacing: 0.02em;
+  font-size: 12px;
+  color: #C9C6BE;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 560px) {
+  .browser-frame__bar {
+    height: 36px;
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    grid-template-columns: 42px 1fr 42px;
+  }
+  .browser-frame__dots { gap: 6px; }
+  .browser-frame__dot { width: 8px; height: 8px; }
+  .browser-frame__address { height: 22px; padding: 0 var(--space-3); }
+  .browser-frame__url { font-size: 10px; }
 }
 
 .browser-frame__screen {
@@ -1716,7 +1740,8 @@ button {
   }
 
   .project-band {
-    padding: var(--space-6);
+    /* Vertical only — there is no card to inset from any more. */
+    padding: var(--space-10) 0;
   }
 
   .project-band__grid,
@@ -1793,13 +1818,8 @@ button {
   .browser-frame {
     transform: none !important;
   }
-  .project-band::after {
+  .project-band__info::before {
     transform: scaleX(1) !important;
-    opacity: 0;
-  }
-  .project-band:hover::after,
-  .project-band:focus-within::after {
-    opacity: 0.7;
   }
   .project-band__btn-study .arrow {
     transform: none !important;

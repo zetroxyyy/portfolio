@@ -40,7 +40,8 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: duration.slow, ease, delay: 0.25 }}
           >
-            I build the website <span className="serif-italic">and the system that runs it.</span>
+            The website is the easy half.{' '}
+            <span className="serif-italic">I build what&apos;s underneath.</span>
           </motion.h1>
         </div>
 
