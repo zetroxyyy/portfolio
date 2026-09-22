@@ -83,14 +83,11 @@ export function Process() {
                     : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.15 + i * 0.12 }
                 }
               >
-                <div className="timeline-stage__top">
-                  <span
-                    className="timeline-stage__marker"
-                    style={{ '--stage-opacity': `${55 + i * 15}%` } as React.CSSProperties}
-                    aria-hidden="true"
-                  />
-                  <span className="timeline-stage__badge">{stage.duration}</span>
+                <div className="timeline-stage__marker-wrap">
+                  <span className="timeline-stage__marker" aria-hidden="true" />
                 </div>
+
+                <span className="timeline-stage__badge">{stage.duration}</span>
 
                 <h3 className="timeline-stage__name">{stage.name}</h3>
 
