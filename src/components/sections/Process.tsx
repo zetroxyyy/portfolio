@@ -31,9 +31,6 @@ export function Process() {
     <section className="process" id="process" aria-labelledby="process-heading">
       <div className="process__inner">
         <header className="process__header">
-          <span className="section-eyebrow">
-            PROCESS
-          </span>
           <h2 id="process-heading" className="section-heading section-heading--major">
             From first message <span className="serif-italic">to running it yourself.</span>
           </h2>

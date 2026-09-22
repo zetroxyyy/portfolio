@@ -569,8 +569,9 @@ button {
 
 /* ── WORK SECTION ─────────────────────────────────────────── */
 .work-section {
-  padding: var(--space-24) var(--page-px);
+  padding: var(--space-24) var(--page-px) var(--space-32);
   border-top: 1px solid var(--hairline);
+  background-color: var(--paper);
 }
 
 .work-section__inner {
@@ -658,8 +659,8 @@ button {
 
 /* ── STATEMENT BLOCK ──────────────────────────────────────── */
 .statement-wrap {
-  margin-top: var(--space-20);
-  margin-bottom: var(--space-8);
+  margin-top: var(--space-24);
+  margin-bottom: var(--space-12);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -972,7 +973,7 @@ button {
      what marks where one project ends and the next begins. */
   font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
   font-weight: 500;
-  color: var(--fog);
+  color: var(--project-accent, var(--fog));
   letter-spacing: var(--tracking-tight);
   line-height: 1;
 }
@@ -1266,7 +1267,7 @@ button {
 
 /* ── CAPABILITIES SECTION ─────────────────────────────────── */
 .capabilities {
-  padding: var(--space-24) var(--page-px);
+  padding: var(--space-20) var(--page-px);
   border-top: 1px solid var(--hairline);
   background: var(--paper-2);
   transition: background-color 0.25s ease;
@@ -1378,11 +1379,20 @@ button {
   transform: translateX(3px);
 }
 
-/* Dark mode override for didee row accent to ensure high contrast */
+/* Dark mode override for Didee (#1A1A18) accent to guarantee high contrast on dark paper */
 :root[data-theme="dark"] .capability-row[data-slug="didee"],
+:root[data-theme="dark"] .project-band[style*="#1A1A18"],
+:root[data-theme="dark"] .case-study[style*="#1A1A18"] {
+  --row-accent: #E5E3DC !important;
+  --project-accent: #E5E3DC !important;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .capability-row[data-slug="didee"] {
-    --row-accent: #E5E3DC;
+  :root:not([data-theme="light"]) .capability-row[data-slug="didee"],
+  :root:not([data-theme="light"]) .project-band[style*="#1A1A18"],
+  :root:not([data-theme="light"]) .case-study[style*="#1A1A18"] {
+    --row-accent: #E5E3DC !important;
+    --project-accent: #E5E3DC !important;
   }
 }
 
@@ -1390,14 +1400,24 @@ button {
 .process {
   padding: var(--space-24) var(--page-px);
   border-top: 1px solid var(--hairline);
+  background: var(--paper);
+  transition: background-color 0.25s ease;
 }
 
 .process__inner {
-  max-width: var(--page-max);
+  max-width: 1040px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
+}
+
+@media (min-width: 1025px) {
+  .process__inner {
+    margin-left: clamp(2rem, 7vw, 8rem);
+    margin-right: auto;
+    max-width: 1000px;
+  }
 }
 
 .process__header {
@@ -1608,7 +1628,8 @@ button {
   gap: var(--space-4);
   padding: var(--space-6);
   background: var(--paper-2);
-  border: 1px solid var(--hairline);
+  border: 1px solid color-mix(in srgb, var(--project-accent, var(--hairline)) 30%, var(--hairline));
+  border-top: 2px solid var(--project-accent, var(--hairline));
   border-radius: var(--radius);
 }
 
@@ -1635,7 +1656,13 @@ button {
 .case-study__meta-value--link {
   color: var(--ink);
   text-decoration: underline;
+  text-decoration-color: var(--project-accent, var(--fog));
   text-underline-offset: 3px;
+  transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+}
+.case-study__meta-value--link:hover {
+  opacity: 0.8;
+  text-decoration-color: var(--ink);
 }
 
 .case-study__hero-frame {
@@ -1647,7 +1674,7 @@ button {
   flex-direction: column;
   gap: var(--space-6);
   padding-top: var(--space-8);
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid color-mix(in srgb, var(--project-accent, var(--hairline)) 25%, var(--hairline));
 }
 
 .case-study__section-heading {
@@ -1662,6 +1689,18 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+.case-study__prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--project-accent, var(--fog));
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+}
+.case-study__prose a:hover {
+  opacity: 0.85;
+  text-decoration-color: var(--ink);
 }
 
 .case-study__built-list {
@@ -1780,7 +1819,7 @@ button {
   max-width: 48%;
 }
 .case-study__nav-card:hover {
-  border-color: var(--ink);
+  border-color: var(--project-accent, var(--ink));
 }
 
 .case-study__nav-card--next {
