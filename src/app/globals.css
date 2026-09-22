@@ -1531,53 +1531,95 @@ button {
   gap: var(--space-2);
 }
 
-/* ── PROCESS TIMELINE ─────────────────────────────────────── */
-.timeline {
+/* ── PROCESS VERTICAL STEPPER ─────────────────────────────── */
+.process-stepper-wrap {
   position: relative;
   width: 100%;
 }
 
-/* Horizontal connecting rule behind stages */
-.timeline__track-bg {
+/* Vertical connecting spine behind stage markers */
+.process-stepper__spine-bg {
   position: absolute;
-  top: 5px;
-  left: 6px;
-  right: 6px;
-  height: 2px;
+  top: 18px;
+  bottom: 24px;
+  left: 17px;
+  width: 2px;
   background-color: var(--graphite);
-  opacity: 0.35;
+  opacity: 0.25;
   z-index: 1;
 }
 
-.timeline__track-fill {
+.process-stepper__spine-fill {
   position: absolute;
-  top: 5px;
-  left: 6px;
-  right: 6px;
-  height: 2px;
+  top: 18px;
+  bottom: 24px;
+  left: 17px;
+  width: 2px;
   background-color: var(--ink);
   z-index: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .timeline__track-fill {
-    transform: scaleX(1) !important;
+  .process-stepper__spine-fill {
+    transform: scaleY(1) !important;
     transition: none !important;
   }
 }
 
-.timeline__list {
+.process-stepper {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  padding-left: 48px;
   position: relative;
   z-index: 2;
 }
 
-.timeline-stage {
+.process-row {
+  position: relative;
+  width: 100%;
+}
+
+/* Stage marker sitting on vertical spine */
+.process-row__marker {
+  position: absolute;
+  left: -35px; /* (48px - 35px) = 13px; center at 13 + 5 = 18px */
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--ink);
+  box-shadow: 0 0 0 4px var(--paper);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Two-column layout: text (~42%) & animation stage (~58%) */
+.process-row__layout {
+  display: grid;
+  grid-template-columns: 1fr 1.38fr;
+  gap: var(--space-12);
+  align-items: center;
+  width: 100%;
+}
+
+.process-row--reversed .process-row__layout {
+  grid-template-columns: 1.38fr 1fr;
+}
+
+.process-row--reversed .process-row__text {
+  order: 2;
+}
+
+.process-row--reversed .process-row__stage {
+  order: 1;
+}
+
+/* Text Column */
+.process-row__text {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -1587,24 +1629,7 @@ button {
   padding: 0;
 }
 
-.timeline-stage__marker-wrap {
-  display: flex;
-  align-items: center;
-  height: 12px;
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-stage__marker {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--ink);
-  box-shadow: 0 0 0 4px var(--paper);
-  flex-shrink: 0;
-}
-
-.timeline-stage__badge {
+.process-row__badge {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wider);
@@ -1613,7 +1638,7 @@ button {
   font-weight: 500;
 }
 
-.timeline-stage__name {
+.process-row__name {
   font-family: var(--font-display);
   font-size: var(--h-sub);
   font-weight: 700;
@@ -1622,7 +1647,7 @@ button {
   letter-spacing: var(--tracking-tight);
 }
 
-.timeline-stage__deliverable {
+.process-row__deliverable {
   border-left: 2px solid var(--ink);
   padding: var(--space-1) 0 var(--space-1) var(--space-3);
   background: transparent;
@@ -1631,7 +1656,7 @@ button {
   gap: 2px;
 }
 
-.timeline-stage__deliverable-label {
+.process-row__deliverable-label {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: var(--tracking-wider);
@@ -1640,17 +1665,37 @@ button {
   font-weight: 600;
 }
 
-.timeline-stage__deliverable-text {
+.process-row__deliverable-text {
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--ink);
   line-height: 1.45;
 }
 
-.timeline-stage__desc {
+.process-row__desc {
   font-size: var(--text-sm);
   line-height: 1.6;
   color: var(--graphite);
+}
+
+/* Animation Column Stage */
+.process-row__stage {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.process-diagram-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 
@@ -2045,13 +2090,33 @@ button {
 }
 
 @media (max-width: 900px) {
-  .timeline__track-bg,
-  .timeline__track-fill {
-    display: none;
+  .process-stepper {
+    padding-left: 32px;
+    gap: var(--space-14);
   }
-  .timeline__list {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
+
+  .process-stepper__spine-bg,
+  .process-stepper__spine-fill {
+    left: 11px;
+  }
+
+  .process-row__marker {
+    left: -25px;
+  }
+
+  .process-row__layout,
+  .process-row--reversed .process-row__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .process-row--reversed .process-row__text {
+    order: 1;
+  }
+
+  .process-row--reversed .process-row__stage {
+    order: 2;
   }
 }
 
