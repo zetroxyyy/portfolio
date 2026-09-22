@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { site } from '../../content/site';
 
 export const metadata: Metadata = {
-  title: `${site.name} — Full-Stack Web Developer`,
+  title: site.title,
   description: site.ogDescription,
 };
 

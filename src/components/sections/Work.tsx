@@ -61,13 +61,13 @@ export function Work() {
             no screenshot, no live dot, no case study. */}
         <div className="work-group work-group--side" aria-labelledby="side-projects-heading">
           <header className="work-group__header">
-            <span className="work-group__eyebrow">03 / TOOLS</span>
+            <span className="work-group__eyebrow">03 / BUILT INDEPENDENTLY</span>
             <h2 id="side-projects-heading" className="work-group__title">
-              Side projects. <span className="serif-italic">Built to scratch my own itch.</span>
+              Tools &amp; Apps. <span className="serif-italic">Built to scratch my own itch.</span>
             </h2>
             <p className="work-group__qualifier">
-              Things built to solve my own problems. Source is public — clone the repo and run
-              them yourself.
+              A Flutter Android app, a self-hosted AI pipeline, and a streaming file tool. Source is
+              public — clone any of them and run it yourself.
             </p>
           </header>
 

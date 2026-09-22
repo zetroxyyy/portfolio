@@ -28,7 +28,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: duration.base, ease, delay: 0.1 }}
         >
-          <span className="hero__eyebrow">FULL-STACK WEB DEVELOPMENT · NEPAL</span>
+          <span className="hero__eyebrow">FULL-STACK DEVELOPMENT · NEPAL</span>
           <StatusReadout />
         </motion.div>
 
@@ -61,13 +61,13 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: duration.slow, ease, delay: 0.55 }}
-          aria-label="Verified delivery record: 6 products shipped, 3 client domains, Next.js and PostgreSQL stack"
+          aria-label="Verified delivery record: 6 products shipped, 3 client domains, web, mobile, and AI capabilities"
         >
           <span className="hero__proof-item">6 PRODUCTS SHIPPED</span>
           <span className="hero__proof-sep" aria-hidden="true">·</span>
           <span className="hero__proof-item">3 CLIENT DOMAINS</span>
           <span className="hero__proof-sep" aria-hidden="true">·</span>
-          <span className="hero__proof-item">NEXT.JS + POSTGRES</span>
+          <span className="hero__proof-item">WEB · MOBILE · AI</span>
         </motion.div>
 
         {/* Actions */}
