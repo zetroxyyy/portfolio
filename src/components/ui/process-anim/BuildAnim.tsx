@@ -107,6 +107,21 @@ export function BuildAnim({ inView, delay = 0 }: AnimProps) {
     initial: { width: 0, opacity: 0 },
   };
 
+  const fadeGroupVariants: Variants = {
+    play: {
+      opacity: [1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'linear' as const,
+        times: [0, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1 },
+    initial: { opacity: 0 },
+  };
+
   const caretVariants: Variants = {
     play: {
       x: [
@@ -180,6 +195,60 @@ export function BuildAnim({ inView, delay = 0 }: AnimProps) {
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
+      <defs>
+        {/* Clip paths for progressive typing of syntax segments */}
+        <clipPath id="build-line-1-clip">
+          <motion.rect
+            x={96}
+            y={90}
+            height={12}
+            variants={line1Variants}
+            animate={state}
+            initial="initial"
+          />
+        </clipPath>
+        <clipPath id="build-line-2-clip">
+          <motion.rect
+            x={112}
+            y={122}
+            height={12}
+            variants={line2Variants}
+            animate={state}
+            initial="initial"
+          />
+        </clipPath>
+        <clipPath id="build-line-3-clip">
+          <motion.rect
+            x={112}
+            y={154}
+            height={12}
+            variants={line3Variants}
+            animate={state}
+            initial="initial"
+          />
+        </clipPath>
+        <clipPath id="build-line-4-clip">
+          <motion.rect
+            x={96}
+            y={186}
+            height={12}
+            variants={line4Variants}
+            animate={state}
+            initial="initial"
+          />
+        </clipPath>
+        <clipPath id="build-line-5-clip">
+          <motion.rect
+            x={96}
+            y={218}
+            height={12}
+            variants={line5Variants}
+            animate={state}
+            initial="initial"
+          />
+        </clipPath>
+      </defs>
+
       {/* 1. Structure: Editor frame */}
       <rect
         x="28"
@@ -192,18 +261,43 @@ export function BuildAnim({ inView, delay = 0 }: AnimProps) {
         strokeWidth="1"
       />
 
-      {/* 2. Structure: Tab bar divider & tab title */}
+      {/* 2. Structure: Tab bar divider, filename tab, and preview link pill */}
       <line x1="28" y1="64" x2="532" y2="64" stroke="var(--fog)" strokeWidth="1" />
       <text
         x="48"
-        y="46"
+        y="47"
+        dominantBaseline="middle"
+        fill="var(--ink)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+        fontWeight="600"
+      >
+        app.tsx
+      </text>
+
+      {/* Preview link pill: x 372, y 36, w 160, h 22, radius 11, 1px --fog, fill --paper-2 */}
+      <rect
+        x="372"
+        y="36"
+        width="160"
+        height="22"
+        rx="11"
+        fill="var(--paper-2)"
+        stroke="var(--fog)"
+        strokeWidth="1"
+      />
+      <text
+        x="452"
+        y="47"
+        textAnchor="middle"
         dominantBaseline="middle"
         fill="var(--graphite)"
         fontFamily="var(--font-mono)"
         fontSize="11"
         letterSpacing="0.04em"
       >
-        booking.ts
+        preview.zetroxy.me
       </text>
 
       {/* 3. Structure: Gutter divider & line numbers 1 to 5 */}
@@ -269,65 +363,64 @@ export function BuildAnim({ inView, delay = 0 }: AnimProps) {
         5
       </text>
 
-      {/* 4. Code line 1 */}
-      <motion.rect
-        x={96}
-        y={92}
-        height={8}
-        rx={4}
-        fill="var(--graphite)"
-        variants={line1Variants}
+      {/* 4. Code line 1: Syntax-weighted segments (keyword --ink + expressions --graphite) */}
+      <motion.g
+        clipPath="url(#build-line-1-clip)"
+        variants={fadeGroupVariants}
         animate={state}
         initial="initial"
-      />
+      >
+        <rect x="96" y="92" width="60" height="8" rx="4" fill="var(--ink)" />
+        <rect x="162" y="92" width="136" height="8" rx="4" fill="var(--graphite)" />
+        <rect x="304" y="92" width="92" height="8" rx="4" fill="var(--graphite)" />
+      </motion.g>
 
-      {/* 5. Code line 2 */}
-      <motion.rect
-        x={112}
-        y={124}
-        height={8}
-        rx={4}
-        fill="var(--graphite)"
-        variants={line2Variants}
+      {/* 5. Code line 2: Syntax-weighted segments */}
+      <motion.g
+        clipPath="url(#build-line-2-clip)"
+        variants={fadeGroupVariants}
         animate={state}
         initial="initial"
-      />
+      >
+        <rect x="112" y="124" width="48" height="8" rx="4" fill="var(--ink)" />
+        <rect x="166" y="124" width="116" height="8" rx="4" fill="var(--graphite)" />
+        <rect x="288" y="124" width="84" height="8" rx="4" fill="var(--graphite)" />
+      </motion.g>
 
-      {/* 6. Code line 3 */}
-      <motion.rect
-        x={112}
-        y={156}
-        height={8}
-        rx={4}
-        fill="var(--graphite)"
-        variants={line3Variants}
+      {/* 6. Code line 3: Syntax-weighted segments */}
+      <motion.g
+        clipPath="url(#build-line-3-clip)"
+        variants={fadeGroupVariants}
         animate={state}
         initial="initial"
-      />
+      >
+        <rect x="112" y="156" width="72" height="8" rx="4" fill="var(--ink)" />
+        <rect x="190" y="156" width="146" height="8" rx="4" fill="var(--graphite)" />
+        <rect x="342" y="156" width="100" height="8" rx="4" fill="var(--graphite)" />
+      </motion.g>
 
-      {/* 7. Code line 4 */}
-      <motion.rect
-        x={96}
-        y={188}
-        height={8}
-        rx={4}
-        fill="var(--graphite)"
-        variants={line4Variants}
+      {/* 7. Code line 4: Syntax-weighted segments */}
+      <motion.g
+        clipPath="url(#build-line-4-clip)"
+        variants={fadeGroupVariants}
         animate={state}
         initial="initial"
-      />
+      >
+        <rect x="96" y="188" width="54" height="8" rx="4" fill="var(--ink)" />
+        <rect x="156" y="188" width="160" height="8" rx="4" fill="var(--graphite)" />
+      </motion.g>
 
-      {/* 8. Code line 5 */}
-      <motion.rect
-        x={96}
-        y={220}
-        height={8}
-        rx={4}
-        fill="var(--graphite)"
-        variants={line5Variants}
+      {/* 8. Code line 5: Syntax-weighted segments */}
+      <motion.g
+        clipPath="url(#build-line-5-clip)"
+        variants={fadeGroupVariants}
         animate={state}
         initial="initial"
-      />
+      >
+        <rect x="96" y="220" width="64" height="8" rx="4" fill="var(--ink)" />
+        <rect x="166" y="220" width="128" height="8" rx="4" fill="var(--graphite)" />
+        <rect x="300" y="220" width="86" height="8" rx="4" fill="var(--graphite)" />
+      </motion.g>
 
       {/* 9. Caret: 2 units wide in --ink, moves with typed line and blinks at end of line 5 */}
       <motion.rect

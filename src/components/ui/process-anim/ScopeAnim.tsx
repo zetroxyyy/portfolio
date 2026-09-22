@@ -129,107 +129,122 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* 1. Structure: Vertical guideline rail (never animated) */}
-      <line
-        x1="280"
-        y1="28"
-        x2="280"
-        y2="244"
-        stroke="var(--fog)"
-        strokeWidth="1"
-        strokeDasharray="2 3"
-        opacity="0.4"
-      />
+      {/* 1. Structure: Speaker Labels (permanent, never animated) */}
+      <text
+        x="28"
+        y="28"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+      >
+        CLIENT
+      </text>
+      <text
+        x="532"
+        y="28"
+        textAnchor="end"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+      >
+        ZETROXY
+      </text>
 
-      {/* 2. Bubble 1 (client, left) */}
+      {/* 2. Bubble 1 (client, left, y: 60) — squared bottom-left corner */}
       <motion.g variants={bubble1Variants} animate={state} initial="initial">
         <path
-          d="M 36 40 H 260 A 8 8 0 0 1 268 48 V 72 A 8 8 0 0 1 260 80 H 28 V 48 A 8 8 0 0 1 36 40 Z"
+          d="M 36 60 H 264 A 8 8 0 0 1 272 68 V 92 A 8 8 0 0 1 264 100 H 28 V 68 A 8 8 0 0 1 36 60 Z"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
           x="44"
-          y="60"
+          y="80"
           dominantBaseline="middle"
           fill="var(--graphite)"
           fontFamily="var(--font-mono)"
           fontSize="11"
           letterSpacing="0.04em"
         >
-          What should it do?
+          We need a site now, an app later.
         </text>
       </motion.g>
 
-      {/* 3. Bubble 2 (you, right) */}
+      {/* 3. Bubble 2 (you, right, y: 112) — squared bottom-right corner */}
       <motion.g variants={bubble2Variants} animate={state} initial="initial">
         <path
-          d="M 300 92 H 524 A 8 8 0 0 1 532 100 V 132 H 300 A 8 8 0 0 1 292 124 V 100 A 8 8 0 0 1 300 92 Z"
+          d="M 296 112 H 524 A 8 8 0 0 1 532 120 V 152 H 296 A 8 8 0 0 1 288 144 V 120 A 8 8 0 0 1 296 112 Z"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
-          x="308"
-          y="112"
+          x="304"
+          y="132"
           dominantBaseline="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
           fontSize="11"
           letterSpacing="0.04em"
         >
-          Bookings, and an admin panel.
+          What has to work on day one?
         </text>
       </motion.g>
 
-      {/* 4. Bubble 3 (client, left) */}
+      {/* 4. Bubble 3 (client, left, y: 164) — squared bottom-left corner */}
       <motion.g variants={bubble3Variants} animate={state} initial="initial">
         <path
-          d="M 36 144 H 260 A 8 8 0 0 1 268 152 V 176 A 8 8 0 0 1 260 184 H 28 V 152 A 8 8 0 0 1 36 144 Z"
+          d="M 36 164 H 264 A 8 8 0 0 1 272 172 V 196 A 8 8 0 0 1 264 204 H 28 V 172 A 8 8 0 0 1 36 164 Z"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
           x="44"
-          y="164"
+          y="184"
           dominantBaseline="middle"
           fill="var(--graphite)"
           fontFamily="var(--font-mono)"
           fontSize="11"
           letterSpacing="0.04em"
+          textLength="216"
+          lengthAdjust="spacing"
         >
-          Who updates the content?
+          Sign-ups, and our team editing content.
         </text>
       </motion.g>
 
-      {/* 5. Bubble 4 (you, right) */}
+      {/* 5. Bubble 4 (you, right, y: 216) — squared bottom-right corner */}
       <motion.g variants={bubble4Variants} animate={state} initial="initial">
         <path
-          d="M 300 196 H 524 A 8 8 0 0 1 532 204 V 236 H 300 A 8 8 0 0 1 292 228 V 204 A 8 8 0 0 1 300 196 Z"
+          d="M 296 216 H 524 A 8 8 0 0 1 532 224 V 256 H 296 A 8 8 0 0 1 288 248 V 224 A 8 8 0 0 1 296 216 Z"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
-          x="308"
-          y="216"
+          x="304"
+          y="236"
           dominantBaseline="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
           fontSize="11"
           letterSpacing="0.04em"
         >
-          Your team. No developer needed.
+          Scope, timeline and price by Friday.
         </text>
       </motion.g>
 
-      {/* 6. Agreement bar */}
+      {/* 6. Agreement bar (y: 260, h: 44) */}
       <motion.g variants={barVariants} animate={state} initial="initial">
         <rect
           x="28"
-          y="252"
+          y="260"
           width="504"
           height="44"
           rx="8"
@@ -239,7 +254,7 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
         />
         <text
           x="48"
-          y="274"
+          y="282"
           dominantBaseline="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
@@ -247,12 +262,12 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
           letterSpacing="0.04em"
           fontWeight="600"
         >
-          SCOPE AGREED
+          SCOPE · TIMELINE · PRICE
         </text>
 
         {/* 7. Check mark in agreement bar */}
         <motion.path
-          d="M 502 274.5 L 506 278.5 L 514 269.5"
+          d="M 502 282.5 L 506 286.5 L 514 277.5"
           fill="none"
           stroke="var(--ink)"
           strokeWidth="1.5"

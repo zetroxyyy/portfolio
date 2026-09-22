@@ -24,17 +24,17 @@ const stages: ProcessStage[] = [
     duration: 'Week 1',
     name: 'Scope',
     deliverable: 'a written scope, a fixed timeline, and a price.',
-    desc: 'A conversation about workflows and data models, agreed in writing before work begins.',
-    ariaLabel: 'A scoping conversation between client and developer ending in an agreed document.',
+    desc: 'A conversation about what the system has to do, written down and agreed before any code exists.',
+    ariaLabel: 'A scoping conversation between client and developer ending in an agreed scope, timeline, and price.',
     anim: ScopeAnim,
   },
   {
     num: '02',
     duration: 'Weeks 2–N',
     name: 'Build',
-    deliverable: 'a live preview link, from the first week.',
-    desc: 'Public interface and back office built together on a live preview URL you can test.',
-    ariaLabel: 'Code being written line by line in an editor with line numbers and a typing caret.',
+    deliverable: 'a preview link you can open from the first week.',
+    desc: 'Front-end and back-end written together, on a link you can check any time — not a reveal at the end.',
+    ariaLabel: 'Code being typed in an editor with a live preview link in the header.',
     anim: BuildAnim,
   },
   {
@@ -42,17 +42,17 @@ const stages: ProcessStage[] = [
     duration: 'Launch week',
     name: 'Ship',
     deliverable: 'your domain, live, with SSL and search metadata.',
-    desc: 'Database migration, custom domain setup, and mobile QA before opening publicly.',
-    ariaLabel: 'Address bar switching from preview domain to real domain, followed by checks passing.',
+    desc: 'The preview link becomes your own domain, with the certificate, search metadata and mobile checks done before it opens.',
+    ariaLabel: 'Address bar switching from preview domain to real domain, followed by verification checks passing.',
     anim: ShipAnim,
   },
   {
     num: '04',
     duration: 'Handover',
     name: 'Yours',
-    deliverable: 'admin credentials, a walkthrough, and two weeks of fixes.',
-    desc: 'Full admin access and two weeks of warranty, with zero ongoing retainer required.',
-    ariaLabel: 'Admin access, documentation, and walkthrough cards handed across to client with checks.',
+    deliverable: 'admin access, documentation, and a walkthrough.',
+    desc: 'Everything handed across, with the docs to use it. Two weeks of fixes included, then it runs without me.',
+    ariaLabel: 'Admin access, documentation, and walkthrough handed across to client with progress tracking.',
     anim: YoursAnim,
   },
 ];
@@ -126,7 +126,7 @@ export function Process() {
             From first message <span className="serif-italic">to running it yourself.</span>
           </h2>
           <p className="section-subhead">
-            Every build includes the admin tooling needed to operate without ongoing developer friction.
+            The same four steps whether it&apos;s a website, a mobile app, or the system running behind both.
           </p>
         </header>
 
@@ -154,7 +154,7 @@ export function Process() {
             Most agencies deliver a static brochure.
           </blockquote>
           <p className="statement__sub">
-            Every system here includes a custom admin back office so non-technical staff can update prices, dates, media, and copy autonomously.
+            Everything I build ships with the tools to run it, so your team can change what needs changing without calling a developer.
           </p>
         </motion.div>
       </div>

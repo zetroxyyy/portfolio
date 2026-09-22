@@ -13,13 +13,13 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
   const isPlaying = inView && !shouldReduceMotion;
 
   // 14.0s total cycle:
-  // 0.4s - 1.5s: Card 1 travels x 28 -> 372 (1.1s)
+  // 0.4s - 1.5s: Card 1 travels x 28 -> 372 (1.1s) & rail fills 0 -> 1/3
   // 1.5s - 1.9s: Check 1 appears (400ms)
-  // 2.3s - 3.4s: Card 2 travels x 28 -> 372 (1.1s)
+  // 2.3s - 3.4s: Card 2 travels x 28 -> 372 (1.1s) & rail fills 1/3 -> 2/3
   // 3.4s - 3.8s: Check 2 appears (400ms)
-  // 4.2s - 5.3s: Card 3 travels x 28 -> 372 (1.1s)
+  // 4.2s - 5.3s: Card 3 travels x 28 -> 372 (1.1s) & rail fills 2/3 -> 1.0
   // 5.3s - 5.7s: Check 3 appears (400ms)
-  // 5.7s - 11.5s: Hold (4.5s completely still)
+  // 5.7s - 11.5s: Hold (4.5s completely still, rail fully drawn)
   // 11.5s - 12.4s: Fade out (900ms)
   // 12.4s - 14.0s: Rest
   const DURATION = 14.0;
@@ -120,6 +120,23 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
     initial: { pathLength: 0, opacity: 0 },
   };
 
+  // Rail fill progress: fills by 1/3 as each card travels across
+  const railProgressVariants: Variants = {
+    play: {
+      pathLength: [0, 0, 0.333, 0.333, 0.667, 0.667, 1.0, 1.0, 1.0, 0],
+      opacity: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.0286, 0.1071, 0.1643, 0.2429, 0.3000, 0.3786, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { pathLength: 1.0, opacity: 1 },
+    initial: { pathLength: 0, opacity: 0 },
+  };
+
   const state = isPlaying ? 'play' : shouldReduceMotion ? 'static' : 'initial';
 
   return (
@@ -158,8 +175,22 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
         You
       </text>
 
-      {/* 3. Structure: 1px --fog rail spanning between endpoints at y 76 */}
+      {/* 3. Structure & Progress: Rail spanning between endpoints at y 76 */}
+      {/* Base 1px --fog rail (always drawn) */}
       <line x1="28" y1="76" x2="532" y2="76" stroke="var(--fog)" strokeWidth="1" />
+      {/* Active 1.5px --ink fill tracking handover progress by thirds */}
+      <motion.line
+        x1="28"
+        y1="76"
+        x2="532"
+        y2="76"
+        stroke="var(--ink)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        variants={railProgressVariants}
+        animate={state}
+        initial="initial"
+      />
 
       {/* 4. Card 1: Admin access (row y: 104, h: 52) */}
       <motion.g variants={card1Variants} animate={state} initial="initial">
