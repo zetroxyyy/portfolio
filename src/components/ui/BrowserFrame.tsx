@@ -187,7 +187,10 @@ export function BrowserFrame({
             aria-expanded={isExpanded}
             aria-controls={screenId}
           >
-            {isExpanded ? 'Collapse ↑' : 'See the full page ↓'}
+            <span>{isExpanded ? 'Collapse' : 'See the full page'}</span>
+            <span className="browser-frame__expand-arrow" aria-hidden="true">
+              {isExpanded ? '↑' : '↓'}
+            </span>
           </button>
         </div>
       )}

@@ -1294,7 +1294,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: 8px 20px;
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
   border: 1px solid var(--hairline);
   background: var(--paper);
@@ -1305,30 +1305,32 @@ button {
   text-transform: uppercase;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  box-shadow: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 }
 
 .browser-frame__expand-btn:hover {
-  border-color: var(--project-accent, var(--ink));
-  color: var(--ink);
-  transform: translateY(-1px);
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
 }
 
-.browser-frame--expandable:not(.browser-frame--expanded) .browser-frame__expand-btn:hover {
-  transform: translateX(-50%) translateY(-1px);
+.browser-frame__expand-arrow {
+  display: inline-block;
+  transition: transform 0.25s var(--ease-expo);
 }
 
-.browser-frame__expand-btn:active {
-  transform: translateY(0);
+.browser-frame__expand-btn:hover .browser-frame__expand-arrow {
+  transform: translateY(2px);
 }
 
-.browser-frame--expandable:not(.browser-frame--expanded) .browser-frame__expand-btn:active {
-  transform: translateX(-50%) translateY(0);
+.browser-frame--expanded .browser-frame__expand-btn:hover .browser-frame__expand-arrow {
+  transform: translateY(-2px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .browser-frame__expand-btn {
+  .browser-frame__expand-btn,
+  .browser-frame__expand-arrow {
     transition: none !important;
     transform: none !important;
   }
