@@ -31,7 +31,7 @@ export function MediaBlock({ item, defaultUrl, accent }: MediaBlockProps) {
         alt={item.imageAlt || item.heading || 'Project screenshot'}
         url={url}
         accent={accent}
-        scrollable={item.isFullScroll}
+        expandable={item.isFullScroll}
       />
       {item.caption && (
         <figcaption className="case-study__caption" style={{ marginTop: 'var(--space-3)' }}>

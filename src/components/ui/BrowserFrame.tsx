@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useState, useRef, useId } from 'react';
 import { getImageSize } from '../../../content/imageDimensions';
 
 export interface BrowserFrameProps {
@@ -10,7 +10,8 @@ export interface BrowserFrameProps {
   url: string;
   accent?: string;
   priority?: boolean;
-  scrollable?: boolean;
+  expandable?: boolean;
+  scrollable?: boolean; // backwards compatible alias
   variant?: 'browser' | 'mobile';
   className?: string;
 }
@@ -21,11 +22,19 @@ export function BrowserFrame({
   url,
   accent,
   priority = false,
+  expandable = false,
   scrollable = false,
   variant = 'browser',
   className = '',
 }: BrowserFrameProps) {
-  // Clean URL for address bar display (strip protocol if preferred, or keep https://)
+  const isExpandable = expandable || scrollable;
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [targetHeight, setTargetHeight] = useState<number | undefined>(undefined);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
+  const screenId = useId();
+
+  // Clean URL for address bar display
   const displayUrl = url.replace(/^https?:\/\//, '');
   const intrinsic = getImageSize(src);
 
@@ -33,9 +42,63 @@ export function BrowserFrame({
     ...(accent ? ({ '--project-accent': accent } as CSSProperties) : {}),
   };
 
+  const handleToggle = () => {
+    if (!isExpandable) return;
+
+    if (isExpanded) {
+      // Collapsing — scroll frame top edge back into view so reader is never stranded
+      if (frameRef.current) {
+        const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
+        if (lenis) {
+          lenis.scrollTo(frameRef.current, { offset: -80 });
+        } else {
+          frameRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      if (screenRef.current) {
+        setTargetHeight(screenRef.current.scrollHeight);
+        requestAnimationFrame(() => {
+          setTargetHeight(460);
+          setIsExpanded(false);
+        });
+      } else {
+        setIsExpanded(false);
+      }
+    } else {
+      // Expanding
+      if (screenRef.current) {
+        setTargetHeight(screenRef.current.scrollHeight);
+      }
+      setIsExpanded(true);
+    }
+  };
+
+  const onTransitionEnd = () => {
+    if (isExpanded) {
+      setTargetHeight(undefined);
+    } else {
+      setTargetHeight(undefined);
+    }
+  };
+
+  const screenStyle: CSSProperties = isExpandable
+    ? {
+        maxHeight:
+          targetHeight !== undefined
+            ? `${targetHeight}px`
+            : isExpanded
+            ? 'none'
+            : '460px',
+      }
+    : {};
+
   return (
     <div
-      className={`browser-frame ${scrollable ? 'browser-frame--scrollable' : ''} ${
+      ref={frameRef}
+      className={`browser-frame ${
+        isExpandable ? 'browser-frame--expandable' : ''
+      } ${isExpanded ? 'browser-frame--expanded' : ''} ${
         variant === 'mobile' ? 'browser-frame--mobile' : ''
       } ${className}`}
       style={customStyle}
@@ -74,23 +137,29 @@ export function BrowserFrame({
       </div>
 
       {/* Screenshot frame */}
-      <div className="browser-frame__screen">
-        {scrollable ? (
+      <div
+        id={screenId}
+        ref={screenRef}
+        className={`browser-frame__screen ${
+          isExpandable ? 'browser-frame__screen--expandable' : ''
+        }`}
+        style={screenStyle}
+        onTransitionEnd={onTransitionEnd}
+      >
+        {isExpandable ? (
           <>
             <Image
               src={src}
               alt={alt}
-              /* True intrinsic size — these captures run 2,464px to 9,000px tall,
-                 so a single hardcoded height shifts layout on every one of them. */
               width={intrinsic.width}
               height={intrinsic.height}
               className="browser-frame__img"
-              style={{ height: 'auto', width: '100%' }}
+              style={{ height: 'auto', width: '100%', display: 'block' }}
               priority={priority}
             />
-            <div className="browser-frame__scroll-hint" aria-hidden="true">
-              <span>Scroll to view full page ↓</span>
-            </div>
+            {!isExpanded && (
+              <div className="browser-frame__fade" aria-hidden="true" />
+            )}
           </>
         ) : (
           <Image
@@ -103,6 +172,25 @@ export function BrowserFrame({
           />
         )}
       </div>
+
+      {/* Expand / Collapse action button */}
+      {isExpandable && (
+        <div
+          className={`browser-frame__expand-wrap ${
+            isExpanded ? 'browser-frame__expand-wrap--expanded' : ''
+          }`}
+        >
+          <button
+            type="button"
+            className="browser-frame__expand-btn"
+            onClick={handleToggle}
+            aria-expanded={isExpanded}
+            aria-controls={screenId}
+          >
+            {isExpanded ? 'Collapse ↑' : 'See the full page ↓'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

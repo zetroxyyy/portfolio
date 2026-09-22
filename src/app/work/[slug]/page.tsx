@@ -144,7 +144,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                       alt={item.imageAlt || item.heading}
                       url={project.liveUrl}
                       accent={project.accent}
-                      scrollable={item.isFullScroll}
+                      expandable={item.isFullScroll}
                     />
                     {item.caption && (
                       <figcaption className="case-study__caption" style={{ marginTop: 'var(--space-3)' }}>
