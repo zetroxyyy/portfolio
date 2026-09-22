@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 
 interface AnimProps {
   inView: boolean;
@@ -12,411 +12,281 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  // 14.0s total cycle (0-6s build-up, 6-11.5s 5.5s hold, 11.5-12.3s fade, 12.3-14s rest)
+  // 14.0s total cycle:
+  // 0.0s - 1.2s: preview.zetroxy.me visible, padlock open
+  // 1.2s - 1.6s: preview.zetroxy.me fades out (400ms)
+  // 1.6s - 1.8s: 200ms gap (both opacity 0)
+  // 1.8s - 2.2s: yourdomain.com fades in (400ms), padlock closes
+  // 2.6s - 3.3s: Check 1 (SSL certificate) draws (700ms)
+  // 3.3s - 4.0s: Check 2 (Search metadata) draws (700ms)
+  // 4.0s - 4.7s: Check 3 (Mobile verified) draws (700ms)
+  // 4.7s - 11.5s: Hold (4.5s completely still)
+  // 11.5s - 12.4s: Fade out (900ms)
+  // 12.4s - 14.0s: Rest
   const DURATION = 14.0;
-  const REPEAT_DELAY = 0;
+
+  // Preview domain: 0 -> 1.2s visible, 1.2s -> 1.6s fade out, 0 afterwards
+  const previewDomainVariants: Variants = {
+    play: {
+      opacity: [1, 1, 0, 0, 0, 1],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.0857, 0.1143, 0.8857, 0.999, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 0 },
+    initial: { opacity: 1 },
+  };
+
+  // Real domain: 0 -> 1.8s hidden, 1.8s -> 2.2s fade in, 2.2s -> 11.5s visible, 11.5s -> 12.4s fade out
+  const realDomainVariants: Variants = {
+    play: {
+      opacity: [0, 0, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.1286, 0.1571, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1 },
+    initial: { opacity: 0 },
+  };
+
+  // Padlock shackle: open (offset up-left) until 1.8s, closes 1.8s -> 2.0s, stays closed until 11.5s
+  const shackleVariants: Variants = {
+    play: {
+      x: [-2, -2, 0, 0, -2, -2],
+      y: [-3, -3, 0, 0, -3, -3],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.1286, 0.1429, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { x: 0, y: 0 },
+    initial: { x: -2, y: -3 },
+  };
+
+  // Check 1: draws 2.6s -> 3.3s (700ms)
+  const check1Variants: Variants = {
+    play: {
+      pathLength: [0, 0, 1, 1, 1, 0],
+      opacity: [0, 0, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.1857, 0.2357, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { pathLength: 1, opacity: 1 },
+    initial: { pathLength: 0, opacity: 0 },
+  };
+
+  // Check 2: draws 3.3s -> 4.0s (700ms)
+  const check2Variants: Variants = {
+    play: {
+      pathLength: [0, 0, 1, 1, 1, 0],
+      opacity: [0, 0, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.2357, 0.2857, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { pathLength: 1, opacity: 1 },
+    initial: { pathLength: 0, opacity: 0 },
+  };
+
+  // Check 3: draws 4.0s -> 4.7s (700ms)
+  const check3Variants: Variants = {
+    play: {
+      pathLength: [0, 0, 1, 1, 1, 0],
+      opacity: [0, 0, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.2857, 0.3357, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { pathLength: 1, opacity: 1 },
+    initial: { pathLength: 0, opacity: 0 },
+  };
+
+  const state = isPlaying ? 'play' : shouldReduceMotion ? 'static' : 'initial';
 
   return (
     <svg
-      viewBox="0 0 600 338"
+      viewBox="0 0 560 315"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── 1. PERMANENT LOCAL PANEL ── */}
-      {/* x: 32, y: 104, w: 150, h: 130, label centred at y: 122 */}
+      {/* 1. Address bar */}
       <rect
-        x="32"
-        y="104"
-        width="150"
-        height="130"
-        rx="6"
-        fill="var(--paper)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-      />
-      <text
-        x="107"
-        y="122"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
-        letterSpacing="0.04em"
-      >
-        LOCAL
-      </text>
-
-      {/* ── 2. PERMANENT TRAVEL PATH ── */}
-      {/* 182 -> 330, 169 -> 120, gentle curve, roughly horizontal */}
-      <path
-        d="M 182 169 C 232 160, 280 135, 330 120"
-        stroke="var(--fog)"
-        strokeWidth="1.5"
-        strokeDasharray="4 4"
-        fill="none"
-      />
-
-      {/* ── 3. THREE BLOCKS TRAVELLING (BUILD, DB, ASSETS) ── */}
-      {/* Block 1: BUILD (starts x 48, y 142, w 118, h 24) -> travels to x 390, y 82 inside PRODUCTION */}
-      <motion.g
-        initial={
-          shouldReduceMotion
-            ? { x: 342, y: -60, opacity: 1, scale: 0.9 }
-            : { x: 0, y: 0, opacity: 1, scale: 1 }
-        }
-        animate={
-          isPlaying
-            ? {
-                x: [0, 0, 342, 342, 342, 0],
-                y: [0, 0, -60, -60, -60, 0],
-                scale: [1, 1, 0.9, 0.9, 0.9, 1],
-                opacity: [1, 1, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { x: 342, y: -60, opacity: 1, scale: 0.9 }
-              : { x: 0, y: 0, opacity: 1 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.08, 0.16, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="48"
-          y="142"
-          width="118"
-          height="24"
-          rx="4"
-          fill="var(--ink)"
-        />
-        <text
-          x="107"
-          y="154"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="var(--paper)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="700"
-          letterSpacing="0.04em"
-        >
-          BUILD
-        </text>
-      </motion.g>
-
-      {/* Block 2: DB (starts x 48, y 172, w 118, h 24) -> travels to x 342, y -60 inside PRODUCTION */}
-      <motion.g
-        initial={
-          shouldReduceMotion
-            ? { x: 342, y: -90, opacity: 1, scale: 0.9 }
-            : { x: 0, y: 0, opacity: 1, scale: 1 }
-        }
-        animate={
-          isPlaying
-            ? {
-                x: [0, 0, 342, 342, 342, 0],
-                y: [0, 0, -90, -90, -90, 0],
-                scale: [1, 1, 0.9, 0.9, 0.9, 1],
-                opacity: [1, 1, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { x: 342, y: -90, opacity: 1, scale: 0.9 }
-              : { x: 0, y: 0, opacity: 1 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.16, 0.24, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="48"
-          y="172"
-          width="118"
-          height="24"
-          rx="4"
-          fill="var(--graphite)"
-        />
-        <text
-          x="107"
-          y="184"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="var(--paper)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="600"
-          letterSpacing="0.04em"
-        >
-          DB
-        </text>
-      </motion.g>
-
-      {/* Block 3: ASSETS (starts x 48, y 202, w 118, h 24) -> travels to x 342, y -120 inside PRODUCTION */}
-      <motion.g
-        initial={
-          shouldReduceMotion
-            ? { x: 342, y: -120, opacity: 1, scale: 0.9 }
-            : { x: 0, y: 0, opacity: 1, scale: 1 }
-        }
-        animate={
-          isPlaying
-            ? {
-                x: [0, 0, 342, 342, 342, 0],
-                y: [0, 0, -120, -120, -120, 0],
-                scale: [1, 1, 0.9, 0.9, 0.9, 1],
-                opacity: [1, 1, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { x: 342, y: -120, opacity: 1, scale: 0.9 }
-              : { x: 0, y: 0, opacity: 1 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.24, 0.32, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="48"
-          y="202"
-          width="118"
-          height="24"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <text
-          x="107"
-          y="214"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="var(--ink)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="600"
-          letterSpacing="0.04em"
-        >
-          ASSETS
-        </text>
-      </motion.g>
-
-      {/* ── 4. PERMANENT PRODUCTION PANEL ── */}
-      {/* x: 330, y: 72, w: 238, h: 96, label centred at y: 90 */}
-      <rect
-        x="330"
-        y="72"
-        width="238"
-        height="96"
-        rx="6"
-        fill="var(--paper)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-      />
-      <text
-        x="449"
-        y="90"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="700"
-        letterSpacing="0.04em"
-      >
-        PRODUCTION
-      </text>
-
-      {/* Domain pill: x: 346, y: 112, w: 206, h: 28; padlock at x 358, yourdomain.com at x 376 */}
-      <rect
-        x="346"
-        y="112"
-        width="206"
-        height="28"
-        rx="14"
+        x="28"
+        y="48"
+        width="504"
+        height="52"
+        rx="26"
         fill="var(--paper-2)"
         stroke="var(--fog)"
         strokeWidth="1"
       />
-      {/* Padlock Icon (snaps shut once all three arrive at t=0.32) */}
-      <g transform="translate(358, 120)">
-        {/* Shackle: Open state */}
+
+      {/* 2. Padlock at x: 52, y: 62, w: 18, h: 24 */}
+      <g>
+        {/* Shackle: open by default, snaps down into sockets when closed */}
         <motion.path
-          d="M 3 6 L 3 3 A 3 3 0 0 1 9 3 L 9 5"
+          d="M 57 71 V 66 A 4 4 0 0 1 65 66 V 71"
           fill="none"
           stroke="var(--ink)"
-          strokeWidth="1.2"
+          strokeWidth="1.5"
           strokeLinecap="round"
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
-          animate={
-            isPlaying
-              ? {
-                  opacity: [1, 1, 0, 0, 1],
-                }
-              : { opacity: 0 }
-          }
-          transition={{
-            duration: DURATION,
-            delay: isPlaying ? delay : 0,
-            repeat: isPlaying ? Infinity : 0,
-            repeatDelay: REPEAT_DELAY,
-            times: [0, 0.31, 0.33, 0.85, 1],
-          }}
+          variants={shackleVariants}
+          animate={state}
+          initial="initial"
         />
-
-        {/* Shackle: Closed state (snapped shut) */}
-        <motion.path
-          d="M 3 6 L 3 3 A 3 3 0 0 1 9 3 L 9 6"
-          fill="none"
+        {/* Padlock Body */}
+        <rect
+          x="53"
+          y="71"
+          width="16"
+          height="13"
+          rx="2.5"
+          fill="var(--paper)"
           stroke="var(--ink)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-          animate={
-            isPlaying
-              ? {
-                  opacity: [0, 0, 1, 1, 0],
-                }
-              : shouldReduceMotion
-                ? { opacity: 1 }
-                : { opacity: 0 }
-          }
-          transition={{
-            duration: DURATION,
-            delay: isPlaying ? delay : 0,
-            repeat: isPlaying ? Infinity : 0,
-            repeatDelay: REPEAT_DELAY,
-            times: [0, 0.31, 0.33, 0.85, 1],
-          }}
+          strokeWidth="1.5"
         />
-
-        {/* Lock Body */}
-        <rect x="1" y="6" width="10" height="7" rx="1.5" fill="var(--ink)" />
+        {/* Keyhole dot */}
+        <circle cx="61" cy="77.5" r="1.25" fill="var(--ink)" />
       </g>
 
-      {/* yourdomain.com at x: 376, centre y: 126 */}
-      <text
-        x="376"
-        y="126"
+      {/* 3. Outgoing Domain Label: preview.zetroxy.me */}
+      <motion.text
+        x="88"
+        y="74"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+        variants={previewDomainVariants}
+        animate={state}
+        initial="initial"
+      >
+        preview.zetroxy.me
+      </motion.text>
+
+      {/* 4. Incoming Domain Label: yourdomain.com */}
+      <motion.text
+        x="88"
+        y="74"
         dominantBaseline="middle"
         fill="var(--ink)"
         fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
+        fontSize="11"
         letterSpacing="0.04em"
+        fontWeight="600"
+        variants={realDomainVariants}
+        animate={state}
+        initial="initial"
       >
         yourdomain.com
-      </text>
+      </motion.text>
 
-      {/* ── 5. PERMANENT PHONE FRAME ── */}
-      {/* x: 330, y: 190, w: 96, h: 116, radius 10 */}
-      <rect
-        x="330"
-        y="190"
-        width="96"
-        height="116"
-        rx="10"
-        fill="var(--paper)"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-      />
-      {/* Phone top speaker bar */}
-      <rect x="366" y="195" width="24" height="3" rx="1.5" fill="var(--fog)" />
-
-      {/* Phone screen content: x 340, y 202, w 76, h 92 (banner band, two lines, one button) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.34, 0.38, 0.82, 0.88, 1],
-        }}
-      >
-        {/* Banner band */}
-        <rect
-          x="340"
-          y="202"
-          width="76"
-          height="32"
-          rx="3"
-          fill="var(--fog)"
-          opacity="0.6"
-        />
-        {/* Two lines */}
-        <rect x="340" y="242" width="52" height="5" rx="2" fill="var(--ink)" />
-        <rect x="340" y="251" width="68" height="4" rx="2" fill="var(--graphite)" />
-        {/* One button */}
-        <rect x="340" y="263" width="36" height="10" rx="2" fill="var(--ink)" />
-      </motion.g>
-
-      {/* ── 6. VERIFIED LABEL ── */}
-      {/* x: 442, centre y: 248, left-aligned */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.38, 0.42, 0.82, 0.88, 1],
-        }}
-      >
-        <path
-          d="M 442 248 L 446 252 L 452 244"
+      {/* 5. Check row 1: SSL certificate */}
+      <g>
+        <text
+          x="48"
+          y="168"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="11"
+          letterSpacing="0.04em"
+        >
+          SSL certificate
+        </text>
+        <line x1="28" y1="188" x2="532" y2="188" stroke="var(--fog)" strokeWidth="1" />
+        <motion.path
+          d="M 502 168.5 L 506 172.5 L 514 163.5"
           fill="none"
           stroke="var(--ink)"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          variants={check1Variants}
+          animate={state}
+          initial="initial"
         />
+      </g>
+
+      {/* 6. Check row 2: Search metadata */}
+      <g>
         <text
-          x="458"
-          y="248"
+          x="48"
+          y="216"
           dominantBaseline="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="700"
+          fontSize="11"
           letterSpacing="0.04em"
         >
-          VERIFIED · 60FPS
+          Search metadata
         </text>
-      </motion.g>
+        <line x1="28" y1="236" x2="532" y2="236" stroke="var(--fog)" strokeWidth="1" />
+        <motion.path
+          d="M 502 216.5 L 506 220.5 L 514 211.5"
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          variants={check2Variants}
+          animate={state}
+          initial="initial"
+        />
+      </g>
+
+      {/* 7. Check row 3: Mobile verified */}
+      <g>
+        <text
+          x="48"
+          y="264"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="11"
+          letterSpacing="0.04em"
+        >
+          Mobile verified
+        </text>
+        <motion.path
+          d="M 502 264.5 L 506 268.5 L 514 259.5"
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          variants={check3Variants}
+          animate={state}
+          initial="initial"
+        />
+      </g>
     </svg>
   );
 }

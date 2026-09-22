@@ -25,7 +25,7 @@ const stages: ProcessStage[] = [
     name: 'Scope',
     deliverable: 'a written scope, a fixed timeline, and a price.',
     desc: 'A conversation about workflows and data models, agreed in writing before work begins.',
-    ariaLabel: 'A conversation condensing into a written scope, timeline and price, each marked complete.',
+    ariaLabel: 'A scoping conversation between client and developer ending in an agreed document.',
     anim: ScopeAnim,
   },
   {
@@ -34,7 +34,7 @@ const stages: ProcessStage[] = [
     name: 'Build',
     deliverable: 'a live preview link, from the first week.',
     desc: 'Public interface and back office built together on a live preview URL you can test.',
-    ariaLabel: 'Public storefront and admin dashboard being built concurrently on a live preview link with real-time feedback adaptation.',
+    ariaLabel: 'Code being written line by line in an editor with line numbers and a typing caret.',
     anim: BuildAnim,
   },
   {
@@ -43,7 +43,7 @@ const stages: ProcessStage[] = [
     name: 'Ship',
     deliverable: 'your domain, live, with SSL and search metadata.',
     desc: 'Database migration, custom domain setup, and mobile QA before opening publicly.',
-    ariaLabel: 'Build deployed from local repo to production server, secured with domain and SSL, verified on mobile phone.',
+    ariaLabel: 'Address bar switching from preview domain to real domain, followed by checks passing.',
     anim: ShipAnim,
   },
   {
@@ -52,12 +52,12 @@ const stages: ProcessStage[] = [
     name: 'Yours',
     deliverable: 'admin credentials, a walkthrough, and two weeks of fixes.',
     desc: 'Full admin access and two weeks of warranty, with zero ongoing retainer required.',
-    ariaLabel: 'Administrative access transferred from developer to client with full console control and a two-week warranty period.',
+    ariaLabel: 'Admin access, documentation, and walkthrough cards handed across to client with checks.',
     anim: YoursAnim,
   },
 ];
 
-function ProcessRow({
+function ProcessCell({
   stage,
   index,
   shouldReduceMotion,
@@ -66,53 +66,52 @@ function ProcessRow({
   index: number;
   shouldReduceMotion: boolean | null;
 }) {
-  const rowRef = useRef<HTMLLIElement | null>(null);
-  const isInView = useInView(rowRef, { margin: '-60px' });
+  const cellRef = useRef<HTMLDivElement | null>(null);
+  const isInView = useInView(cellRef, { margin: '-60px' });
   const Anim = stage.anim;
 
   return (
-    <motion.li
-      ref={rowRef}
-      className="process-row"
+    <motion.div
+      ref={cellRef}
+      className="process-cell"
       initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={
         shouldReduceMotion
           ? { duration: 0 }
-          : { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }
+          : { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }
       }
     >
-      {/* Two-column layout (Text Left, Animation Right) */}
-      <div className="process-row__layout">
-        {/* Text column (~42%) */}
-        <div className="process-row__text">
-          {/* Numbered Stage Marker on the vertical spine, aligned with badge line */}
-          <div className="process-row__marker" aria-hidden="true">
-            <span className="process-row__marker-num">{stage.num}</span>
-          </div>
-
-          <span className="process-row__badge">{stage.duration}</span>
-          <h3 className="process-row__name">{stage.name}</h3>
-
-          <div className="process-row__deliverable">
-            <span className="process-row__deliverable-label">You get:</span>
-            <p className="process-row__deliverable-text">{stage.deliverable}</p>
-          </div>
-
-          <p className="process-row__desc">{stage.desc}</p>
-        </div>
-
-        {/* Animation stage column (~58%) */}
-        <div
-          className="process-row__stage"
-          role="img"
-          aria-label={stage.ariaLabel}
-        >
-          <Anim inView={isInView} delay={index * 0.4} />
-        </div>
+      {/* 1. Animation stage */}
+      <div
+        className="process-cell__stage"
+        role="img"
+        aria-label={stage.ariaLabel}
+      >
+        <Anim inView={isInView} delay={index * 0.5} />
       </div>
-    </motion.li>
+
+      {/* 2. Text Content */}
+      <div className="process-cell__content">
+        {/* Meta line: number and duration together in mono, e.g. 01 · WEEK 1 */}
+        <span className="process-cell__meta">
+          {stage.num} · {stage.duration.toUpperCase()}
+        </span>
+
+        {/* Stage name */}
+        <h3 className="process-cell__name">{stage.name}</h3>
+
+        {/* "You get:" deliverable block */}
+        <div className="process-cell__deliverable">
+          <span className="process-cell__deliverable-label">You get:</span>
+          <p className="process-cell__deliverable-text">{stage.deliverable}</p>
+        </div>
+
+        {/* Description */}
+        <p className="process-cell__desc">{stage.desc}</p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -131,32 +130,16 @@ export function Process() {
           </p>
         </header>
 
-        {/* Vertical Stepper Timeline */}
-        <div className="process-stepper-wrap">
-          {/* Static background spine */}
-          <div className="process-stepper__spine-bg" aria-hidden="true" />
-
-          {/* Animated fill spine drawn downward */}
-          <motion.div
-            className="process-stepper__spine-fill"
-            initial={shouldReduceMotion ? { scaleY: 1 } : { scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            style={{ transformOrigin: 'top' }}
-            aria-hidden="true"
-          />
-
-          <ol className="process-stepper">
-            {stages.map((stage, i) => (
-              <ProcessRow
-                key={stage.name}
-                stage={stage}
-                index={i}
-                shouldReduceMotion={shouldReduceMotion}
-              />
-            ))}
-          </ol>
+        {/* 2 × 2 Process Grid */}
+        <div className="process-grid">
+          {stages.map((stage, i) => (
+            <ProcessCell
+              key={stage.name}
+              stage={stage}
+              index={i}
+              shouldReduceMotion={shouldReduceMotion}
+            />
+          ))}
         </div>
 
         {/* Statement callout */}

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 
 interface AnimProps {
   inView: boolean;
@@ -12,492 +12,333 @@ export function BuildAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  // 14.0s total cycle (0-6s build-up, 6-11.5s 5.5s hold, 11.5-12.3s fade, 12.3-14s rest)
+  // 14.0s total cycle:
+  // 0.0s - 0.7s: Line 1 types in (w: 0 -> 300)
+  // 0.7s - 1.0s: Caret jumps to line 2 (300ms gap)
+  // 1.0s - 1.7s: Line 2 types in (w: 0 -> 260)
+  // 1.7s - 2.0s: Caret jumps to line 3 (300ms gap)
+  // 2.0s - 2.7s: Line 3 types in (w: 0 -> 330)
+  // 2.7s - 3.0s: Caret jumps to line 4 (300ms gap)
+  // 3.0s - 3.7s: Line 4 types in (w: 0 -> 220)
+  // 3.7s - 4.0s: Caret jumps to line 5 (300ms gap)
+  // 4.0s - 4.7s: Line 5 types in (w: 0 -> 290)
+  // 4.7s - 11.5s: Hold (4.5s completely still, caret blinks at end of line 5)
+  // 11.5s - 12.4s: Fade out (900ms)
+  // 12.4s - 14.0s: Rest
   const DURATION = 14.0;
-  const REPEAT_DELAY = 0;
+
+  const line1Variants: Variants = {
+    play: {
+      width: [0, 300, 300, 300, 0, 0],
+      opacity: [1, 1, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'linear' as const,
+        times: [0, 0.05, 0.8214, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { width: 300, opacity: 1 },
+    initial: { width: 0, opacity: 0 },
+  };
+
+  const line2Variants: Variants = {
+    play: {
+      width: [0, 0, 260, 260, 260, 0, 0],
+      opacity: [0, 1, 1, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'linear' as const,
+        times: [0, 0.0714, 0.1214, 0.8214, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { width: 260, opacity: 1 },
+    initial: { width: 0, opacity: 0 },
+  };
+
+  const line3Variants: Variants = {
+    play: {
+      width: [0, 0, 330, 330, 330, 0, 0],
+      opacity: [0, 1, 1, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'linear' as const,
+        times: [0, 0.1429, 0.1929, 0.8214, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { width: 330, opacity: 1 },
+    initial: { width: 0, opacity: 0 },
+  };
+
+  const line4Variants: Variants = {
+    play: {
+      width: [0, 0, 220, 220, 220, 0, 0],
+      opacity: [0, 1, 1, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'linear' as const,
+        times: [0, 0.2143, 0.2643, 0.8214, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { width: 220, opacity: 1 },
+    initial: { width: 0, opacity: 0 },
+  };
+
+  const line5Variants: Variants = {
+    play: {
+      width: [0, 0, 290, 290, 290, 0, 0],
+      opacity: [0, 1, 1, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'linear' as const,
+        times: [0, 0.2857, 0.3357, 0.8214, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { width: 290, opacity: 1 },
+    initial: { width: 0, opacity: 0 },
+  };
+
+  const caretVariants: Variants = {
+    play: {
+      x: [
+        96, 396,
+        112, 372,
+        112, 442,
+        96, 316,
+        96, 386,
+        386, 386,
+      ],
+      y: [
+        90, 90,
+        122, 122,
+        154, 154,
+        186, 186,
+        218, 218,
+        218, 218,
+      ],
+      opacity: [
+        1, 1,
+        1, 1,
+        1, 1,
+        1, 1,
+        1, 1,
+        0, 1, 0, 1, 0, 1, 0, 1, 0,
+        0, 0,
+      ],
+      transition: {
+        x: {
+          duration: DURATION,
+          repeat: Infinity,
+          ease: 'linear' as const,
+          times: [0, 0.05, 0.0714, 0.1214, 0.1429, 0.1929, 0.2143, 0.2643, 0.2857, 0.3357, 0.8214, 1.0],
+          delay,
+        },
+        y: {
+          duration: DURATION,
+          repeat: Infinity,
+          ease: 'linear' as const,
+          times: [0, 0.05, 0.0714, 0.1214, 0.1429, 0.1929, 0.2143, 0.2643, 0.2857, 0.3357, 0.8214, 1.0],
+          delay,
+        },
+        opacity: {
+          duration: DURATION,
+          repeat: Infinity,
+          ease: 'linear' as const,
+          times: [
+            0, 0.3357,
+            0.3358, 0.3714,
+            0.4071, 0.4429,
+            0.4786, 0.5143,
+            0.5500, 0.5857,
+            0.6214, 0.6571, 0.6929, 0.7286, 0.7643, 0.8000, 0.8100, 0.8214, 0.8300,
+            0.8857, 1.0,
+          ],
+          delay,
+        },
+      },
+    },
+    static: { x: 386, y: 218, opacity: 1 },
+    initial: { x: 96, y: 90, opacity: 0 },
+  };
+
+  const state = isPlaying ? 'play' : shouldReduceMotion ? 'static' : 'initial';
 
   return (
     <svg
-      viewBox="0 0 600 338"
+      viewBox="0 0 560 315"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── 1. PERMANENT TOP BAR PILLS ── */}
-      {/* URL Pill: x: 32, y: 32, w: 200, h: 26, radius 13; dot at x 46; text at x 60 */}
+      {/* 1. Structure: Editor frame */}
       <rect
-        x="32"
-        y="32"
-        width="200"
-        height="26"
-        rx="13"
+        x="28"
+        y="28"
+        width="504"
+        height="259"
+        rx="8"
         fill="var(--paper)"
         stroke="var(--fog)"
         strokeWidth="1"
       />
-      <circle cx="46" cy="45" r="3" fill="var(--ink)" />
-      <text
-        x="60"
-        y="45"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        letterSpacing="0.04em"
-      >
-        preview.zetroxy.me
-      </text>
 
-      {/* Commits Pill: x: 428, y: 32, w: 140, h: 26, radius 13; text centred on x=498, y=45 */}
-      <rect
-        x="428"
-        y="32"
-        width="140"
-        height="26"
-        rx="13"
-        fill="var(--paper)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-      />
-      {/* Commits text: +12 commits -> +14 commits · main */}
-      <motion.text
-        x="498"
-        y="45"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [1, 1, 0, 0, 0, 0, 1],
-              }
-            : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.22, 0.24, 0.82, 0.88, 1],
-        }}
-      >
-        +12 commits
-      </motion.text>
-      <motion.text
-        x="498"
-        y="45"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={{ opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0, 0],
-              }
-            : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.24, 0.26, 0.40, 0.42, 0.82, 1],
-        }}
-      >
-        +13 commits
-      </motion.text>
-      <motion.text
-        x="498"
-        y="45"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.42, 0.44, 0.82, 0.88],
-        }}
-      >
-        +14 commits · main
-      </motion.text>
-
-      {/* ── 2. PERMANENT PANELS (LEFT & RIGHT) ── */}
-      {/* Left panel: x: 32, y: 72, w: 258, h: 234, 1px --fog, radius 6, fill --paper */}
-      <rect
-        x="32"
-        y="72"
-        width="258"
-        height="234"
-        rx="6"
-        fill="var(--paper)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-      />
+      {/* 2. Structure: Tab bar divider & tab title */}
+      <line x1="28" y1="64" x2="532" y2="64" stroke="var(--fog)" strokeWidth="1" />
       <text
         x="48"
-        y="90"
+        y="46"
         dominantBaseline="middle"
         fill="var(--graphite)"
         fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
+        fontSize="11"
         letterSpacing="0.04em"
       >
-        01 / PUBLIC
+        booking.ts
       </text>
-      <line x1="32" y1="106" x2="290" y2="106" stroke="var(--fog)" strokeWidth="1" />
 
-      {/* Right panel: x: 310, y: 72, w: 258, h: 234, 1px --fog, radius 6, fill --paper */}
-      <rect
-        x="310"
-        y="72"
-        width="258"
-        height="234"
-        rx="6"
-        fill="var(--paper)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-      />
+      {/* 3. Structure: Gutter divider & line numbers 1 to 5 */}
+      <line x1="76" y1="64" x2="76" y2="287" stroke="var(--fog)" strokeWidth="1" />
       <text
-        x="326"
-        y="90"
+        x="64"
+        y="96"
+        textAnchor="end"
         dominantBaseline="middle"
-        fill="var(--graphite)"
+        fill="var(--mist)"
         fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="600"
+        fontSize="11"
         letterSpacing="0.04em"
       >
-        02 / ADMIN
+        1
       </text>
-      <line x1="310" y1="106" x2="568" y2="106" stroke="var(--fog)" strokeWidth="1" />
-
-      {/* ── 3. LEFT PANEL BODY (starts y: 118) ── */}
-      {/* Search field: x: 48, y: 118, w: 226, h: 24 (Permanent frame) */}
-      <rect
-        x="48"
-        y="118"
-        width="226"
-        height="24"
-        rx="4"
-        fill="var(--paper-2)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-      />
       <text
-        x="60"
-        y="130"
+        x="64"
+        y="128"
+        textAnchor="end"
         dominantBaseline="middle"
-        fill="var(--graphite)"
+        fill="var(--mist)"
         fontFamily="var(--font-mono)"
-        fontSize="9"
+        fontSize="11"
         letterSpacing="0.04em"
       >
-        Search...
+        2
       </text>
-      {/* Blinking Caret after Search... (x=114, y1=124, y2=136) */}
-      <motion.line
-        x1="114"
-        y1="124"
-        x2="114"
-        y2="136"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-        animate={
-          shouldReduceMotion
-            ? { opacity: 1 }
-            : { opacity: [1, 0, 1] }
-        }
-        transition={{
-          duration: 0.85,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
+      <text
+        x="64"
+        y="160"
+        textAnchor="end"
+        dominantBaseline="middle"
+        fill="var(--mist)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+      >
+        3
+      </text>
+      <text
+        x="64"
+        y="192"
+        textAnchor="end"
+        dominantBaseline="middle"
+        fill="var(--mist)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+      >
+        4
+      </text>
+      <text
+        x="64"
+        y="224"
+        textAnchor="end"
+        dominantBaseline="middle"
+        fill="var(--mist)"
+        fontFamily="var(--font-mono)"
+        fontSize="11"
+        letterSpacing="0.04em"
+      >
+        5
+      </text>
+
+      {/* 4. Code line 1 */}
+      <motion.rect
+        x={96}
+        y={92}
+        height={8}
+        rx={4}
+        fill="var(--graphite)"
+        variants={line1Variants}
+        animate={state}
+        initial="initial"
       />
 
-      {/* Two content cards: x 48 and x 166, y 154, w 108, h 62 */}
-      {/* Card 1 (x: 48, y: 154, w: 108, h: 62) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                y: [6, 6, 0, 0, 0, 6],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.05, 0.09, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="48"
-          y="154"
-          width="108"
-          height="62"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <rect x="56" y="162" width="92" height="26" rx="2" fill="var(--fog)" />
-        <rect x="56" y="194" width="60" height="6" rx="2" fill="var(--ink)" />
-        <rect x="56" y="204" width="34" height="5" rx="2" fill="var(--graphite)" />
-      </motion.g>
+      {/* 5. Code line 2 */}
+      <motion.rect
+        x={112}
+        y={124}
+        height={8}
+        rx={4}
+        fill="var(--graphite)"
+        variants={line2Variants}
+        animate={state}
+        initial="initial"
+      />
 
-      {/* Card 2 (x: 166, y: 154, w: 108, h: 62) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                y: [6, 6, 0, 0, 0, 6],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.16, 0.20, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="166"
-          y="154"
-          width="108"
-          height="62"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <rect x="174" y="162" width="92" height="26" rx="2" fill="var(--fog)" />
-        <rect x="174" y="194" width="60" height="6" rx="2" fill="var(--ink)" />
-        <rect x="174" y="204" width="34" height="5" rx="2" fill="var(--graphite)" />
-      </motion.g>
+      {/* 6. Code line 3 */}
+      <motion.rect
+        x={112}
+        y={156}
+        height={8}
+        rx={4}
+        fill="var(--graphite)"
+        variants={line3Variants}
+        animate={state}
+        initial="initial"
+      />
 
-      {/* Bottom bar: x 48, y 264, w 226, h 26; CONTINUE button right-aligned w 76, h 20, at x 190 */}
-      <g>
-        <rect
-          x="48"
-          y="264"
-          width="226"
-          height="26"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <rect x="58" y="274" width="56" height="6" rx="2" fill="var(--fog)" />
-        {/* CONTINUE Button */}
-        <motion.g
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-          animate={
-            isPlaying
-              ? {
-                  opacity: [0, 0, 1, 1, 0, 0],
-                }
-              : shouldReduceMotion
-                ? { opacity: 1 }
-                : { opacity: 0 }
-          }
-          transition={{
-            duration: DURATION,
-            delay: isPlaying ? delay : 0,
-            repeat: isPlaying ? Infinity : 0,
-            repeatDelay: REPEAT_DELAY,
-            times: [0, 0.38, 0.42, 0.82, 0.88, 1],
-          }}
-        >
-          <rect
-            x="190"
-            y="267"
-            width="76"
-            height="20"
-            rx="3"
-            fill="var(--ink)"
-          />
-          <text
-            x="228"
-            y="277"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="var(--paper)"
-            fontFamily="var(--font-mono)"
-            fontSize="9"
-            fontWeight="700"
-            letterSpacing="0.04em"
-          >
-            CONTINUE
-          </text>
-        </motion.g>
-      </g>
+      {/* 7. Code line 4 */}
+      <motion.rect
+        x={96}
+        y={188}
+        height={8}
+        rx={4}
+        fill="var(--graphite)"
+        variants={line4Variants}
+        animate={state}
+        initial="initial"
+      />
 
-      {/* ── 4. RIGHT PANEL BODY (starts y: 118) ── */}
-      {/* Three table rows at y 118, 152, 186 — each x 326, w 226, h 26 */}
-      {/* Row 1 (y: 118) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                y: [6, 6, 0, 0, 0, 6],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.10, 0.14, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="326"
-          y="118"
-          width="226"
-          height="26"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <rect x="336" y="128" width="68" height="6" rx="2" fill="var(--ink)" />
-        <rect x="446" y="128" width="38" height="6" rx="2" fill="var(--graphite)" />
-        <rect x="508" y="124" width="34" height="14" rx="2" fill="var(--fog)" />
-      </motion.g>
+      {/* 8. Code line 5 */}
+      <motion.rect
+        x={96}
+        y={220}
+        height={8}
+        rx={4}
+        fill="var(--graphite)"
+        variants={line5Variants}
+        animate={state}
+        initial="initial"
+      />
 
-      {/* Row 2 (y: 152) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                y: [6, 6, 0, 0, 0, 6],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.22, 0.26, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="326"
-          y="152"
-          width="226"
-          height="26"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <rect x="336" y="162" width="68" height="6" rx="2" fill="var(--ink)" />
-        <rect x="446" y="162" width="38" height="6" rx="2" fill="var(--graphite)" />
-        <rect x="508" y="158" width="34" height="14" rx="2" fill="var(--fog)" />
-      </motion.g>
-
-      {/* Row 3 (y: 186) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                y: [6, 6, 0, 0, 0, 6],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.34, 0.38, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="326"
-          y="186"
-          width="226"
-          height="26"
-          rx="4"
-          fill="var(--paper-2)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <rect x="336" y="196" width="68" height="6" rx="2" fill="var(--ink)" />
-        <rect x="446" y="196" width="38" height="6" rx="2" fill="var(--graphite)" />
-        <rect x="508" y="192" width="34" height="14" rx="2" fill="var(--fog)" />
-      </motion.g>
-
-      {/* Status line at x 326, y 272, with a dot at x 326 and SHARED DB SYNC: LIVE at x 340 */}
-      <g>
-        <circle cx="329" cy="272" r="3" fill="var(--ink)" />
-        <text
-          x="340"
-          y="272"
-          dominantBaseline="middle"
-          fill="var(--ink)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="600"
-          letterSpacing="0.04em"
-        >
-          SHARED DB SYNC: LIVE
-        </text>
-      </g>
+      {/* 9. Caret: 2 units wide in --ink, moves with typed line and blinks at end of line 5 */}
+      <motion.rect
+        width={2}
+        height={12}
+        rx={1}
+        fill="var(--ink)"
+        variants={caretVariants}
+        animate={state}
+        initial="initial"
+      />
     </svg>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 
 interface AnimProps {
   inView: boolean;
@@ -12,626 +12,256 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  // 14.0s total cycle (0-6s build-up, 6-11.5s 5.5s hold, 11.5-12.3s fade, 12.3-14s rest)
+  // 14.0s total cycle:
+  // 0.0s - 0.6s: Bubble 1
+  // 0.9s - 1.5s: Bubble 2
+  // 1.8s - 2.4s: Bubble 3
+  // 2.7s - 3.3s: Bubble 4
+  // 3.8s - 4.5s: Agreement bar
+  // 4.8s - 5.5s: Check draws
+  // 7.0s - 11.5s: Hold (4.5s completely still)
+  // 11.5s - 12.4s: Fade out (900ms)
+  // 12.4s - 14.0s: Rest
   const DURATION = 14.0;
-  const REPEAT_DELAY = 0;
+
+  const bubble1Variants: Variants = {
+    play: {
+      opacity: [0, 0, 1, 1, 0, 0],
+      y: [8, 8, 0, 0, 0, 8],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.001, 0.0428, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1, y: 0 },
+    initial: { opacity: 0, y: 8 },
+  };
+
+  const bubble2Variants: Variants = {
+    play: {
+      opacity: [0, 0, 1, 1, 0, 0],
+      y: [8, 8, 0, 0, 0, 8],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.0643, 0.1071, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1, y: 0 },
+    initial: { opacity: 0, y: 8 },
+  };
+
+  const bubble3Variants: Variants = {
+    play: {
+      opacity: [0, 0, 1, 1, 0, 0],
+      y: [8, 8, 0, 0, 0, 8],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.1286, 0.1714, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1, y: 0 },
+    initial: { opacity: 0, y: 8 },
+  };
+
+  const bubble4Variants: Variants = {
+    play: {
+      opacity: [0, 0, 1, 1, 0, 0],
+      y: [8, 8, 0, 0, 0, 8],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.1929, 0.2357, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1, y: 0 },
+    initial: { opacity: 0, y: 8 },
+  };
+
+  const barVariants: Variants = {
+    play: {
+      opacity: [0, 0, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.2714, 0.3214, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { opacity: 1 },
+    initial: { opacity: 0 },
+  };
+
+  const checkVariants: Variants = {
+    play: {
+      pathLength: [0, 0, 1, 1, 1, 0],
+      opacity: [0, 0, 1, 1, 0, 0],
+      transition: {
+        duration: DURATION,
+        repeat: Infinity,
+        ease: 'easeInOut' as const,
+        times: [0, 0.3429, 0.3929, 0.8214, 0.8857, 1.0],
+        delay,
+      },
+    },
+    static: { pathLength: 1, opacity: 1 },
+    initial: { pathLength: 0, opacity: 0 },
+  };
+
+  const state = isPlaying ? 'play' : shouldReduceMotion ? 'static' : 'initial';
 
   return (
     <svg
-      viewBox="0 0 600 338"
+      viewBox="0 0 560 315"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── 1. PERMANENT DOCUMENT PANEL STRUCTURE ── */}
-      {/* x: 32, y: 32, w: 536, h: 274, 1px --fog border, radius 6, fill --paper */}
-      <rect
-        x="32"
-        y="32"
-        width="536"
-        height="274"
-        rx="6"
-        fill="var(--paper)"
+      {/* 1. Structure: Vertical guideline rail (never animated) */}
+      <line
+        x1="280"
+        y1="28"
+        x2="280"
+        y2="244"
         stroke="var(--fog)"
         strokeWidth="1"
+        strokeDasharray="2 3"
+        opacity="0.4"
       />
 
-      {/* Header divider: x: 32, y: 74, w: 536, h: 1, --fog */}
-      <line x1="32" y1="74" x2="568" y2="74" stroke="var(--fog)" strokeWidth="1" />
-
-      {/* PROJECT SCOPE: x=52, centre-aligned vertically on y=53 */}
-      <text
-        x="52"
-        y="53"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        fontWeight="700"
-        letterSpacing="0.04em"
-      >
-        PROJECT SCOPE
-      </text>
-
-      {/* ── PERMANENT ROW DIVIDERS & LABELS ── */}
-      {/* Row 1 (y: 74..120, centre y=97) */}
-      <line x1="32" y1="120" x2="568" y2="120" stroke="var(--fog)" strokeWidth="1" />
-      <text
-        x="52"
-        y="97"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        letterSpacing="0.04em"
-      >
-        Scope
-      </text>
-
-      {/* Row 2 (y: 120..166, centre y=143) */}
-      <line x1="32" y1="166" x2="568" y2="166" stroke="var(--fog)" strokeWidth="1" />
-      <text
-        x="52"
-        y="143"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        letterSpacing="0.04em"
-      >
-        Platforms
-      </text>
-
-      {/* Row 3 (y: 166..212, centre y=189) */}
-      <line x1="32" y1="212" x2="568" y2="212" stroke="var(--fog)" strokeWidth="1" />
-      <text
-        x="52"
-        y="189"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        letterSpacing="0.04em"
-      >
-        Who edits it
-      </text>
-
-      {/* Row 4 (y: 212..258, centre y=235) */}
-      <line x1="32" y1="258" x2="568" y2="258" stroke="var(--fog)" strokeWidth="1" />
-      <text
-        x="52"
-        y="235"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        letterSpacing="0.04em"
-      >
-        Timeline
-      </text>
-
-      {/* Row 5 (y: 258..304, centre y=281) */}
-      <text
-        x="52"
-        y="281"
-        dominantBaseline="middle"
-        fill="var(--graphite)"
-        fontFamily="var(--font-mono)"
-        fontSize="9"
-        letterSpacing="0.04em"
-      >
-        Price
-      </text>
-
-      {/* ── 2. STATUS PILL (x: 470, y: 41, w: 78, h: 24, radius 12; DRAFT -> AGREED) ── */}
-      {/* DRAFT pill */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [1, 1, 1, 0, 0, 0, 1],
-              }
-            : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.38, 0.40, 0.41, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="470"
-          y="41"
-          width="78"
-          height="24"
-          rx="12"
-          fill="var(--paper)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <text
-          x="509"
-          y="53"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="var(--graphite)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          letterSpacing="0.04em"
-        >
-          DRAFT
-        </text>
-      </motion.g>
-
-      {/* AGREED pill */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.40, 0.41, 0.82, 0.88, 1],
-        }}
-      >
-        <rect
-          x="470"
-          y="41"
-          width="78"
-          height="24"
-          rx="12"
-          fill="var(--ink)"
-        />
-        <text
-          x="509"
-          y="53"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="var(--paper)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="700"
-          letterSpacing="0.04em"
-        >
-          AGREED
-        </text>
-      </motion.g>
-
-      {/* ── 3. SPECIFICATION VALUES & CHECKS ── */}
-      {/* Row 1 Value: Pages, flows, admin screens (x: 190, centre y: 97) */}
-      <motion.text
-        x="190"
-        y="97"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="10"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.17, 0.20, 0.82, 0.88, 1],
-        }}
-      >
-        Pages, flows, admin screens
-      </motion.text>
-
-      {/* Row 1 Checkmark (centred at x=534, y=97, 12x12) */}
-      <motion.path
-        d="M 528 97 L 532 101 L 540 93"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                pathLength: [0, 0, 1, 1, 1, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, pathLength: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.20, 0.23, 0.82, 0.88, 1],
-        }}
-      />
-
-      {/* Row 2 Value: Web · Mobile (middle dot U+00B7) (x: 190, centre y: 143) */}
-      <motion.text
-        x="190"
-        y="143"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="10"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.22, 0.25, 0.82, 0.88, 1],
-        }}
-      >
-        Web · Mobile
-      </motion.text>
-
-      {/* Row 2 Checkmark (centred at x=534, y=143) */}
-      <motion.path
-        d="M 528 143 L 532 147 L 540 139"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                pathLength: [0, 0, 1, 1, 1, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, pathLength: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.25, 0.28, 0.82, 0.88, 1],
-        }}
-      />
-
-      {/* Row 3 Value: Your team, no developer (x: 190, centre y: 189) */}
-      <motion.text
-        x="190"
-        y="189"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="10"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.27, 0.30, 0.82, 0.88, 1],
-        }}
-      >
-        Your team, no developer
-      </motion.text>
-
-      {/* Row 3 Checkmark (centred at x=534, y=189) */}
-      <motion.path
-        d="M 528 189 L 532 193 L 540 185"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                pathLength: [0, 0, 1, 1, 1, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, pathLength: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.30, 0.33, 0.82, 0.88, 1],
-        }}
-      />
-
-      {/* Row 4 Value: Agreed before work starts (x: 190, centre y: 235) */}
-      <motion.text
-        x="190"
-        y="235"
-        dominantBaseline="middle"
-        fill="var(--ink)"
-        fontFamily="var(--font-mono)"
-        fontSize="10"
-        fontWeight="600"
-        letterSpacing="0.04em"
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.32, 0.35, 0.82, 0.88, 1],
-        }}
-      >
-        Agreed before work starts
-      </motion.text>
-
-      {/* Row 4 Checkmark (centred at x=534, y=235) */}
-      <motion.path
-        d="M 528 235 L 532 239 L 540 231"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                pathLength: [0, 0, 1, 1, 1, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, pathLength: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.35, 0.38, 0.82, 0.88, 1],
-        }}
-      />
-
-      {/* Row 5 Value: Redacted bar: x 190, y 275, w 96, h 12, fill --paper-2, 1px --fog border */}
-      <motion.rect
-        x="190"
-        y="275"
-        width="96"
-        height="12"
-        rx="2"
-        fill="var(--paper-2)"
-        stroke="var(--fog)"
-        strokeWidth="1"
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.37, 0.40, 0.82, 0.88, 1],
-        }}
-      />
-
-      {/* Row 5 Checkmark (centred at x=534, y=281) */}
-      <motion.path
-        d="M 528 281 L 532 285 L 540 277"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0, 0],
-                pathLength: [0, 0, 1, 1, 1, 0],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, pathLength: 1 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          times: [0, 0.40, 0.43, 0.82, 0.88, 1],
-        }}
-      />
-
-      {/* ── 4. OPENING CHAT BUBBLES (INSIDE PANEL BODY y: 74..306) ── */}
-      {/* Bubble 1 (Client) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 1, 1, 0, 0],
-                y: [6, 0, 0, -4, 6],
-              }
-            : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.02, 0.12, 0.16, 1],
-        }}
-      >
-        <rect
-          x="48"
-          y="86"
-          width="264"
-          height="34"
-          rx="6"
-          fill="var(--paper)"
-          stroke="var(--fog)"
-          strokeWidth="1"
-        />
-        <text
-          x="60"
-          y="103"
-          dominantBaseline="middle"
-          fill="var(--graphite)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          letterSpacing="0.04em"
-        >
-          &quot;Need client portal + admin screens&quot;
-        </text>
-      </motion.g>
-
-      {/* Bubble 2 (Developer) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 0, 0],
-                y: [6, 6, 0, -4, 6],
-              }
-            : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.05, 0.12, 0.16, 1],
-        }}
-      >
-        <rect
-          x="276"
-          y="132"
-          width="264"
-          height="34"
-          rx="6"
+      {/* 2. Bubble 1 (client, left) */}
+      <motion.g variants={bubble1Variants} animate={state} initial="initial">
+        <path
+          d="M 36 40 H 260 A 8 8 0 0 1 268 48 V 72 A 8 8 0 0 1 260 80 H 28 V 48 A 8 8 0 0 1 36 40 Z"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
-          x="288"
-          y="149"
+          x="44"
+          y="60"
           dominantBaseline="middle"
-          fill="var(--ink)"
+          fill="var(--graphite)"
           fontFamily="var(--font-mono)"
-          fontSize="9"
+          fontSize="11"
           letterSpacing="0.04em"
         >
-          &quot;Understood. 6 weeks milestone scope.&quot;
+          What should it do?
         </text>
       </motion.g>
 
-      {/* Bubble 3 (Client) */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 0, 0],
-                y: [6, 6, 0, -4, 6],
-              }
-            : { opacity: 0 }
-        }
-        transition={{
-          duration: DURATION,
-          delay: isPlaying ? delay : 0,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: REPEAT_DELAY,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.09, 0.13, 0.16, 1],
-        }}
-      >
+      {/* 3. Bubble 2 (you, right) */}
+      <motion.g variants={bubble2Variants} animate={state} initial="initial">
+        <path
+          d="M 300 92 H 524 A 8 8 0 0 1 532 100 V 132 H 300 A 8 8 0 0 1 292 124 V 100 A 8 8 0 0 1 300 92 Z"
+          fill="var(--paper-2)"
+          stroke="var(--fog)"
+          strokeWidth="1"
+        />
+        <text
+          x="308"
+          y="112"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="11"
+          letterSpacing="0.04em"
+        >
+          Bookings, and an admin panel.
+        </text>
+      </motion.g>
+
+      {/* 4. Bubble 3 (client, left) */}
+      <motion.g variants={bubble3Variants} animate={state} initial="initial">
+        <path
+          d="M 36 144 H 260 A 8 8 0 0 1 268 152 V 176 A 8 8 0 0 1 260 184 H 28 V 152 A 8 8 0 0 1 36 144 Z"
+          fill="var(--paper-2)"
+          stroke="var(--fog)"
+          strokeWidth="1"
+        />
+        <text
+          x="44"
+          y="164"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
+          fontFamily="var(--font-mono)"
+          fontSize="11"
+          letterSpacing="0.04em"
+        >
+          Who updates the content?
+        </text>
+      </motion.g>
+
+      {/* 5. Bubble 4 (you, right) */}
+      <motion.g variants={bubble4Variants} animate={state} initial="initial">
+        <path
+          d="M 300 196 H 524 A 8 8 0 0 1 532 204 V 236 H 300 A 8 8 0 0 1 292 228 V 204 A 8 8 0 0 1 300 196 Z"
+          fill="var(--paper-2)"
+          stroke="var(--fog)"
+          strokeWidth="1"
+        />
+        <text
+          x="308"
+          y="216"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="11"
+          letterSpacing="0.04em"
+        >
+          Your team. No developer needed.
+        </text>
+      </motion.g>
+
+      {/* 6. Agreement bar */}
+      <motion.g variants={barVariants} animate={state} initial="initial">
         <rect
-          x="64"
-          y="178"
-          width="240"
-          height="32"
-          rx="6"
+          x="28"
+          y="252"
+          width="504"
+          height="44"
+          rx="8"
           fill="var(--paper)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
-          x="76"
-          y="194"
+          x="48"
+          y="274"
           dominantBaseline="middle"
-          fill="var(--graphite)"
+          fill="var(--ink)"
           fontFamily="var(--font-mono)"
-          fontSize="9"
+          fontSize="11"
           letterSpacing="0.04em"
+          fontWeight="600"
         >
-          &quot;Agreed. Let&apos;s lock the spec.&quot;
+          SCOPE AGREED
         </text>
+
+        {/* 7. Check mark in agreement bar */}
+        <motion.path
+          d="M 502 274.5 L 506 278.5 L 514 269.5"
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          variants={checkVariants}
+          animate={state}
+          initial="initial"
+        />
       </motion.g>
     </svg>
   );

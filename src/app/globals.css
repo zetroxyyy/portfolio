@@ -1531,163 +1531,26 @@ button {
   gap: var(--space-2);
 }
 
-/* ── PROCESS VERTICAL STEPPER ─────────────────────────────── */
-.process-stepper-wrap {
-  --spine-x: 10px;
-  --marker-size: 28px;
-  --marker-gap: 16px;
-  --gutter: calc(var(--spine-x) + (var(--marker-size) / 2) + var(--marker-gap));
-  position: relative;
-  width: 100%;
-}
-
-/* Vertical connecting spine behind stage markers */
-.process-stepper__spine-bg {
-  position: absolute;
-  top: 18px;
-  bottom: 24px;
-  left: calc(var(--spine-x) - 1px);
-  width: 2px;
-  background-color: var(--graphite);
-  opacity: 0.25;
-  z-index: 1;
-}
-
-.process-stepper__spine-fill {
-  position: absolute;
-  top: 18px;
-  bottom: 24px;
-  left: calc(var(--spine-x) - 1px);
-  width: 2px;
-  background-color: var(--ink);
-  z-index: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .process-stepper__spine-fill {
-    transform: scaleY(1) !important;
-    transition: none !important;
-  }
-}
-
-.process-stepper {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-  padding-left: var(--gutter);
-  position: relative;
-  z-index: 2;
-}
-
-.process-row {
-  position: relative;
-  width: 100%;
-}
-
-/* Stage marker sitting on vertical spine, aligned with the badge line */
-.process-row__marker {
-  position: absolute;
-  left: calc(var(--spine-x) - var(--gutter) - (var(--marker-size) / 2));
-  top: calc(8px - (var(--marker-size) / 2));
-  width: var(--marker-size);
-  height: var(--marker-size);
-  border-radius: 50%;
-  border: 1px solid var(--fog);
-  background-color: var(--paper);
-  box-shadow: 0 0 0 4px var(--paper);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.process-row__marker-num {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--ink);
-  font-weight: 500;
-  line-height: 1;
-}
-
-/* Two-column layout: text (~42%) & animation stage (~58%) */
-.process-row__layout {
+/* ── PROCESS 2x2 GRID ─────────────────────────────────────── */
+.process-grid {
   display: grid;
-  grid-template-columns: 1fr 1.38fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-12);
-  align-items: center;
   width: 100%;
 }
 
-/* Text Column */
-.process-row__text {
+.process-cell {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  position: relative;
-  background: transparent;
-  border: none;
-  padding: 0;
+  gap: var(--space-6);
+  width: 100%;
 }
 
-.process-row__badge {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  line-height: 16px;
-  letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
-  color: var(--mist);
-  font-weight: 500;
-}
-
-.process-row__name {
-  font-family: var(--font-display);
-  font-size: var(--h-sub);
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.25;
-  letter-spacing: var(--tracking-tight);
-}
-
-.process-row__deliverable {
-  border-left: 2px solid var(--ink);
-  padding: var(--space-1) 0 var(--space-1) var(--space-3);
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.process-row__deliverable-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
-  color: var(--mist);
-  font-weight: 600;
-}
-
-.process-row__deliverable-text {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.45;
-}
-
-.process-row__desc {
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--graphite);
-}
-
-/* Animation Column Stage */
-.process-row__stage {
+/* 1. Animation stage */
+.process-cell__stage {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--fog);
   border-radius: var(--radius-lg);
   background: var(--paper);
   position: relative;
@@ -1702,6 +1565,68 @@ button {
   height: 100%;
   display: block;
 }
+
+/* 2. Text Content */
+.process-cell__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.process-cell__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 16px;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--mist);
+  font-weight: 500;
+}
+
+.process-cell__name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: var(--tracking-tight);
+}
+
+.process-cell__deliverable {
+  border-left: 2px solid var(--ink);
+  padding: var(--space-1) 0 var(--space-1) var(--space-3);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.process-cell__deliverable-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--mist);
+  font-weight: 600;
+}
+
+.process-cell__deliverable-text {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.process-cell__desc {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--graphite);
+}
+
 
 
 /* ── FOOTER & CONTACT ─────────────────────────────────────── */
@@ -2095,20 +2020,9 @@ button {
 }
 
 @media (max-width: 900px) {
-  .process-stepper-wrap {
-    --spine-x: 10px;
-    --marker-size: 26px;
-    --marker-gap: 14px;
-  }
-
-  .process-stepper {
-    gap: var(--space-12);
-  }
-
-  .process-row__layout {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+  .process-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
   }
 }
 
