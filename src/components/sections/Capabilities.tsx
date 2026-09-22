@@ -59,13 +59,13 @@ export function Capabilities() {
     <section className="capabilities" id="capabilities" aria-labelledby="capabilities-heading">
       <div className="capabilities__inner">
         <header className="capabilities__header">
-          <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--mist)', letterSpacing: 'var(--tracking-wider)' }}>
+          <span className="section-eyebrow">
             CAPABILITIES
           </span>
-          <h2 id="capabilities-heading" style={{ fontSize: 'clamp(var(--text-2xl), 4vw, var(--text-3xl))', color: 'var(--ink)' }}>
-            What I build and ship.
+          <h2 id="capabilities-heading" className="section-heading section-heading--major">
+            What I build <span className="serif-italic">and what it costs you to run.</span>
           </h2>
-          <p className="serif-italic" style={{ fontSize: '1.25rem', color: 'var(--graphite)' }}>
+          <p className="section-subhead">
             Full-stack scope — from database architecture to client-operable back offices.
           </p>
         </header>

@@ -15,7 +15,7 @@ export function Work() {
           <header className="work-group__header">
             <span className="work-group__eyebrow">01 / ENGAGEMENTS</span>
             <h2 id="client-work-heading" className="work-group__title">
-              Client Work
+              Client work. <span className="serif-italic">Shipped, and still running.</span>
             </h2>
             <p className="work-group__qualifier">
               Commissioned, shipped, live on the client&apos;s own domain.
@@ -38,7 +38,7 @@ export function Work() {
           <header className="work-group__header">
             <span className="work-group__eyebrow">02 / PRODUCTION DEMOS</span>
             <h2 id="independent-work-heading" className="work-group__title">
-              Independent Builds
+              Independent builds. <span className="serif-italic">Made without waiting to be asked.</span>
             </h2>
             <p className="work-group__qualifier">
               Self-initiated production builds for real businesses, made to demonstrate the work. Live on zetroxy.me subdomains.
@@ -63,7 +63,7 @@ export function Work() {
           <header className="work-group__header">
             <span className="work-group__eyebrow">03 / TOOLS</span>
             <h2 id="side-projects-heading" className="work-group__title">
-              Side Projects
+              Side projects. <span className="serif-italic">Built to scratch my own itch.</span>
             </h2>
             <p className="work-group__qualifier">
               Things built to solve my own problems. Source is public — clone the repo and run

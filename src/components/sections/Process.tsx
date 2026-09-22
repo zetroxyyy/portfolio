@@ -31,13 +31,13 @@ export function Process() {
     <section className="process" id="process" aria-labelledby="process-heading">
       <div className="process__inner">
         <header className="process__header">
-          <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--mist)', letterSpacing: 'var(--tracking-wider)' }}>
+          <span className="section-eyebrow">
             PROCESS
           </span>
-          <h2 id="process-heading" style={{ fontSize: 'clamp(var(--text-2xl), 4vw, var(--text-3xl))', color: 'var(--ink)' }}>
-            From scope to self-serve production.
+          <h2 id="process-heading" className="section-heading section-heading--major">
+            From first message <span className="serif-italic">to running it yourself.</span>
           </h2>
-          <p className="serif-italic" style={{ fontSize: '1.25rem', color: 'var(--graphite)' }}>
+          <p className="section-subhead">
             Every build includes the admin tooling needed to operate without ongoing developer friction.
           </p>
         </header>
@@ -63,14 +63,17 @@ export function Process() {
         </div>
 
         <motion.div
-          className="process__statement"
-          initial={{ opacity: 0, y: 16 }}
+          className="statement-wrap"
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: duration.slow, ease, delay: 0.3 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: duration.slow, ease, delay: 0.2 }}
         >
-          <p className="process__statement-text">
-            <strong>The differentiator:</strong> Most agencies deliver a static brochure. Every system here includes a custom admin back office so non-technical staff can update prices, dates, media, and copy autonomously.
+          <blockquote className="statement">
+            Most agencies deliver a static brochure.
+          </blockquote>
+          <p className="statement__sub">
+            Every system here includes a custom admin back office so non-technical staff can update prices, dates, media, and copy autonomously.
           </p>
         </motion.div>
       </div>
