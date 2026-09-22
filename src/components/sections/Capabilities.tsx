@@ -1,72 +1,104 @@
 'use client';
 
+import React, { useState, useRef, CSSProperties } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { duration, ease } from '@/lib/motionConfig';
-import React, { CSSProperties } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BrowserFrame } from '@/components/ui/BrowserFrame';
 
-interface CapabilityItem {
+interface Capability {
   num: string;
   slug: string;
   title: string;
   desc: string;
-  proof: string;
+  screenshot: string;
+  alt: string;
+  url: string;
+  caption: string;
+  projectName: string;
   link: string;
-  linkLabel: string;
   accent: string;
 }
 
-const capabilityRows: CapabilityItem[] = [
+const capabilities: Capability[] = [
   {
     num: '01',
-    slug: 'dream-adventure',
-    title: 'Booking and availability systems',
-    desc: 'Reservation flows where a seat cannot be sold twice, because availability is read from the database at the moment of booking rather than cached.',
-    proof: 'Dream Adventure holds 21 rafting seats across three daily departures, in Japanese and English.',
+    slug: 'dream-adventure-booking',
+    title: 'Booking and availability',
+    desc: 'Per-slot capacity and blackout dates read from the database at booking time.',
+    screenshot: '/images/projects/dream-adventure/admin-availability.webp',
+    alt: 'Dream Adventure booking availability calendar showing capacity per departure and date controls',
+    url: 'https://dreamadventure.jp/admin/availability',
+    caption: 'Availability calendar — per-slot capacity and blackout dates.',
+    projectName: 'Dream Adventure',
     link: '/work/dream-adventure',
-    linkLabel: 'Dream Adventure case study',
     accent: '#0D9488',
   },
   {
     num: '02',
     slug: 'nischal-legal',
-    title: 'Admin panels the client actually runs',
-    desc: 'Not a generic CMS bolted on — screens built for the specific things this business changes, in the language its staff work in.',
-    proof: 'A legal practice in Chitwan edits its own services, photography and contact details in Nepali.',
+    title: 'Admin panels clients run',
+    desc: 'Bespoke back offices built in Nepali for non-technical office staff.',
+    screenshot: '/images/projects/nischal-legal/admin-services.webp',
+    alt: 'Nischal Legal Service admin panel showing service editing form in Nepali language',
+    url: 'https://nischallegal.com/admin/services',
+    caption: 'Service editor, in Nepali, used by the office staff.',
+    projectName: 'Nischal Legal Service',
     link: '/work/nischal-legal',
-    linkLabel: 'Nischal Legal Service case study',
     accent: '#B3222C',
   },
   {
     num: '03',
     slug: 'didee',
-    title: 'Catalogues and storefronts',
-    desc: 'Product, category and pricing management built for bulk editing, because catalogues go stale when every change takes six clicks.',
-    proof: 'Didee’s back office updates prices across the whole catalogue in a single pass.',
+    title: 'Catalogue and pricing',
+    desc: 'Bulk price and inventory updates across the catalogue in a single pass.',
+    screenshot: '/images/projects/didee/admin-prices.webp',
+    alt: 'Didee back office product catalogue price updates interface',
+    url: 'https://didee.store/admin/prices',
+    caption: 'Bulk price entry across the whole catalogue in one pass.',
+    projectName: 'Didee',
     link: '/work/didee',
-    linkLabel: 'Didee case study',
     accent: '#1A1A18',
   },
   {
     num: '04',
-    slug: 'all-shipped',
-    title: 'Shipped and maintained',
-    desc: 'Custom domain, SSL, search metadata, Core Web Vitals, and the deployment pipeline — set up once and handed over with the credentials.',
-    proof: 'Six products live on their own domains, including three client-owned.',
-    link: '/#work',
-    linkLabel: 'View shipped projects',
-    accent: '#E11D2F',
+    slug: 'dream-adventure-manifest',
+    title: 'Operations and documents',
+    desc: 'Daily manifest grouping departures, river guides, and instant PDF exports.',
+    screenshot: '/images/projects/dream-adventure/admin-manifest.webp',
+    alt: 'Dream Adventure daily manifest interface showing departures and PDF export options',
+    url: 'https://dreamadventure.jp/admin/manifest',
+    caption: 'Daily manifest, grouped by departure, exports to PDF.',
+    projectName: 'Dream Adventure',
+    link: '/work/dream-adventure',
+    accent: '#0D9488',
   },
 ];
 
 export function Capabilities() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = (index + 1) % capabilities.length;
+      setSelectedIndex(next);
+      buttonRefs.current[next]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prev = (index - 1 + capabilities.length) % capabilities.length;
+      setSelectedIndex(prev);
+      buttonRefs.current[prev]?.focus();
+    }
+  };
+
+  const selected = capabilities[selectedIndex];
+
   return (
     <section className="capabilities" id="capabilities" aria-labelledby="capabilities-heading">
       <div className="capabilities__inner">
         <header className="capabilities__header">
-          <span className="section-eyebrow">
-            CAPABILITIES
-          </span>
+          <span className="section-eyebrow">CAPABILITIES</span>
           <h2 id="capabilities-heading" className="section-heading section-heading--major">
             What I build <span className="serif-italic">and what it costs you to run.</span>
           </h2>
@@ -75,42 +107,110 @@ export function Capabilities() {
           </p>
         </header>
 
-        <div className="capabilities__list" role="list">
-          {capabilityRows.map((item, i) => (
-            <motion.div
-              key={item.num}
-              className="capability-row"
-              data-slug={item.slug}
-              style={{ '--row-accent': item.accent } as CSSProperties}
-              role="listitem"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: duration.slow, ease, delay: i * 0.08 }}
-            >
-              <div className="capability-row__left">
-                <span className="capability-row__num" aria-hidden="true">
-                  {item.num}
-                </span>
-                <h3 className="capability-row__title">{item.title}</h3>
-              </div>
-              <div className="capability-row__right">
-                <p className="capability-row__desc">{item.desc}</p>
-                <Link
-                  href={item.link}
-                  className="capability-row__proof"
-                  aria-label={`${item.proof} (${item.linkLabel})`}
+        <div className="capabilities__layout">
+          {/* Left Column: Selector list */}
+          <div
+            className="capabilities__selector"
+            aria-label="Capabilities selector"
+          >
+            {capabilities.map((item, index) => {
+              const isSelected = selectedIndex === index;
+              const customStyle = {
+                '--row-accent': item.accent,
+              } as CSSProperties;
+
+              return (
+                <div
+                  key={item.num}
+                  className={`capabilities__item ${isSelected ? 'capabilities__item--active' : ''}`}
+                  data-slug={item.slug}
+                  style={customStyle}
                 >
-                  <span className="capability-row__proof-text">
-                    {item.proof}
-                  </span>
-                  <span className="capability-row__proof-arrow" aria-hidden="true">
-                    →
-                  </span>
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+                  <button
+                    ref={(el) => {
+                      buttonRefs.current[index] = el;
+                    }}
+                    type="button"
+                    className={`capability-nav-btn ${isSelected ? 'capability-nav-btn--active' : ''}`}
+                    onClick={() => setSelectedIndex(index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    aria-pressed={isSelected}
+                    id={`cap-tab-${item.num}`}
+                    aria-controls={`cap-panel-${item.num}`}
+                  >
+                    <div className="capability-nav-btn__header">
+                      <span className="capability-nav-btn__num" aria-hidden="true">
+                        {item.num}
+                      </span>
+                      <h3 className="capability-nav-btn__title">{item.title}</h3>
+                    </div>
+                    <p className="capability-nav-btn__desc">{item.desc}</p>
+                  </button>
+
+                  {/* Accordion panel on mobile (<= 820px) */}
+                  <div
+                    id={`cap-panel-${item.num}`}
+                    aria-labelledby={`cap-tab-${item.num}`}
+                    className={`capabilities__accordion-panel ${
+                      isSelected ? 'capabilities__accordion-panel--open' : ''
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="capabilities__accordion-content">
+                        <BrowserFrame
+                          src={item.screenshot}
+                          alt={item.alt}
+                          url={item.url}
+                          accent={item.accent}
+                          priority={index === 0}
+                        />
+                        <div className="capabilities__caption">
+                          <span>{item.caption} </span>
+                          <Link href={item.link} className="capabilities__caption-link">
+                            <em>{item.projectName}</em> →
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Desktop Viewer */}
+          <div className="capabilities__viewer" aria-live="polite">
+            <div
+              className="capabilities__viewer-wrap"
+              style={{ '--project-accent': selected.accent } as CSSProperties}
+              data-slug={selected.slug}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selected.num}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  className="capabilities__viewer-motion"
+                >
+                  <BrowserFrame
+                    src={selected.screenshot}
+                    alt={selected.alt}
+                    url={selected.url}
+                    accent={selected.accent}
+                    priority={selectedIndex === 0}
+                  />
+                  <div className="capabilities__caption">
+                    <span>{selected.caption} </span>
+                    <Link href={selected.link} className="capabilities__caption-link">
+                      <em>{selected.projectName}</em> →
+                    </Link>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </section>
