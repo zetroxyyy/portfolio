@@ -92,6 +92,12 @@
   --radius:     6px;
   --radius-lg:  10px;
   --radius-xl:  14px;
+
+  /* Process timeline stage accents */
+  --stage-1:    #0D9488;
+  --stage-2:    #2563EB;
+  --stage-3:    #D97A2B;
+  --stage-4:    #10B981;
 }
 
 /* ── DARK THEME OVERRIDES ─────────────────────────────────── */
@@ -105,6 +111,11 @@
     --fog:          #2A2926;
     --hairline:     rgba(237, 237, 234, 0.12);
     --hairline-2:   rgba(237, 237, 234, 0.06);
+
+    --stage-1:      #14B8A6;
+    --stage-2:      #60A5FA;
+    --stage-3:      #F59E0B;
+    --stage-4:      #34D399;
 
     --frame-bg:     #1F1F1D;
     --frame-bar:    #2A2A27;
@@ -121,6 +132,11 @@
   --fog:          #2A2926;
   --hairline:     rgba(237, 237, 234, 0.12);
   --hairline-2:   rgba(237, 237, 234, 0.06);
+
+  --stage-1:      #14B8A6;
+  --stage-2:      #60A5FA;
+  --stage-3:      #F59E0B;
+  --stage-4:      #34D399;
 
   --frame-bg:     #1F1F1D;
   --frame-bar:    #2A2A27;
@@ -1524,51 +1540,114 @@ button {
   gap: var(--space-2);
 }
 
-.process__steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-4);
+/* ── PROCESS TIMELINE ─────────────────────────────────────── */
+.timeline {
   position: relative;
+  width: 100%;
 }
 
-.process__step {
-  background: var(--paper-2);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  padding: var(--space-6);
+/* Horizontal connecting rule behind stages */
+.timeline__track {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background-color: var(--hairline);
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline__track {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.timeline__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-stage {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
-.process__step-header {
+.timeline-stage__top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--space-2);
 }
 
-.process__step-num {
+.timeline-stage__marker {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--stage-accent, var(--ink));
+  box-shadow: 0 0 0 3px var(--paper);
+  flex-shrink: 0;
+}
+
+.timeline-stage__badge {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--mist);
   letter-spacing: var(--tracking-wider);
-}
-
-.process__step-arrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  text-transform: uppercase;
   color: var(--mist);
+  font-weight: 500;
 }
 
-.process__step-name {
-  font-size: var(--text-lg);
+.timeline-stage__name {
+  font-family: var(--font-display);
+  font-size: var(--h-sub);
+  font-weight: 700;
   color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: var(--tracking-tight);
 }
 
-.process__step-desc {
+.timeline-stage__deliverable {
+  border-left: 2px solid var(--stage-accent, var(--ink));
+  padding: var(--space-2) var(--space-3);
+  background: color-mix(in srgb, var(--paper-2) 65%, transparent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeline-stage__deliverable-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--stage-accent, var(--mist));
+  font-weight: 600;
+}
+
+.timeline-stage__deliverable-text {
   font-size: var(--text-sm);
-  color: var(--graphite);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.timeline-stage__desc {
+  font-size: var(--text-sm);
   line-height: 1.6;
+  color: var(--graphite);
 }
 
 
@@ -1956,14 +2035,19 @@ button {
   gap: var(--space-6);
 }
 
-/* ── RESPONSIVE MEDIA QUERIES ─────────────────────────────── */
-
 @media (max-width: 1024px) {
-  .process__steps {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .case-study__decisions-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .timeline__track {
+    display: none;
+  }
+  .timeline__list {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
 }
 
@@ -2025,9 +2109,6 @@ button {
     order: 2;
   }
 
-  .process__steps {
-    grid-template-columns: 1fr;
-  }
 
   .case-study__meta-bar {
     grid-template-columns: repeat(2, 1fr);
