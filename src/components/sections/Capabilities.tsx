@@ -2,80 +2,75 @@
 
 import React, { useState, useRef, CSSProperties } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BrowserFrame } from '@/components/ui/BrowserFrame';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { WebAppAnim } from '@/components/ui/capability-anim/WebAppAnim';
+import { MobileAppAnim } from '@/components/ui/capability-anim/MobileAppAnim';
+import { AiRetrievalAnim } from '@/components/ui/capability-anim/AiRetrievalAnim';
+import { ShipHandoverAnim } from '@/components/ui/capability-anim/ShipHandoverAnim';
 
 interface Capability {
   num: string;
   slug: string;
   title: string;
-  desc: string;
-  screenshot: string;
-  alt: string;
-  url: string;
   caption: string;
   projectName: string;
   link: string;
   accent: string;
+  ariaLabel: string;
+  anim: React.ComponentType<{ active: boolean; inView: boolean }>;
 }
 
 const capabilities: Capability[] = [
   {
     num: '01',
-    slug: 'dream-adventure-booking',
-    title: 'Booking and availability',
-    desc: 'Per-slot capacity and blackout dates read from the database at booking time.',
-    screenshot: '/images/projects/dream-adventure/admin-availability.webp',
-    alt: 'Dream Adventure booking availability calendar showing capacity per departure and date controls',
-    url: 'https://dreamadventure.jp/admin/availability',
-    caption: 'Availability calendar — per-slot capacity and blackout dates.',
+    slug: 'web-apps',
+    title: 'Web applications',
+    caption: 'The public side and the back office, wired to the same database.',
     projectName: 'Dream Adventure',
     link: '/work/dream-adventure',
     accent: '#0D9488',
+    ariaLabel: 'Diagram showing customer booking requests flowing to a shared database and updating the admin back office in real time.',
+    anim: WebAppAnim,
   },
   {
     num: '02',
-    slug: 'nischal-legal',
-    title: 'Admin panels clients run',
-    desc: 'Bespoke back offices built in Nepali for non-technical office staff.',
-    screenshot: '/images/projects/nischal-legal/admin-services.webp',
-    alt: 'Nischal Legal Service admin panel showing service editing form in Nepali language',
-    url: 'https://nischallegal.com/admin/services',
-    caption: 'Service editor, in Nepali, used by the office staff.',
-    projectName: 'Nischal Legal Service',
-    link: '/work/nischal-legal',
-    accent: '#B3222C',
+    slug: 'mobile-apps',
+    title: 'Mobile applications',
+    caption: 'Native Android apps — voice input, on-device flows, real file output.',
+    projectName: 'Resumiq',
+    link: 'https://github.com/zetroxyyy/resumiq',
+    accent: '#2563EB',
+    ariaLabel: 'Diagram showing native Android mobile application with voice-assisted form inputs generating a PDF document.',
+    anim: MobileAppAnim,
   },
   {
     num: '03',
-    slug: 'didee',
-    title: 'Catalogue and pricing',
-    desc: 'Bulk price and inventory updates across the catalogue in a single pass.',
-    screenshot: '/images/projects/didee/admin-prices.webp',
-    alt: 'Didee back office product catalogue price updates interface',
-    url: 'https://didee.store/admin/prices',
-    caption: 'Bulk price entry across the whole catalogue in one pass.',
-    projectName: 'Didee',
-    link: '/work/didee',
-    accent: '#1A1A18',
+    slug: 'ai-retrieval',
+    title: 'AI & retrieval',
+    caption: 'Language models wired into products — transcription, summarisation, semantic search.',
+    projectName: 'Reels Second Brain',
+    link: 'https://github.com/zetroxyyy/reels-second-brain',
+    accent: '#D97A2B',
+    ariaLabel: 'Diagram showing documents being embedded into vector space, with a query ripple retrieving the nearest semantic matches.',
+    anim: AiRetrievalAnim,
   },
   {
     num: '04',
-    slug: 'dream-adventure-manifest',
-    title: 'Operations and documents',
-    desc: 'Daily manifest grouping departures, river guides, and instant PDF exports.',
-    screenshot: '/images/projects/dream-adventure/admin-manifest.webp',
-    alt: 'Dream Adventure daily manifest interface showing departures and PDF export options',
-    url: 'https://dreamadventure.jp/admin/manifest',
-    caption: 'Daily manifest, grouped by departure, exports to PDF.',
-    projectName: 'Dream Adventure',
-    link: '/work/dream-adventure',
-    accent: '#0D9488',
+    slug: 'ship-handover',
+    title: 'Ship & hand over',
+    caption: 'Deployed on your domain, with the keys handed to you.',
+    projectName: 'All work',
+    link: '/#work',
+    accent: '#16A34A',
+    ariaLabel: 'Diagram showing delivery phases: build, domain setup with SSL, and handing over administrative keys to the owner.',
+    anim: ShipHandoverAnim,
   },
 ];
 
 export function Capabilities() {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const isInView = useInView(containerRef, { margin: '-60px' });
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const accordionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -90,21 +85,36 @@ export function Capabilities() {
       const prev = (index - 1 + capabilities.length) % capabilities.length;
       setSelectedIndex(prev);
       tabRefs.current[prev]?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      setSelectedIndex(0);
+      tabRefs.current[0]?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      const last = capabilities.length - 1;
+      setSelectedIndex(last);
+      tabRefs.current[last]?.focus();
     }
   };
 
   const selected = capabilities[selectedIndex];
+  const SelectedAnim = selected.anim;
 
   return (
-    <section className="capabilities" id="capabilities" aria-labelledby="capabilities-heading">
+    <section
+      ref={containerRef}
+      className="capabilities"
+      id="capabilities"
+      aria-labelledby="capabilities-heading"
+    >
       <div className="capabilities__inner">
         <header className="capabilities__header">
           <span className="section-eyebrow">CAPABILITIES</span>
           <h2 id="capabilities-heading" className="section-heading section-heading--major">
-            What I build <span className="serif-italic">and what it costs you to run.</span>
+            What I build <span className="serif-italic">and how the system works.</span>
           </h2>
           <p className="section-subhead">
-            Full-stack scope — from database architecture to client-operable back offices.
+            Full-stack scope — web platforms, native mobile apps, AI pipelines, and production handover.
           </p>
         </header>
 
@@ -166,25 +176,35 @@ export function Capabilities() {
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                     className="capabilities__viewer-motion"
                   >
-                    <BrowserFrame
-                      src={selected.screenshot}
-                      alt={selected.alt}
-                      url={selected.url}
-                      accent={selected.accent}
-                      priority={selectedIndex === 0}
-                    />
+                    <div
+                      className="capabilities__stage"
+                      role="img"
+                      aria-label={selected.ariaLabel}
+                    >
+                      <SelectedAnim active={true} inView={isInView} />
+                    </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
 
-              {/* Meta row beneath frame: description + caption/case study link */}
+              {/* Meta row beneath stage: caption + proof link */}
               <div className="capabilities__viewer-meta">
-                <p className="capabilities__meta-desc">{selected.desc}</p>
                 <div className="capabilities__caption">
                   <span>{selected.caption} </span>
-                  <Link href={selected.link} className="capabilities__caption-link">
-                    <em>{selected.projectName}</em> →
-                  </Link>
+                  {selected.link.startsWith('http') ? (
+                    <a
+                      href={selected.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="capabilities__caption-link"
+                    >
+                      <em>{selected.projectName}</em> ↗
+                    </a>
+                  ) : (
+                    <Link href={selected.link} className="capabilities__caption-link">
+                      <em>{selected.projectName}</em> →
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -195,8 +215,10 @@ export function Capabilities() {
         <div className="capabilities__mobile-accordion">
           {capabilities.map((item, index) => {
             const isSelected = selectedIndex === index;
+            const ItemAnim = item.anim;
             const customStyle = {
               '--row-accent': item.accent,
+              '--project-accent': item.accent,
             } as CSSProperties;
 
             return (
@@ -223,7 +245,6 @@ export function Capabilities() {
                     </span>
                     <h3 className="capability-nav-btn__title">{item.title}</h3>
                   </div>
-                  <p className="capability-nav-btn__desc">{item.desc}</p>
                 </button>
 
                 {isSelected && (
@@ -233,18 +254,29 @@ export function Capabilities() {
                     className="capabilities__accordion-panel capabilities__accordion-panel--open"
                   >
                     <div className="capabilities__accordion-content">
-                      <BrowserFrame
-                        src={item.screenshot}
-                        alt={item.alt}
-                        url={item.url}
-                        accent={item.accent}
-                        priority={index === 0}
-                      />
+                      <div
+                        className="capabilities__stage"
+                        role="img"
+                        aria-label={item.ariaLabel}
+                      >
+                        <ItemAnim active={isSelected} inView={isInView} />
+                      </div>
                       <div className="capabilities__caption">
                         <span>{item.caption} </span>
-                        <Link href={item.link} className="capabilities__caption-link">
-                          <em>{item.projectName}</em> →
-                        </Link>
+                        {item.link.startsWith('http') ? (
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="capabilities__caption-link"
+                          >
+                            <em>{item.projectName}</em> ↗
+                          </a>
+                        ) : (
+                          <Link href={item.link} className="capabilities__caption-link">
+                            <em>{item.projectName}</em> →
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
