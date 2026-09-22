@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { site } from '../../../content/site';
 import { ease, duration } from '@/lib/motionConfig';
@@ -11,6 +12,7 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -28,20 +30,42 @@ export function Nav() {
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  function handleNavClick(href: string) {
-    setMenuOpen(false);
-    if (href.startsWith('/#')) {
-      const id = href.replace('/#', '');
-      const el = document.getElementById(id);
+  // Handle on-load or route-change hash scroll
+  useEffect(() => {
+    if (pathname === '/' && window.location.hash) {
+      const el = document.getElementById(window.location.hash.slice(1));
       if (el) {
         const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
-        if (lenis) {
-          lenis.scrollTo(el, { offset: -70 });
-        } else {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
+        setTimeout(() => {
+          if (lenis) {
+            lenis.scrollTo(el, { offset: -70, immediate: true });
+          } else {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
       }
     }
+  }, [pathname]);
+
+  function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
+    // Let the browser handle modified clicks — new tab, new window, download.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    if (!href.startsWith('/#')) return;
+
+    const el = document.getElementById(href.slice(2));
+    if (!el) return; // not on this page — let the browser navigate to it
+
+    e.preventDefault();
+    setMenuOpen(false);
+
+    const lenis = (window as unknown as {
+      lenis?: { scrollTo: (el: Element, opts?: object) => void };
+    }).lenis;
+
+    if (lenis) lenis.scrollTo(el, { offset: -70 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+
+    window.history.pushState(null, '', href.slice(1));
   }
 
   return (
@@ -61,14 +85,13 @@ export function Nav() {
           <ul className="nav__links" role="list">
             {site.nav.map((item) => (
               <li key={item.href}>
-                <button
-                  type="button"
+                <Link
+                  href={item.href}
                   className="nav__link"
-                  onClick={() => handleNavClick(item.href)}
-                  aria-label={`Navigate to ${item.label}`}
+                  onClick={(e) => handleNavClick(e, item.href)}
                 >
                   {item.label}
-                </button>
+                </Link>
               </li>
             ))}
           </ul>
@@ -107,13 +130,13 @@ export function Nav() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: duration.base, ease } }}
                 >
-                  <button
-                    type="button"
+                  <Link
+                    href={item.href}
                     className="nav__mobile-link"
-                    onClick={() => handleNavClick(item.href)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 </motion.li>
               ))}
             </ul>

@@ -32,8 +32,17 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
     raf = requestAnimationFrame(loop);
 
     // Expose lenis on window for scroll anchors
-     
     (window as unknown as { lenis?: Lenis }).lenis = lenis;
+
+    // Handle initial hash scroll if present on load
+    if (window.location.hash) {
+      const el = document.getElementById(window.location.hash.slice(1));
+      if (el) {
+        requestAnimationFrame(() => {
+          lenis.scrollTo(el, { offset: -70, immediate: true });
+        });
+      }
+    }
 
     return () => {
       cancelAnimationFrame(raf);
