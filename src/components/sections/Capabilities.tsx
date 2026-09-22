@@ -76,19 +76,20 @@ const capabilities: Capability[] = [
 
 export function Capabilities() {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const accordionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'ArrowDown') {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
       const next = (index + 1) % capabilities.length;
       setSelectedIndex(next);
-      buttonRefs.current[next]?.focus();
-    } else if (e.key === 'ArrowUp') {
+      tabRefs.current[next]?.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
       const prev = (index - 1 + capabilities.length) % capabilities.length;
       setSelectedIndex(prev);
-      buttonRefs.current[prev]?.focus();
+      tabRefs.current[prev]?.focus();
     }
   };
 
@@ -107,12 +108,10 @@ export function Capabilities() {
           </p>
         </header>
 
-        <div className="capabilities__layout">
-          {/* Left Column: Selector list */}
-          <div
-            className="capabilities__selector"
-            aria-label="Capabilities selector"
-          >
+        {/* ── DESKTOP STACKED LAYOUT (> 820px) ── */}
+        <div className="capabilities__desktop">
+          {/* Horizontal tab row across full measure */}
+          <div className="capabilities__tabs" role="tablist" aria-label="Capabilities tabs">
             {capabilities.map((item, index) => {
               const isSelected = selectedIndex === index;
               const customStyle = {
@@ -120,97 +119,139 @@ export function Capabilities() {
               } as CSSProperties;
 
               return (
-                <div
+                <button
                   key={item.num}
-                  className={`capabilities__item ${isSelected ? 'capabilities__item--active' : ''}`}
+                  ref={(el) => {
+                    tabRefs.current[index] = el;
+                  }}
+                  type="button"
+                  role="tab"
+                  id={`cap-tab-${item.num}`}
+                  aria-selected={isSelected}
+                  aria-controls="capabilities-desktop-panel"
+                  className={`capabilities__tab-btn ${isSelected ? 'capabilities__tab-btn--active' : ''}`}
+                  onClick={() => setSelectedIndex(index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   data-slug={item.slug}
                   style={customStyle}
                 >
-                  <button
-                    ref={(el) => {
-                      buttonRefs.current[index] = el;
-                    }}
-                    type="button"
-                    className={`capability-nav-btn ${isSelected ? 'capability-nav-btn--active' : ''}`}
-                    onClick={() => setSelectedIndex(index)}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    aria-pressed={isSelected}
-                    id={`cap-tab-${item.num}`}
-                    aria-controls={`cap-panel-${item.num}`}
-                  >
-                    <div className="capability-nav-btn__header">
-                      <span className="capability-nav-btn__num" aria-hidden="true">
-                        {item.num}
-                      </span>
-                      <h3 className="capability-nav-btn__title">{item.title}</h3>
-                    </div>
-                    <p className="capability-nav-btn__desc">{item.desc}</p>
-                  </button>
-
-                  {/* Accordion panel on mobile (<= 820px) */}
-                  <div
-                    id={`cap-panel-${item.num}`}
-                    aria-labelledby={`cap-tab-${item.num}`}
-                    className={`capabilities__accordion-panel ${
-                      isSelected ? 'capabilities__accordion-panel--open' : ''
-                    }`}
-                  >
-                    {isSelected && (
-                      <div className="capabilities__accordion-content">
-                        <BrowserFrame
-                          src={item.screenshot}
-                          alt={item.alt}
-                          url={item.url}
-                          accent={item.accent}
-                          priority={index === 0}
-                        />
-                        <div className="capabilities__caption">
-                          <span>{item.caption} </span>
-                          <Link href={item.link} className="capabilities__caption-link">
-                            <em>{item.projectName}</em> →
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                  <span className="capabilities__tab-num" aria-hidden="true">
+                    {item.num}
+                  </span>
+                  <span className="capabilities__tab-title">{item.title}</span>
+                </button>
               );
             })}
           </div>
 
-          {/* Right Column: Desktop Viewer */}
-          <div className="capabilities__viewer" aria-live="polite">
+          {/* Full-width frame viewer */}
+          <div
+            id="capabilities-desktop-panel"
+            role="tabpanel"
+            aria-labelledby={`cap-tab-${selected.num}`}
+            className="capabilities__desktop-viewer"
+          >
             <div
-              className="capabilities__viewer-wrap"
+              className="capabilities__viewer-stacked"
               style={{ '--project-accent': selected.accent } as CSSProperties}
               data-slug={selected.slug}
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={selected.num}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="capabilities__viewer-motion"
-                >
-                  <BrowserFrame
-                    src={selected.screenshot}
-                    alt={selected.alt}
-                    url={selected.url}
-                    accent={selected.accent}
-                    priority={selectedIndex === 0}
-                  />
-                  <div className="capabilities__caption">
-                    <span>{selected.caption} </span>
-                    <Link href={selected.link} className="capabilities__caption-link">
-                      <em>{selected.projectName}</em> →
-                    </Link>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+              <div className="capabilities__frame-box">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={selected.num}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    className="capabilities__viewer-motion"
+                  >
+                    <BrowserFrame
+                      src={selected.screenshot}
+                      alt={selected.alt}
+                      url={selected.url}
+                      accent={selected.accent}
+                      priority={selectedIndex === 0}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Meta row beneath frame: description + caption/case study link */}
+              <div className="capabilities__viewer-meta">
+                <p className="capabilities__meta-desc">{selected.desc}</p>
+                <div className="capabilities__caption">
+                  <span>{selected.caption} </span>
+                  <Link href={selected.link} className="capabilities__caption-link">
+                    <em>{selected.projectName}</em> →
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* ── MOBILE ACCORDION (<= 820px) ── */}
+        <div className="capabilities__mobile-accordion">
+          {capabilities.map((item, index) => {
+            const isSelected = selectedIndex === index;
+            const customStyle = {
+              '--row-accent': item.accent,
+            } as CSSProperties;
+
+            return (
+              <div
+                key={item.num}
+                className={`capabilities__item ${isSelected ? 'capabilities__item--active' : ''}`}
+                data-slug={item.slug}
+                style={customStyle}
+              >
+                <button
+                  ref={(el) => {
+                    accordionRefs.current[index] = el;
+                  }}
+                  type="button"
+                  className={`capability-nav-btn ${isSelected ? 'capability-nav-btn--active' : ''}`}
+                  onClick={() => setSelectedIndex(index)}
+                  aria-expanded={isSelected}
+                  id={`cap-acc-${item.num}`}
+                  aria-controls={`cap-acc-panel-${item.num}`}
+                >
+                  <div className="capability-nav-btn__header">
+                    <span className="capability-nav-btn__num" aria-hidden="true">
+                      {item.num}
+                    </span>
+                    <h3 className="capability-nav-btn__title">{item.title}</h3>
+                  </div>
+                  <p className="capability-nav-btn__desc">{item.desc}</p>
+                </button>
+
+                {isSelected && (
+                  <div
+                    id={`cap-acc-panel-${item.num}`}
+                    aria-labelledby={`cap-acc-${item.num}`}
+                    className="capabilities__accordion-panel capabilities__accordion-panel--open"
+                  >
+                    <div className="capabilities__accordion-content">
+                      <BrowserFrame
+                        src={item.screenshot}
+                        alt={item.alt}
+                        url={item.url}
+                        accent={item.accent}
+                        priority={index === 0}
+                      />
+                      <div className="capabilities__caption">
+                        <span>{item.caption} </span>
+                        <Link href={item.link} className="capabilities__caption-link">
+                          <em>{item.projectName}</em> →
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
