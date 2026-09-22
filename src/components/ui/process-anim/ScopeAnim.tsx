@@ -12,9 +12,9 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  // Total duration: 11.5s cycle (45% build-up, 35% hold, 20% graceful fade-out reset)
-  const DURATION = 11.5;
-  const REPEAT_DELAY = 0.5;
+  // 14.0s total cycle (0-6s build-up, 6-11.5s 5.5s hold, 11.5-12.3s fade, 12.3-14s rest)
+  const DURATION = 14.0;
+  const REPEAT_DELAY = 0;
 
   return (
     <svg
@@ -24,72 +24,108 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── 1. PERMANENT DOCUMENT CONTAINER (NEVER DISAPPEARS) ── */}
-      {/* Internal padding: exactly 32 units on all sides (x: 32..568, y: 32..306) */}
+      {/* ── 1. PERMANENT DOCUMENT PANEL STRUCTURE ── */}
+      {/* x: 32, y: 32, w: 536, h: 274, 1px --fog border, radius 6, fill --paper */}
       <rect
         x="32"
         y="32"
         width="536"
         height="274"
-        rx="10"
-        fill="var(--paper-2)"
-        stroke="var(--hairline)"
-        strokeWidth="1.2"
+        rx="6"
+        fill="var(--paper)"
+        stroke="var(--fog)"
+        strokeWidth="1"
       />
 
-      {/* Header Row (Permanent) */}
+      {/* Header divider: x: 32, y: 74, w: 536, h: 1, --fog */}
+      <line x1="32" y1="74" x2="568" y2="74" stroke="var(--fog)" strokeWidth="1" />
+
+      {/* PROJECT SCOPE: x=52, centre-aligned vertically on y=53 */}
       <text
-        x="56"
-        y="59"
+        x="52"
+        y="53"
+        dominantBaseline="middle"
         fill="var(--ink)"
         fontFamily="var(--font-mono)"
-        fontSize="9.5"
+        fontSize="9"
         fontWeight="700"
-        letterSpacing="0.08em"
+        letterSpacing="0.04em"
       >
         PROJECT SCOPE
       </text>
 
-      {/* Divider line below header (Permanent) */}
-      <line x1="56" y1="72" x2="544" y2="72" stroke="var(--hairline)" strokeWidth="1" />
+      {/* ── PERMANENT ROW DIVIDERS & LABELS ── */}
+      {/* Row 1 (y: 74..120, centre y=97) */}
+      <line x1="32" y1="120" x2="568" y2="120" stroke="var(--fog)" strokeWidth="1" />
+      <text
+        x="52"
+        y="97"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        Scope
+      </text>
 
-      {/* ── PERMANENT SPECIFICATION LABELS & ROW DIVIDERS ── */}
-      {[
-        { label: 'Scope', y: 92 },
-        { label: 'Platforms', y: 132 },
-        { label: 'Who edits it', y: 172 },
-        { label: 'Timeline', y: 212 },
-        { label: 'Price', y: 252 },
-      ].map((row, idx) => (
-        <g key={row.label}>
-          {idx > 0 && (
-            <line
-              x1="56"
-              y1={row.y - 14}
-              x2="544"
-              y2={row.y - 14}
-              stroke="var(--hairline)"
-              strokeWidth="0.8"
-              opacity="0.6"
-            />
-          )}
-          {/* Row Label (Always visible at low/subtle contrast) */}
-          <text
-            x="56"
-            y={row.y + 12}
-            fill="var(--mist)"
-            fontFamily="var(--font-mono)"
-            fontSize="9.5"
-            fontWeight="500"
-            letterSpacing="0.04em"
-          >
-            {row.label}
-          </text>
-        </g>
-      ))}
+      {/* Row 2 (y: 120..166, centre y=143) */}
+      <line x1="32" y1="166" x2="568" y2="166" stroke="var(--fog)" strokeWidth="1" />
+      <text
+        x="52"
+        y="143"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        Platforms
+      </text>
 
-      {/* ── 2. DRAFT / AGREED STATUS PILL ── */}
-      {/* DRAFT pill (visible initially, hides during hold, resets at end) */}
+      {/* Row 3 (y: 166..212, centre y=189) */}
+      <line x1="32" y1="212" x2="568" y2="212" stroke="var(--fog)" strokeWidth="1" />
+      <text
+        x="52"
+        y="189"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        Who edits it
+      </text>
+
+      {/* Row 4 (y: 212..258, centre y=235) */}
+      <line x1="32" y1="258" x2="568" y2="258" stroke="var(--fog)" strokeWidth="1" />
+      <text
+        x="52"
+        y="235"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        Timeline
+      </text>
+
+      {/* Row 5 (y: 258..304, centre y=281) */}
+      <text
+        x="52"
+        y="281"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        Price
+      </text>
+
+      {/* ── 2. STATUS PILL (x: 470, y: 41, w: 78, h: 24, radius 12; DRAFT -> AGREED) ── */}
+      {/* DRAFT pill */}
       <motion.g
         initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
         animate={
@@ -104,34 +140,34 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
           delay: isPlaying ? delay : 0,
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: REPEAT_DELAY,
-          times: [0, 0.44, 0.48, 0.50, 0.84, 0.88, 1],
+          times: [0, 0.38, 0.40, 0.41, 0.82, 0.88, 1],
         }}
       >
         <rect
-          x="480"
-          y="44"
-          width="64"
-          height="20"
-          rx="4"
+          x="470"
+          y="41"
+          width="78"
+          height="24"
+          rx="12"
           fill="var(--paper)"
           stroke="var(--fog)"
           strokeWidth="1"
         />
         <text
-          x="512"
-          y="58"
+          x="509"
+          y="53"
           textAnchor="middle"
-          fill="var(--mist)"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
           fontFamily="var(--font-mono)"
           fontSize="9"
-          fontWeight="600"
           letterSpacing="0.04em"
         >
           DRAFT
         </text>
       </motion.g>
 
-      {/* AGREED pill (snaps on at t=50%, holds through 82%, then gently fades) */}
+      {/* AGREED pill */}
       <motion.g
         initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
         animate={
@@ -148,149 +184,327 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
           delay: isPlaying ? delay : 0,
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: REPEAT_DELAY,
-          times: [0, 0.48, 0.51, 0.82, 0.88, 1],
+          times: [0, 0.40, 0.41, 0.82, 0.88, 1],
         }}
       >
         <rect
-          x="480"
-          y="44"
-          width="64"
-          height="20"
-          rx="4"
+          x="470"
+          y="41"
+          width="78"
+          height="24"
+          rx="12"
           fill="var(--ink)"
         />
         <text
-          x="512"
-          y="58"
+          x="509"
+          y="53"
           textAnchor="middle"
+          dominantBaseline="middle"
           fill="var(--paper)"
           fontFamily="var(--font-mono)"
           fontSize="9"
           fontWeight="700"
-          letterSpacing="0.06em"
+          letterSpacing="0.04em"
         >
           AGREED
         </text>
       </motion.g>
 
-      {/* ── 3. FIVE SPECIFICATION LINE VALUES & CHECKMARKS ── */}
-      {[
-        {
-          val: 'Pages, flows, admin screens',
-          y: 92,
-          enterTime: 0.22,
-          checkTime: 0.26,
-        },
-        {
-          val: 'Web · Mobile',
-          y: 132,
-          enterTime: 0.28,
-          checkTime: 0.32,
-        },
-        {
-          val: 'Your team, no developer',
-          y: 172,
-          enterTime: 0.34,
-          checkTime: 0.38,
-        },
-        {
-          val: 'Agreed before work starts',
-          y: 212,
-          enterTime: 0.40,
-          checkTime: 0.44,
-        },
-        {
-          val: 'REDACTED',
-          isRedacted: true,
-          y: 252,
-          enterTime: 0.46,
-          checkTime: 0.50,
-        },
-      ].map((item) => (
-        <g key={item.val}>
-          {/* Value Content */}
-          <motion.g
-            initial={shouldReduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
-            animate={
-              isPlaying
-                ? {
-                    opacity: [0, 0, 1, 1, 0, 0],
-                    x: [-6, -6, 0, 0, 0, -6],
-                  }
-                : shouldReduceMotion
-                  ? { opacity: 1, x: 0 }
-                  : { opacity: 0 }
-            }
-            transition={{
-              duration: DURATION,
-              delay: isPlaying ? delay : 0,
-              repeat: isPlaying ? Infinity : 0,
-              repeatDelay: REPEAT_DELAY,
-              ease: [0.16, 1, 0.3, 1],
-              times: [0, item.enterTime - 0.03, item.enterTime + 0.02, 0.82, 0.88, 1],
-            }}
-          >
-            {item.isRedacted ? (
-              <rect
-                x="180"
-                y={item.y}
-                width="88"
-                height="16"
-                rx="3"
-                fill="var(--ink)"
-              />
-            ) : (
-              <text
-                x="180"
-                y={item.y + 12}
-                fill="var(--ink)"
-                fontFamily="var(--font-mono)"
-                fontSize="9.5"
-                fontWeight="600"
-                letterSpacing="0.02em"
-              >
-                {item.val}
-              </text>
-            )}
-          </motion.g>
+      {/* ── 3. SPECIFICATION VALUES & CHECKS ── */}
+      {/* Row 1 Value: Pages, flows, admin screens (x: 190, centre y: 97) */}
+      <motion.text
+        x="190"
+        y="97"
+        dominantBaseline="middle"
+        fill="var(--ink)"
+        fontFamily="var(--font-mono)"
+        fontSize="10"
+        fontWeight="600"
+        letterSpacing="0.04em"
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.17, 0.20, 0.82, 0.88, 1],
+        }}
+      >
+        Pages, flows, admin screens
+      </motion.text>
 
-          {/* Checkmark icon for this row */}
-          <motion.path
-            d={`M 522 ${item.y + 7} L 527 ${item.y + 12} L 537 ${item.y + 2}`}
-            fill="none"
-            stroke="var(--ink)"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={
-              shouldReduceMotion
-                ? { opacity: 1, pathLength: 1 }
-                : { opacity: 0, pathLength: 0 }
-            }
-            animate={
-              isPlaying
-                ? {
-                    opacity: [0, 0, 1, 1, 0, 0],
-                    pathLength: [0, 0, 1, 1, 1, 0],
-                  }
-                : shouldReduceMotion
-                  ? { opacity: 1, pathLength: 1 }
-                  : { opacity: 0 }
-            }
-            transition={{
-              duration: DURATION,
-              delay: isPlaying ? delay : 0,
-              repeat: isPlaying ? Infinity : 0,
-              repeatDelay: REPEAT_DELAY,
-              ease: 'easeOut',
-              times: [0, item.checkTime, item.checkTime + 0.03, 0.82, 0.88, 1],
-            }}
-          />
-        </g>
-      ))}
+      {/* Row 1 Checkmark (centred at x=534, y=97, 12x12) */}
+      <motion.path
+        d="M 528 97 L 532 101 L 540 93"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+                pathLength: [0, 0, 1, 1, 1, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1, pathLength: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.20, 0.23, 0.82, 0.88, 1],
+        }}
+      />
 
-      {/* ── 4. OPENING BEAT: THREE CHAT BUBBLES ── */}
-      {/* Appear briefly over the document during t=0.02..0.20, then condense out */}
+      {/* Row 2 Value: Web · Mobile (middle dot U+00B7) (x: 190, centre y: 143) */}
+      <motion.text
+        x="190"
+        y="143"
+        dominantBaseline="middle"
+        fill="var(--ink)"
+        fontFamily="var(--font-mono)"
+        fontSize="10"
+        fontWeight="600"
+        letterSpacing="0.04em"
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.22, 0.25, 0.82, 0.88, 1],
+        }}
+      >
+        Web · Mobile
+      </motion.text>
+
+      {/* Row 2 Checkmark (centred at x=534, y=143) */}
+      <motion.path
+        d="M 528 143 L 532 147 L 540 139"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+                pathLength: [0, 0, 1, 1, 1, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1, pathLength: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.25, 0.28, 0.82, 0.88, 1],
+        }}
+      />
+
+      {/* Row 3 Value: Your team, no developer (x: 190, centre y: 189) */}
+      <motion.text
+        x="190"
+        y="189"
+        dominantBaseline="middle"
+        fill="var(--ink)"
+        fontFamily="var(--font-mono)"
+        fontSize="10"
+        fontWeight="600"
+        letterSpacing="0.04em"
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.27, 0.30, 0.82, 0.88, 1],
+        }}
+      >
+        Your team, no developer
+      </motion.text>
+
+      {/* Row 3 Checkmark (centred at x=534, y=189) */}
+      <motion.path
+        d="M 528 189 L 532 193 L 540 185"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+                pathLength: [0, 0, 1, 1, 1, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1, pathLength: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.30, 0.33, 0.82, 0.88, 1],
+        }}
+      />
+
+      {/* Row 4 Value: Agreed before work starts (x: 190, centre y: 235) */}
+      <motion.text
+        x="190"
+        y="235"
+        dominantBaseline="middle"
+        fill="var(--ink)"
+        fontFamily="var(--font-mono)"
+        fontSize="10"
+        fontWeight="600"
+        letterSpacing="0.04em"
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.32, 0.35, 0.82, 0.88, 1],
+        }}
+      >
+        Agreed before work starts
+      </motion.text>
+
+      {/* Row 4 Checkmark (centred at x=534, y=235) */}
+      <motion.path
+        d="M 528 235 L 532 239 L 540 231"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+                pathLength: [0, 0, 1, 1, 1, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1, pathLength: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.35, 0.38, 0.82, 0.88, 1],
+        }}
+      />
+
+      {/* Row 5 Value: Redacted bar: x 190, y 275, w 96, h 12, fill --paper-2, 1px --fog border */}
+      <motion.rect
+        x="190"
+        y="275"
+        width="96"
+        height="12"
+        rx="2"
+        fill="var(--paper-2)"
+        stroke="var(--fog)"
+        strokeWidth="1"
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.37, 0.40, 0.82, 0.88, 1],
+        }}
+      />
+
+      {/* Row 5 Checkmark (centred at x=534, y=281) */}
+      <motion.path
+        d="M 528 281 L 532 285 L 540 277"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={shouldReduceMotion ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+                pathLength: [0, 0, 1, 1, 1, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1, pathLength: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.40, 0.43, 0.82, 0.88, 1],
+        }}
+      />
+
+      {/* ── 4. OPENING CHAT BUBBLES (INSIDE PANEL BODY y: 74..306) ── */}
       {/* Bubble 1 (Client) */}
       <motion.g
         initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
@@ -308,39 +522,29 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: REPEAT_DELAY,
           ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.03, 0.16, 0.22, 1],
+          times: [0, 0.02, 0.12, 0.16, 1],
         }}
       >
         <rect
-          x="56"
-          y="84"
-          width="268"
-          height="42"
-          rx="8"
+          x="48"
+          y="86"
+          width="264"
+          height="34"
+          rx="6"
           fill="var(--paper)"
           stroke="var(--fog)"
-          strokeWidth="1.2"
+          strokeWidth="1"
         />
         <text
-          x="70"
-          y="101"
-          fill="var(--ink)"
-          fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          fontWeight="500"
-          letterSpacing="0.02em"
-        >
-          &quot;Need customer portal, mobile-ready,&quot;
-        </text>
-        <text
-          x="70"
-          y="115"
+          x="60"
+          y="103"
+          dominantBaseline="middle"
           fill="var(--graphite)"
           fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          letterSpacing="0.02em"
+          fontSize="9"
+          letterSpacing="0.04em"
         >
-          &quot;and an admin back office for the team.&quot;
+          &quot;Need client portal + admin screens&quot;
         </text>
       </motion.g>
 
@@ -361,39 +565,29 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: REPEAT_DELAY,
           ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.07, 0.12, 0.22, 1],
+          times: [0, 0.05, 0.12, 0.16, 1],
         }}
       >
         <rect
           x="276"
-          y="136"
-          width="268"
-          height="42"
-          rx="8"
-          fill="var(--fog)"
-          stroke="var(--hairline)"
-          strokeWidth="1.2"
+          y="132"
+          width="264"
+          height="34"
+          rx="6"
+          fill="var(--paper-2)"
+          stroke="var(--fog)"
+          strokeWidth="1"
         />
         <text
-          x="290"
-          y="153"
+          x="288"
+          y="149"
+          dominantBaseline="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          fontWeight="500"
-          letterSpacing="0.02em"
+          fontSize="9"
+          letterSpacing="0.04em"
         >
-          &quot;Understood. Clear milestone scope,&quot;
-        </text>
-        <text
-          x="290"
-          y="167"
-          fill="var(--graphite)"
-          fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          letterSpacing="0.02em"
-        >
-          &quot;full schema + fixed quote ready.&quot;
+          &quot;Understood. 6 weeks milestone scope.&quot;
         </text>
       </motion.g>
 
@@ -414,29 +608,29 @@ export function ScopeAnim({ inView, delay = 0 }: AnimProps) {
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: REPEAT_DELAY,
           ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.13, 0.17, 0.22, 1],
+          times: [0, 0.09, 0.13, 0.16, 1],
         }}
       >
         <rect
-          x="80"
-          y="188"
-          width="244"
-          height="34"
-          rx="8"
+          x="64"
+          y="178"
+          width="240"
+          height="32"
+          rx="6"
           fill="var(--paper)"
           stroke="var(--fog)"
-          strokeWidth="1.2"
+          strokeWidth="1"
         />
         <text
-          x="94"
-          y="209"
-          fill="var(--ink)"
+          x="76"
+          y="194"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
           fontFamily="var(--font-mono)"
-          fontSize="9.5"
-          fontWeight="500"
-          letterSpacing="0.02em"
+          fontSize="9"
+          letterSpacing="0.04em"
         >
-          &quot;Perfect. Let&apos;s lock the spec.&quot;
+          &quot;Agreed. Let&apos;s lock the spec.&quot;
         </text>
       </motion.g>
     </svg>

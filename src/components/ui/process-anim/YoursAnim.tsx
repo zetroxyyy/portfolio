@@ -12,9 +12,10 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  const DURATION = 11.5;
-  const REPEAT_DELAY = 0.5;
-  const CIRCUMFERENCE = 175.9; // 2 * PI * 28
+  // 14.0s total cycle (0-6s build-up, 6-11.5s 5.5s hold, 11.5-12.3s fade, 12.3-14s rest)
+  const DURATION = 14.0;
+  const REPEAT_DELAY = 0;
+  const CIRCUMFERENCE = 201.06; // 2 * PI * 32
 
   return (
     <svg
@@ -24,440 +25,295 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── 1. PERMANENT ADMIN CONSOLE (TOP / CENTER) ── */}
-      {/* Internal padding: 32 units on all sides (x: 32..568, y: 32..306) */}
-      <g>
-        {/* Panel Frame */}
+      {/* ── 1. PERMANENT CONSOLE PANEL ── */}
+      {/* x: 32, y: 32, w: 536, h: 186, radius 6, 1px --fog border, fill --paper */}
+      <rect
+        x="32"
+        y="32"
+        width="536"
+        height="186"
+        rx="6"
+        fill="var(--paper)"
+        stroke="var(--fog)"
+        strokeWidth="1"
+      />
+
+      {/* Window dots: three 5-unit dots, 8 apart, starting x=48, y=46 */}
+      <circle cx="50.5" cy="48.5" r="2.5" fill="var(--fog)" />
+      <circle cx="58.5" cy="48.5" r="2.5" fill="var(--fog)" />
+      <circle cx="66.5" cy="48.5" r="2.5" fill="var(--fog)" />
+
+      {/* YOUR ADMIN CONSOLE: x=84, centre y=48 */}
+      <text
+        x="84"
+        y="48"
+        dominantBaseline="middle"
+        fill="var(--ink)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        fontWeight="700"
+        letterSpacing="0.04em"
+      >
+        YOUR ADMIN CONSOLE
+      </text>
+
+      {/* Access pill: x: 462, y: 38, w: 90, h: 22; READ ONLY -> OWNER ACCESS */}
+      {/* READ ONLY pill (Initial state) */}
+      <motion.g
+        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [1, 1, 0, 0, 0, 1],
+              }
+            : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.26, 0.28, 0.82, 0.88, 1],
+        }}
+      >
         <rect
-          x="32"
-          y="32"
-          width="536"
-          height="194"
-          rx="10"
+          x="462"
+          y="38"
+          width="90"
+          height="22"
+          rx="4"
           fill="var(--paper-2)"
-          stroke="var(--hairline)"
-          strokeWidth="1.2"
+          stroke="var(--fog)"
+          strokeWidth="1"
         />
+        <text
+          x="507"
+          y="49"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          letterSpacing="0.04em"
+        >
+          READ ONLY
+        </text>
+      </motion.g>
 
-        {/* ── HEADER ROW ── */}
-        <g>
-          {/* Window control dots */}
-          <circle cx="48" cy="47" r="3" fill="var(--fog)" />
-          <circle cx="58" cy="47" r="3" fill="var(--fog)" />
-          <circle cx="68" cy="47" r="3" fill="var(--fog)" />
+      {/* OWNER ACCESS pill (Active state) */}
+      <motion.g
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={
+          isPlaying
+            ? {
+                opacity: [0, 0, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { opacity: 1 }
+              : { opacity: 0 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          times: [0, 0.26, 0.28, 0.82, 0.88, 1],
+        }}
+      >
+        <rect
+          x="462"
+          y="38"
+          width="90"
+          height="22"
+          rx="4"
+          fill="var(--ink)"
+        />
+        <text
+          x="507"
+          y="49"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="var(--paper)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="700"
+          letterSpacing="0.04em"
+        >
+          OWNER ACCESS
+        </text>
+      </motion.g>
 
-          {/* Console Title */}
-          <text
-            x="86"
-            y="50.5"
-            fill="var(--ink)"
-            fontFamily="var(--font-mono)"
-            fontSize="9.5"
-            fontWeight="700"
-            letterSpacing="0.08em"
-          >
-            YOUR ADMIN CONSOLE
-          </text>
+      {/* Header divider: x: 32, y: 66, w: 536, h: 1 */}
+      <line x1="32" y1="66" x2="568" y2="66" stroke="var(--fog)" strokeWidth="1" />
 
-          {/* READ ONLY pill (Initial State, hides when key arrives) */}
-          <motion.g
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
-            animate={
-              isPlaying
-                ? {
-                    opacity: [1, 1, 0, 0, 1],
-                  }
-                : { opacity: 0 }
-            }
-            transition={{
-              duration: DURATION,
-              delay: isPlaying ? delay : 0,
-              repeat: isPlaying ? Infinity : 0,
-              repeatDelay: REPEAT_DELAY,
-              times: [0, 0.38, 0.42, 0.85, 1],
-            }}
-          >
+      {/* ── SIDEBAR (x: 32, y: 66, w: 116, h: 152) ── */}
+      {/* Sidebar divider: x: 148, y: 66, h: 152, vertical */}
+      <line x1="148" y1="66" x2="148" y2="218" stroke="var(--fog)" strokeWidth="1" />
+
+      {/* 5 items, 26 apart, first centre y=84: Dashboard (84), Content (110), Customers (136), Orders (162), Settings (188) */}
+      {[
+        { label: 'Dashboard', y: 84, active: true },
+        { label: 'Content', y: 110, active: false },
+        { label: 'Customers', y: 136, active: false },
+        { label: 'Orders', y: 162, active: false },
+        { label: 'Settings', y: 188, active: false },
+      ].map((item) => (
+        <g key={item.label}>
+          {item.active && (
             <rect
-              x="464"
-              y="37"
-              width="92"
+              x="42"
+              y="74"
+              width="96"
               height="20"
-              rx="4"
-              fill="var(--paper)"
+              rx="3"
+              fill="var(--paper-2)"
               stroke="var(--fog)"
-              strokeWidth="1"
+              strokeWidth="0.8"
             />
-            <text
-              x="510"
-              y="50.5"
-              textAnchor="middle"
-              fill="var(--mist)"
-              fontFamily="var(--font-mono)"
-              fontSize="8.5"
-              fontWeight="600"
-              letterSpacing="0.04em"
-            >
-              READ ONLY
-            </text>
-          </motion.g>
-
-          {/* OWNER ACCESS pill (Active State, flips on when key arrives) */}
-          <motion.g
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          )}
+          <motion.text
+            x="50"
+            y={item.y}
+            dominantBaseline="middle"
+            fontFamily="var(--font-mono)"
+            fontSize="9"
+            fontWeight={item.active ? '700' : '500'}
+            letterSpacing="0.04em"
+            initial={shouldReduceMotion ? { fill: 'var(--ink)' } : { fill: 'var(--graphite)' }}
             animate={
               isPlaying
                 ? {
-                    opacity: [0, 0, 1, 1, 0],
+                    fill: [
+                      'var(--graphite)',
+                      'var(--graphite)',
+                      'var(--ink)',
+                      'var(--ink)',
+                      'var(--graphite)',
+                    ],
                   }
                 : shouldReduceMotion
-                  ? { opacity: 1 }
-                  : { opacity: 0 }
+                  ? { fill: 'var(--ink)' }
+                  : { fill: 'var(--graphite)' }
             }
             transition={{
               duration: DURATION,
               delay: isPlaying ? delay : 0,
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
-              times: [0, 0.38, 0.42, 0.85, 1],
+              times: [0, 0.26, 0.28, 0.82, 0.88, 1],
             }}
           >
-            <rect
-              x="464"
-              y="37"
-              width="92"
-              height="20"
-              rx="4"
-              fill="var(--ink)"
-            />
-            <text
-              x="510"
-              y="50.5"
-              textAnchor="middle"
-              fill="var(--paper)"
-              fontFamily="var(--font-mono)"
-              fontSize="8.5"
-              fontWeight="700"
-              letterSpacing="0.06em"
-            >
-              OWNER ACCESS
-            </text>
-          </motion.g>
-
-          {/* Divider below header */}
-          <line x1="32" y1="62" x2="568" y2="62" stroke="var(--hairline)" strokeWidth="1" />
+            {item.label}
+          </motion.text>
         </g>
+      ))}
 
-        {/* ── SIDEBAR (LEFT) ── */}
-        {/* Width: 114px (x=32 to x=146) */}
-        <g>
-          {/* Vertical divider */}
-          <line x1="146" y1="62" x2="146" y2="226" stroke="var(--hairline)" strokeWidth="1" />
+      {/* ── TABLE AREA (x: 148..568) ── */}
+      {/* Table header: centre y=84: REF x 164, RECORD x 236, STATUS x 470 */}
+      <text
+        x="164"
+        y="84"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        REF
+      </text>
+      <text
+        x="236"
+        y="84"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        RECORD
+      </text>
+      <text
+        x="470"
+        y="84"
+        dominantBaseline="middle"
+        fill="var(--graphite)"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        letterSpacing="0.04em"
+      >
+        STATUS
+      </text>
 
-          {/* 5 Generic Nav Items: Dashboard, Content, Customers, Orders, Settings */}
-          {[
-            { label: 'Dashboard', y: 82, active: true },
-            { label: 'Content', y: 110, active: false },
-            { label: 'Customers', y: 138, active: false },
-            { label: 'Orders', y: 166, active: false },
-            { label: 'Settings', y: 194, active: false },
-          ].map((nav) => (
-            <g key={nav.label}>
-              {/* Active nav indicator */}
-              {nav.active && (
-                <motion.rect
-                  x="40"
-                  y={nav.y - 10}
-                  width="98"
-                  height="18"
-                  rx="3"
-                  initial={
-                    shouldReduceMotion
-                      ? { fill: 'var(--paper)', opacity: 1 }
-                      : { fill: 'var(--paper)', opacity: 0.4 }
+      {/* Row dividers */}
+      <line x1="148" y1="100" x2="568" y2="100" stroke="var(--fog)" strokeWidth="0.8" opacity="0.6" />
+      <line x1="148" y1="134" x2="568" y2="134" stroke="var(--fog)" strokeWidth="0.8" opacity="0.6" />
+      <line x1="148" y1="168" x2="568" y2="168" stroke="var(--fog)" strokeWidth="0.8" opacity="0.6" />
+
+      {/* Table rows: centres y 116, 150, 184 */}
+      {[
+        { ref: '#1042', status: 'ACTIVE', y: 116 },
+        { ref: '#1043', status: 'ACTIVE', y: 150 },
+        { ref: '#1044', status: 'PENDING', y: 184 },
+      ].map((row) => (
+        <g key={row.ref}>
+          {/* REF (x: 164) */}
+          <motion.text
+            x="164"
+            y={row.y}
+            dominantBaseline="middle"
+            fontFamily="var(--font-mono)"
+            fontSize="10"
+            fontWeight="600"
+            letterSpacing="0.04em"
+            initial={shouldReduceMotion ? { fill: 'var(--ink)' } : { fill: 'var(--graphite)' }}
+            animate={
+              isPlaying
+                ? {
+                    fill: [
+                      'var(--graphite)',
+                      'var(--graphite)',
+                      'var(--ink)',
+                      'var(--ink)',
+                      'var(--graphite)',
+                    ],
                   }
-                  animate={
-                    isPlaying
-                      ? {
-                          opacity: [0.4, 0.4, 1, 1, 0.4],
-                        }
-                      : shouldReduceMotion
-                        ? { opacity: 1 }
-                        : { opacity: 0.4 }
-                  }
-                  transition={{
-                    duration: DURATION,
-                    delay: isPlaying ? delay : 0,
-                    repeat: isPlaying ? Infinity : 0,
-                    repeatDelay: REPEAT_DELAY,
-                    times: [0, 0.38, 0.42, 0.85, 1],
-                  }}
-                />
-              )}
+                : shouldReduceMotion
+                  ? { fill: 'var(--ink)' }
+                  : { fill: 'var(--graphite)' }
+            }
+            transition={{
+              duration: DURATION,
+              delay: isPlaying ? delay : 0,
+              repeat: isPlaying ? Infinity : 0,
+              repeatDelay: REPEAT_DELAY,
+              times: [0, 0.26, 0.28, 0.82, 0.88, 1],
+            }}
+          >
+            {row.ref}
+          </motion.text>
 
-              {/* Nav item text */}
-              <motion.text
-                x="48"
-                y={nav.y + 2.5}
-                fontFamily="var(--font-mono)"
-                fontSize="9"
-                fontWeight={nav.active ? '700' : '500'}
-                letterSpacing="0.04em"
-                initial={
-                  shouldReduceMotion
-                    ? { fill: 'var(--ink)' }
-                    : { fill: 'var(--mist)' }
-                }
-                animate={
-                  isPlaying
-                    ? {
-                        fill: [
-                          'var(--mist)',
-                          'var(--mist)',
-                          'var(--ink)',
-                          'var(--ink)',
-                          'var(--mist)',
-                        ],
-                      }
-                    : shouldReduceMotion
-                      ? { fill: 'var(--ink)' }
-                      : { fill: 'var(--mist)' }
-                }
-                transition={{
-                  duration: DURATION,
-                  delay: isPlaying ? delay : 0,
-                  repeat: isPlaying ? Infinity : 0,
-                  repeatDelay: REPEAT_DELAY,
-                  times: [0, 0.38, 0.42, 0.85, 1],
-                }}
-              >
-                {nav.label}
-              </motion.text>
-            </g>
-          ))}
-        </g>
-
-        {/* ── TABLE AREA (RIGHT OF SIDEBAR) ── */}
-        {/* x=146 to x=568 */}
-        <g>
-          {/* Table Column Headers */}
-          <text x="162" y="78" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="8" fontWeight="600" letterSpacing="0.06em">REF</text>
-          <text x="240" y="78" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="8" fontWeight="600" letterSpacing="0.06em">RECORD</text>
-          <text x="496" y="78" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="8" fontWeight="600" letterSpacing="0.06em">STATUS</text>
-          <line x1="146" y1="86" x2="568" y2="86" stroke="var(--hairline)" strokeWidth="0.8" />
-
-          {/* Three Table Rows with REF, Neutral Bar, and Status Pill (NO invented people) */}
-          {[
-            { ref: '#1042', barW: 150, status: 'ACTIVE', y: 104 },
-            { ref: '#1043', barW: 130, status: 'ACTIVE', y: 140 },
-            { ref: '#1044', barW: 165, status: 'PENDING', y: 176 },
-          ].map((row, idx) => (
-            <g key={row.ref}>
-              {idx > 0 && (
-                <line
-                  x1="156"
-                  y1={row.y - 18}
-                  x2="558"
-                  y2={row.y - 18}
-                  stroke="var(--hairline)"
-                  strokeWidth="0.6"
-                  opacity="0.6"
-                />
-              )}
-
-              {/* Row container background */}
-              <motion.rect
-                x="156"
-                y={row.y - 14}
-                width="402"
-                height="28"
-                rx="4"
-                initial={
-                  shouldReduceMotion
-                    ? { fill: 'var(--paper)', opacity: 0.85 }
-                    : { fill: 'var(--paper)', opacity: 0.3 }
-                }
-                animate={
-                  isPlaying
-                    ? {
-                        opacity: [0.3, 0.3, 0.85, 0.85, 0.3],
-                      }
-                    : shouldReduceMotion
-                      ? { opacity: 0.85 }
-                      : { opacity: 0.3 }
-                }
-                transition={{
-                  duration: DURATION,
-                  delay: isPlaying ? delay : 0,
-                  repeat: isPlaying ? Infinity : 0,
-                  repeatDelay: REPEAT_DELAY,
-                  times: [0, 0.38, 0.42, 0.85, 1],
-                }}
-              />
-
-              {/* Row text & neutral bars: brighten from --fog to --ink upon handover */}
-              <motion.g
-                initial={
-                  shouldReduceMotion
-                    ? { fill: 'var(--ink)' }
-                    : { fill: 'var(--fog)' }
-                }
-                animate={
-                  isPlaying
-                    ? {
-                        fill: [
-                          'var(--fog)',
-                          'var(--fog)',
-                          'var(--ink)',
-                          'var(--ink)',
-                          'var(--fog)',
-                        ],
-                      }
-                    : shouldReduceMotion
-                      ? { fill: 'var(--ink)' }
-                      : { fill: 'var(--fog)' }
-                }
-                transition={{
-                  duration: DURATION,
-                  delay: isPlaying ? delay : 0,
-                  repeat: isPlaying ? Infinity : 0,
-                  repeatDelay: REPEAT_DELAY,
-                  times: [0, 0.38, 0.42, 0.85, 1],
-                }}
-              >
-                {/* REF Column */}
-                <text x="166" y={row.y + 4} fontFamily="var(--font-mono)" fontSize="9" fontWeight="600">
-                  {row.ref}
-                </text>
-
-                {/* Neutral Data Bar where an invented name would be */}
-                <rect x="240" y={row.y - 2} width={row.barW} height="7" rx="2" fill="currentColor" opacity="0.8" />
-
-                {/* Status Pill */}
-                <rect x="490" y={row.y - 8} width="58" height="16" rx="3" fill="var(--paper-2)" stroke="currentColor" strokeWidth="0.8" />
-                <text x="519" y={row.y + 3.5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="7.5" fontWeight="700">
-                  {row.status}
-                </text>
-              </motion.g>
-            </g>
-          ))}
-        </g>
-      </g>
-
-      {/* ── 2. BOTTOM ROW: ACCOUNT CHIPS & KEY TRANSFER + WARRANTY ARC ── */}
-      {/* y=244 to y=306 (Internal padding: 32 units, within y_max: 306) */}
-      <g>
-        {/* ── ACCOUNT CHIP 1: zetroxy · DEVELOPER (LEFT) ── */}
-        <g transform="translate(32, 246)">
+          {/* RECORD: a --paper-2 bar (x 236, w 180, h 10, rx 2, 1px --fog border) */}
           <rect
-            x="0"
-            y="0"
-            width="146"
-            height="38"
-            rx="19"
+            x="236"
+            y={row.y - 5}
+            width="180"
+            height="10"
+            rx="2"
             fill="var(--paper-2)"
             stroke="var(--fog)"
-            strokeWidth="1.2"
+            strokeWidth="1"
           />
-          {/* Avatar */}
-          <circle cx="20" cy="19" r="11" fill="var(--ink)" />
-          <text
-            x="20"
-            y="22.5"
-            textAnchor="middle"
-            fill="var(--paper)"
-            fontFamily="var(--font-mono)"
-            fontSize="9"
-            fontWeight="700"
-          >
-            Z
-          </text>
-          {/* Account name */}
-          <text
-            x="38"
-            y="17"
-            fill="var(--ink)"
-            fontFamily="var(--font-mono)"
-            fontSize="9"
-            fontWeight="600"
-          >
-            zetroxy
-          </text>
-          {/* Role badge */}
-          <text
-            x="38"
-            y="28"
-            fill="var(--mist)"
-            fontFamily="var(--font-mono)"
-            fontSize="7.5"
-            fontWeight="500"
-          >
-            DEVELOPER
-          </text>
-        </g>
 
-        {/* ── TRANSFER TRACK (BETWEEN CHIPS) ── */}
-        <line
-          x1="178"
-          y1="265"
-          x2="242"
-          y2="265"
-          stroke="var(--fog)"
-          strokeWidth="1.5"
-          strokeDasharray="3 3"
-        />
-
-        {/* ── SLIDING KEY GLYPH ── */}
-        {/* Slides from zetroxy (x=182) to You (x=240) */}
-        <motion.g
-          initial={
-            shouldReduceMotion
-              ? { x: 240, y: 265, opacity: 1 }
-              : { x: 182, y: 265, opacity: 1 }
-          }
-          animate={
-            isPlaying
-              ? {
-                  x: [182, 182, 240, 240, 182],
-                  opacity: [1, 1, 1, 1, 0],
-                }
-              : shouldReduceMotion
-                ? { x: 240, y: 265, opacity: 1 }
-                : { x: 182, y: 265, opacity: 0 }
-          }
-          transition={{
-            duration: DURATION,
-            delay: isPlaying ? delay : 0,
-            repeat: isPlaying ? Infinity : 0,
-            repeatDelay: REPEAT_DELAY,
-            ease: [0.16, 1, 0.3, 1],
-            times: [0, 0.16, 0.38, 0.85, 1],
-          }}
-        >
-          {/* Key Head */}
-          <circle cx="0" cy="0" r="7" fill="none" stroke="var(--ink)" strokeWidth="1.8" />
-          {/* Key Shaft */}
-          <line x1="7" y1="0" x2="20" y2="0" stroke="var(--ink)" strokeWidth="1.8" strokeLinecap="round" />
-          {/* Key Teeth */}
-          <line x1="16" y1="0" x2="16" y2="5" stroke="var(--ink)" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1="20" y1="0" x2="20" y2="4" stroke="var(--ink)" strokeWidth="1.8" strokeLinecap="round" />
-        </motion.g>
-
-        {/* ── ACCOUNT CHIP 2: You · OWNER (RIGHT OF TRACK) ── */}
-        <g transform="translate(242, 246)">
-          {/* Border brightens to ink when key arrives */}
+          {/* STATUS: status pill (x 470, w 62, h 18, rx 4) */}
           <motion.rect
-            x="0"
-            y="0"
-            width="134"
-            height="38"
-            rx="19"
-            fill="var(--paper-2)"
-            strokeWidth="1.2"
-            initial={
-              shouldReduceMotion
-                ? { stroke: 'var(--ink)' }
-                : { stroke: 'var(--fog)' }
-            }
+            x="470"
+            y={row.y - 9}
+            width="62"
+            height="18"
+            rx="4"
+            fill="var(--paper)"
+            strokeWidth="1"
+            initial={shouldReduceMotion ? { stroke: 'var(--ink)' } : { stroke: 'var(--fog)' }}
             animate={
               isPlaying
                 ? {
@@ -478,127 +334,304 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
               delay: isPlaying ? delay : 0,
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
-              times: [0, 0.36, 0.40, 0.85, 1],
+              times: [0, 0.26, 0.28, 0.82, 0.88, 1],
             }}
           />
-          {/* Avatar */}
-          <circle cx="20" cy="19" r="11" fill="var(--ink)" />
-          <text
-            x="20"
-            y="22.5"
+          <motion.text
+            x="501"
+            y={row.y}
             textAnchor="middle"
-            fill="var(--paper)"
+            dominantBaseline="middle"
             fontFamily="var(--font-mono)"
             fontSize="9"
-            fontWeight="700"
-          >
-            Y
-          </text>
-          {/* Account name */}
-          <text
-            x="38"
-            y="17"
-            fill="var(--ink)"
-            fontFamily="var(--font-mono)"
-            fontSize="9"
-            fontWeight="700"
-          >
-            You
-          </text>
-          {/* Role badge */}
-          <text
-            x="38"
-            y="28"
-            fill="var(--ink)"
-            fontFamily="var(--font-mono)"
-            fontSize="7.5"
             fontWeight="600"
-          >
-            OWNER
-          </text>
-        </g>
-
-        {/* ── 2 WEEKS WARRANTY CIRCULAR ARC (FAR RIGHT) ── */}
-        {/* Center: x=494, y=265 (Radius 28 -> spans 466..522, well inside x_max: 568) */}
-        <g transform="translate(494, 265)">
-          {/* Track Circle (Permanent structure) */}
-          <circle
-            cx="0"
-            cy="0"
-            r="28"
-            fill="none"
-            stroke="var(--fog)"
-            strokeWidth="2.5"
-            opacity="0.4"
-          />
-
-          {/* Animated Sweeping Arc */}
-          <motion.circle
-            cx="0"
-            cy="0"
-            r="28"
-            fill="none"
-            stroke="var(--ink)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeDasharray={CIRCUMFERENCE}
-            style={{ rotate: -90 }}
-            initial={
-              shouldReduceMotion
-                ? { strokeDashoffset: 0 }
-                : { strokeDashoffset: CIRCUMFERENCE }
-            }
+            letterSpacing="0.04em"
+            initial={shouldReduceMotion ? { fill: 'var(--ink)' } : { fill: 'var(--graphite)' }}
             animate={
               isPlaying
                 ? {
-                    strokeDashoffset: [
-                      CIRCUMFERENCE,
-                      CIRCUMFERENCE,
-                      0,
-                      0,
-                      CIRCUMFERENCE,
+                    fill: [
+                      'var(--graphite)',
+                      'var(--graphite)',
+                      'var(--ink)',
+                      'var(--ink)',
+                      'var(--graphite)',
                     ],
                   }
                 : shouldReduceMotion
-                  ? { strokeDashoffset: 0 }
-                  : { strokeDashoffset: CIRCUMFERENCE }
+                  ? { fill: 'var(--ink)' }
+                  : { fill: 'var(--graphite)' }
             }
             transition={{
               duration: DURATION,
               delay: isPlaying ? delay : 0,
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
-              ease: [0.16, 1, 0.3, 1],
-              times: [0, 0.42, 0.62, 0.85, 1],
+              times: [0, 0.26, 0.28, 0.82, 0.88, 1],
             }}
-          />
-
-          {/* Central Label */}
-          <text
-            x="0"
-            y="-3"
-            textAnchor="middle"
-            fill="var(--ink)"
-            fontFamily="var(--font-mono)"
-            fontSize="9"
-            fontWeight="700"
-            letterSpacing="0.04em"
           >
-            2 WEEKS
-          </text>
-          <text
-            x="0"
-            y="10"
-            textAnchor="middle"
-            fill="var(--mist)"
-            fontFamily="var(--font-mono)"
-            fontSize="7"
-            fontWeight="600"
-            letterSpacing="0.08em"
-          >
-            WARRANTY
-          </text>
+            {row.status}
+          </motion.text>
         </g>
+      ))}
+
+      {/* ── 2. BOTTOM ROW: CHIPS, TRAVEL TRACK & KEY, WARRANTY BADGE ── */}
+      {/* Chip: developer: x: 32, y: 250, w: 152, h: 40, radius 20 */}
+      <g>
+        <rect
+          x="32"
+          y="250"
+          width="152"
+          height="40"
+          rx="20"
+          fill="var(--paper)"
+          stroke="var(--fog)"
+          strokeWidth="1"
+        />
+        {/* Avatar circle 24 units at chip.x + 12 = 44, cx = 56, cy = 270 */}
+        <circle cx="56" cy="270" r="12" fill="var(--ink)" />
+        <text
+          x="56"
+          y="270"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="var(--paper)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="700"
+        >
+          Z
+        </text>
+        {/* Name at size 10 --ink, centre y 264 */}
+        <text
+          x="76"
+          y="263"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="10"
+          fontWeight="600"
+          letterSpacing="0.04em"
+        >
+          zetroxy
+        </text>
+        {/* Role at size 9 --graphite, centre y 278 */}
+        <text
+          x="76"
+          y="277"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          letterSpacing="0.04em"
+        >
+          DEVELOPER
+        </text>
+      </g>
+
+      {/* Travel track: x: 196, y: 270, w: 118, h: 1, dashed (from x 196 to x 314) */}
+      <line
+        x1="196"
+        y1="270"
+        x2="314"
+        y2="270"
+        stroke="var(--fog)"
+        strokeWidth="1"
+        strokeDasharray="4 4"
+      />
+
+      {/* Sliding Key Glyph: travels from x 196 to x 314 (stops 18 units before chip at 326) */}
+      <motion.g
+        initial={
+          shouldReduceMotion
+            ? { x: 314, y: 270, opacity: 1 }
+            : { x: 196, y: 270, opacity: 1 }
+        }
+        animate={
+          isPlaying
+            ? {
+                x: [196, 196, 314, 314, 314, 196],
+                opacity: [1, 1, 1, 1, 0, 0],
+              }
+            : shouldReduceMotion
+              ? { x: 314, y: 270, opacity: 1 }
+              : { x: 196, y: 270, opacity: 1 }
+        }
+        transition={{
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
+          repeat: isPlaying ? Infinity : 0,
+          repeatDelay: REPEAT_DELAY,
+          ease: [0.16, 1, 0.3, 1],
+          times: [0, 0.12, 0.28, 0.82, 0.88, 1],
+        }}
+      >
+        {/* Key Head */}
+        <circle cx="0" cy="0" r="6" fill="none" stroke="var(--ink)" strokeWidth="1.5" />
+        {/* Key Shaft */}
+        <line x1="6" y1="0" x2="16" y2="0" stroke="var(--ink)" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Key Teeth */}
+        <line x1="12" y1="0" x2="12" y2="4" stroke="var(--ink)" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="16" y1="0" x2="16" y2="3" stroke="var(--ink)" strokeWidth="1.5" strokeLinecap="round" />
+      </motion.g>
+
+      {/* Chip: owner: x: 326, y: 250, w: 132, h: 40, radius 20 */}
+      <g>
+        <motion.rect
+          x="326"
+          y="250"
+          width="132"
+          height="40"
+          rx="20"
+          fill="var(--paper)"
+          strokeWidth="1"
+          initial={shouldReduceMotion ? { stroke: 'var(--ink)' } : { stroke: 'var(--fog)' }}
+          animate={
+            isPlaying
+              ? {
+                  stroke: [
+                    'var(--fog)',
+                    'var(--fog)',
+                    'var(--ink)',
+                    'var(--ink)',
+                    'var(--fog)',
+                  ],
+                }
+              : shouldReduceMotion
+                ? { stroke: 'var(--ink)' }
+                : { stroke: 'var(--fog)' }
+          }
+          transition={{
+            duration: DURATION,
+            delay: isPlaying ? delay : 0,
+            repeat: isPlaying ? Infinity : 0,
+            repeatDelay: REPEAT_DELAY,
+            times: [0, 0.26, 0.28, 0.82, 0.88, 1],
+          }}
+        />
+        {/* Avatar circle 24 units at chip.x + 12 = 338, cx = 350, cy = 270 */}
+        <circle cx="350" cy="270" r="12" fill="var(--ink)" />
+        <text
+          x="350"
+          y="270"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="var(--paper)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="700"
+        >
+          Y
+        </text>
+        {/* Name at size 10 --ink, centre y 264 */}
+        <text
+          x="370"
+          y="263"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="10"
+          fontWeight="700"
+          letterSpacing="0.04em"
+        >
+          You
+        </text>
+        {/* Role at size 9 --graphite, centre y 278 */}
+        <text
+          x="370"
+          y="277"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="600"
+          letterSpacing="0.04em"
+        >
+          OWNER
+        </text>
+      </g>
+
+      {/* ── WARRANTY BADGE (x: 484, y: 238, w: 64, h: 64, circle centre (516, 270)) ── */}
+      <g>
+        {/* Track Circle (Permanent structure: cx 516, cy 270, r 32) */}
+        <circle
+          cx="516"
+          cy="270"
+          r="32"
+          fill="var(--paper)"
+          stroke="var(--fog)"
+          strokeWidth="1.5"
+        />
+
+        {/* Animated Progress Arc on the circle's own radius (r=32, outside the text) */}
+        <motion.circle
+          cx="516"
+          cy="270"
+          r="32"
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeDasharray={CIRCUMFERENCE}
+          style={{ rotate: -90, transformOrigin: '516px 270px' }}
+          initial={
+            shouldReduceMotion
+              ? { strokeDashoffset: 0 }
+              : { strokeDashoffset: CIRCUMFERENCE }
+          }
+          animate={
+            isPlaying
+              ? {
+                  strokeDashoffset: [
+                    CIRCUMFERENCE,
+                    CIRCUMFERENCE,
+                    0,
+                    0,
+                    0,
+                    CIRCUMFERENCE,
+                  ],
+                }
+              : shouldReduceMotion
+                ? { strokeDashoffset: 0 }
+                : { strokeDashoffset: CIRCUMFERENCE }
+          }
+          transition={{
+            duration: DURATION,
+            delay: isPlaying ? delay : 0,
+            repeat: isPlaying ? Infinity : 0,
+            repeatDelay: REPEAT_DELAY,
+            ease: [0.16, 1, 0.3, 1],
+            times: [0, 0.30, 0.42, 0.82, 0.88, 1],
+          }}
+        />
+
+        {/* Text inside circle: 2 WEEKS at centre y 264, WARRANTY at centre y 278, both size 9, both centred on x 516 */}
+        <text
+          x="516"
+          y="264"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="700"
+          letterSpacing="0.04em"
+        >
+          2 WEEKS
+        </text>
+        <text
+          x="516"
+          y="278"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="var(--graphite)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="600"
+          letterSpacing="0.04em"
+        >
+          WARRANTY
+        </text>
       </g>
     </svg>
   );
