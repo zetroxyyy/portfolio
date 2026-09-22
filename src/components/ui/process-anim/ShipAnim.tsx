@@ -12,8 +12,8 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  const DURATION = 7.2;
-  const REPEAT_DELAY = 0.6;
+  const DURATION = 11.5;
+  const REPEAT_DELAY = 0.5;
 
   return (
     <svg
@@ -23,22 +23,22 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── LOCAL PLINTH (BOTTOM LEFT) ── */}
-      {/* Target ~88% canvas width, plinth sits at x=36, y=254 */}
+      {/* ── 1. PERMANENT LOCAL PLINTH (LEFT) ── */}
+      {/* Internal padding: 32 units on all sides (x: 32..568, y: 32..306) */}
       <g>
         <rect
-          x="36"
-          y="254"
-          width="154"
-          height="38"
+          x="32"
+          y="232"
+          width="168"
+          height="40"
           rx="6"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1.2"
         />
         <text
-          x="113"
-          y="277"
+          x="116"
+          y="256"
           textAnchor="middle"
           fill="var(--mist)"
           fontFamily="var(--font-mono)"
@@ -50,34 +50,34 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
         </text>
       </g>
 
-      {/* ── DEPLOYMENT TRAJECTORY PATH (ACROSS THE CANVAS) ── */}
-      {/* Cuts across center of canvas from (113, 210) to (350, 56) */}
+      {/* ── 2. PERMANENT DIRECT TRAJECTORY PATH (ACROSS THE CENTER) ── */}
+      {/* Runs directly between LOCAL plinth and PRODUCTION node through canvas center */}
       <path
-        d="M 113 210 C 150 120, 230 65, 350 56"
+        d="M 116 150 C 180 84, 250 68, 340 74"
         stroke="var(--fog)"
         strokeWidth="1.5"
         strokeDasharray="4 4"
         fill="none"
       />
 
-      {/* ── MOVING THREE-BLOCK STACK (BUILD, DB, ASSETS) ── */}
+      {/* ── 3. MOVING THREE-BLOCK STACK (BUILD, DB, ASSETS) ── */}
       <motion.g
         initial={
           shouldReduceMotion
             ? { opacity: 0 }
-            : { opacity: 1, x: 49, y: 176, scale: 1 }
+            : { opacity: 1, x: 48, y: 148, scale: 1 }
         }
         animate={
           isPlaying
             ? {
                 opacity: [1, 1, 1, 0, 0, 1],
-                x: [49, 49, 290, 345, 49, 49],
-                y: [176, 170, 56, 56, 176, 176],
+                x: [48, 48, 280, 336, 48, 48],
+                y: [148, 142, 68, 68, 148, 148],
                 scale: [1, 1, 0.85, 0.5, 1, 1],
               }
             : shouldReduceMotion
               ? { opacity: 0 }
-              : { opacity: 1, x: 49, y: 176 }
+              : { opacity: 1, x: 48, y: 148 }
         }
         transition={{
           duration: DURATION,
@@ -85,26 +85,26 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: REPEAT_DELAY,
           ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.1, 0.36, 0.44, 0.94, 1],
+          times: [0, 0.12, 0.34, 0.40, 0.85, 1],
         }}
       >
         {/* Block 3: ASSETS (Base) */}
         <rect
           x="0"
-          y="46"
-          width="128"
-          height="20"
+          y="50"
+          width="136"
+          height="22"
           rx="4"
           fill="var(--fog)"
           stroke="var(--hairline)"
         />
         <text
-          x="64"
-          y="59"
+          x="68"
+          y="64.5"
           textAnchor="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
-          fontSize="8"
+          fontSize="9"
           fontWeight="600"
           letterSpacing="0.08em"
         >
@@ -114,19 +114,19 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
         {/* Block 2: DB (Middle) */}
         <rect
           x="0"
-          y="23"
-          width="128"
-          height="20"
+          y="25"
+          width="136"
+          height="22"
           rx="4"
           fill="var(--graphite)"
         />
         <text
-          x="64"
-          y="36"
+          x="68"
+          y="39.5"
           textAnchor="middle"
           fill="var(--paper)"
           fontFamily="var(--font-mono)"
-          fontSize="8"
+          fontSize="9"
           fontWeight="600"
           letterSpacing="0.08em"
         >
@@ -137,18 +137,18 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
         <rect
           x="0"
           y="0"
-          width="128"
-          height="20"
+          width="136"
+          height="22"
           rx="4"
           fill="var(--ink)"
         />
         <text
-          x="64"
-          y="13"
+          x="68"
+          y="14.5"
           textAnchor="middle"
           fill="var(--paper)"
           fontFamily="var(--font-mono)"
-          fontSize="8"
+          fontSize="9"
           fontWeight="700"
           letterSpacing="0.08em"
         >
@@ -156,14 +156,14 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
         </text>
       </motion.g>
 
-      {/* ── VERCEL · PRODUCTION NODE (TOP RIGHT) ── */}
-      {/* x=334, y=24, w=230, h=66 */}
+      {/* ── 4. PERMANENT PRODUCTION NODE (TOP RIGHT) ── */}
+      {/* Position: x=330, y=32, w=238, h=70 */}
       <g>
         <rect
-          x="334"
-          y="24"
-          width="230"
-          height="66"
+          x="330"
+          y="32"
+          width="238"
+          height="70"
           rx="8"
           fill="var(--paper-2)"
           stroke="var(--hairline)"
@@ -172,26 +172,26 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
 
         {/* Production Node Label */}
         <text
-          x="350"
-          y="42"
+          x="346"
+          y="50"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
-          fontSize="9"
+          fontSize="9.5"
           fontWeight="700"
           letterSpacing="0.08em"
         >
-          VERCEL · PRODUCTION
+          PRODUCTION
         </text>
 
-        {/* Status Indicator */}
-        <circle cx="546" cy="38" r="3.5" fill="var(--ink)" />
+        {/* Status Indicator Dot */}
+        <circle cx="550" cy="46" r="3.5" fill="var(--ink)" />
 
-        {/* Domain Pill (thedreamadventure.com) */}
-        <g transform="translate(348, 50)">
+        {/* Domain Pill (yourdomain.com) */}
+        <g transform="translate(344, 58)">
           <rect
             x="0"
             y="0"
-            width="202"
+            width="210"
             height="26"
             rx="13"
             fill="var(--paper)"
@@ -200,7 +200,7 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
           />
 
           {/* Padlock Icon (snaps shut when deployment lands) */}
-          <g transform="translate(12, 6)">
+          <g transform="translate(14, 6)">
             {/* Shackle: Open state */}
             <motion.path
               d="M 3 6 L 3 3 A 3 3 0 0 1 9 3 L 9 5"
@@ -221,7 +221,7 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
                 delay: isPlaying ? delay : 0,
                 repeat: isPlaying ? Infinity : 0,
                 repeatDelay: REPEAT_DELAY,
-                times: [0, 0.44, 0.46, 0.94, 1],
+                times: [0, 0.40, 0.43, 0.85, 1],
               }}
             />
 
@@ -247,7 +247,7 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
                 delay: isPlaying ? delay : 0,
                 repeat: isPlaying ? Infinity : 0,
                 repeatDelay: REPEAT_DELAY,
-                times: [0, 0.44, 0.46, 0.94, 1],
+                times: [0, 0.40, 0.43, 0.85, 1],
               }}
             />
 
@@ -257,28 +257,28 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
 
           {/* Domain text */}
           <text
-            x="32"
+            x="36"
             y="17"
             fill="var(--ink)"
             fontFamily="var(--font-mono)"
-            fontSize="8.5"
+            fontSize="9"
             fontWeight="600"
             letterSpacing="0.02em"
           >
-            thedreamadventure.com
+            yourdomain.com
           </text>
         </g>
       </g>
 
-      {/* ── MOBILE PHONE QA VERIFICATION (BOTTOM RIGHT) ── */}
-      {/* Position: x=420, y=106, w=128, h=200 */}
+      {/* ── 5. MOBILE PHONE QA VERIFICATION (BOTTOM RIGHT, INSIDE MARGINS) ── */}
+      {/* Position: x=394, y=120, w=134, h=184 (well inside x_max: 568, y_max: 306) */}
       <g>
-        {/* Phone Frame */}
+        {/* Phone Frame (Permanent structure) */}
         <rect
-          x="420"
-          y="106"
-          width="128"
-          height="198"
+          x="394"
+          y="120"
+          width="134"
+          height="184"
           rx="18"
           fill="var(--paper)"
           stroke="var(--ink)"
@@ -286,45 +286,33 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
         />
 
         {/* Phone Top Speaker Notch */}
-        <rect x="466" y="113" width="36" height="4" rx="2" fill="var(--fog)" />
+        <rect x="443" y="126" width="36" height="4" rx="2" fill="var(--fog)" />
 
-        {/* ── MINIATURE OF THE SITE'S OWN HERO ── */}
+        {/* ── MINIATURE OF SITE HERO (NEUTRAL) ── */}
         {/* Nav header line */}
-        <line x1="432" y1="126" x2="536" y2="126" stroke="var(--hairline)" strokeWidth="0.8" />
-        <rect x="432" y="121" width="28" height="3" rx="1.5" fill="var(--ink)" />
+        <line x1="406" y1="138" x2="516" y2="138" stroke="var(--hairline)" strokeWidth="0.8" />
+        <rect x="406" y="133" width="28" height="3" rx="1.5" fill="var(--ink)" />
 
         {/* Hero Banner: permitted muted neutral fill */}
         <rect
-          x="430"
-          y="132"
-          width="108"
-          height="48"
+          x="404"
+          y="144"
+          width="114"
+          height="44"
           rx="4"
           fill="var(--fog)"
           opacity="0.6"
         />
 
         {/* Hero Title & Subhead Lines */}
-        <rect x="430" y="188" width="78" height="6" rx="2" fill="var(--ink)" />
-        <rect x="430" y="198" width="98" height="4" rx="2" fill="var(--graphite)" />
-        <rect x="430" y="206" width="60" height="4" rx="2" fill="var(--mist)" opacity="0.6" />
+        <rect x="404" y="196" width="80" height="6" rx="2" fill="var(--ink)" />
+        <rect x="404" y="206" width="102" height="4" rx="2" fill="var(--graphite)" />
+        <rect x="404" y="214" width="64" height="4" rx="2" fill="var(--mist)" opacity="0.6" />
 
         {/* Mini CTA button */}
-        <rect x="430" y="218" width="46" height="12" rx="3" fill="var(--ink)" />
-        <text
-          x="453"
-          y="227"
-          textAnchor="middle"
-          fill="var(--paper)"
-          fontFamily="var(--font-mono)"
-          fontSize="6"
-          fontWeight="600"
-        >
-          EXPLORE
-        </text>
+        <rect x="404" y="226" width="50" height="12" rx="3" fill="var(--ink)" />
 
         {/* ── PHONE QA VERIFIED BADGE ── */}
-        {/* Enters at ~0.54, stays on hold */}
         <motion.g
           initial={
             shouldReduceMotion
@@ -347,14 +335,14 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
             repeat: isPlaying ? Infinity : 0,
             repeatDelay: REPEAT_DELAY,
             ease: [0.16, 1, 0.3, 1],
-            times: [0, 0.52, 0.58, 0.94, 1],
+            times: [0, 0.48, 0.54, 0.85, 1],
           }}
-          style={{ transformOrigin: '484px 260px' }}
+          style={{ transformOrigin: '461px 260px' }}
         >
           <rect
-            x="428"
-            y="248"
-            width="112"
+            x="400"
+            y="252"
+            width="122"
             height="24"
             rx="12"
             fill="var(--paper)"
@@ -363,7 +351,7 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
           />
           {/* Checkmark icon */}
           <path
-            d="M 440 260 L 443 263 L 449 257"
+            d="M 414 264 L 417 267 L 423 261"
             stroke="var(--ink)"
             strokeWidth="1.5"
             strokeLinecap="round"
@@ -371,12 +359,12 @@ export function ShipAnim({ inView, delay = 0 }: AnimProps) {
             fill="none"
           />
           <text
-            x="480"
-            y="263"
+            x="462"
+            y="267"
             textAnchor="middle"
             fill="var(--ink)"
             fontFamily="var(--font-mono)"
-            fontSize="7.5"
+            fontSize="8.5"
             fontWeight="700"
             letterSpacing="0.04em"
           >

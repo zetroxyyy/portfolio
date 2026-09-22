@@ -1587,11 +1587,11 @@ button {
   width: 100%;
 }
 
-/* Stage marker sitting on vertical spine */
+/* Stage marker sitting on vertical spine, aligned with the badge line */
 .process-row__marker {
   position: absolute;
   left: calc(var(--spine-x) - var(--gutter) - (var(--marker-size) / 2));
-  top: 4px;
+  top: calc(8px - (var(--marker-size) / 2));
   width: var(--marker-size);
   height: var(--marker-size);
   border-radius: 50%;
@@ -1636,6 +1636,7 @@ button {
 .process-row__badge {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
+  line-height: 16px;
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
   color: var(--mist);

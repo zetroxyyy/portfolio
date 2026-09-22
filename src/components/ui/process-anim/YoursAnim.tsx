@@ -12,8 +12,8 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
-  const DURATION = 7.2;
-  const REPEAT_DELAY = 0.6;
+  const DURATION = 11.5;
+  const REPEAT_DELAY = 0.5;
   const CIRCUMFERENCE = 175.9; // 2 * PI * 28
 
   return (
@@ -24,15 +24,15 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
-      {/* ── ADMIN PANEL (TOP / CENTER) ── */}
-      {/* Target ~88% of canvas: x=36, y=20, w=528, h=202 */}
+      {/* ── 1. PERMANENT ADMIN CONSOLE (TOP / CENTER) ── */}
+      {/* Internal padding: 32 units on all sides (x: 32..568, y: 32..306) */}
       <g>
         {/* Panel Frame */}
         <rect
-          x="36"
-          y="20"
-          width="528"
-          height="202"
+          x="32"
+          y="32"
+          width="536"
+          height="194"
           rx="10"
           fill="var(--paper-2)"
           stroke="var(--hairline)"
@@ -42,24 +42,24 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
         {/* ── HEADER ROW ── */}
         <g>
           {/* Window control dots */}
-          <circle cx="52" cy="36" r="3" fill="var(--fog)" />
-          <circle cx="62" cy="36" r="3" fill="var(--fog)" />
-          <circle cx="72" cy="36" r="3" fill="var(--fog)" />
+          <circle cx="48" cy="47" r="3" fill="var(--fog)" />
+          <circle cx="58" cy="47" r="3" fill="var(--fog)" />
+          <circle cx="68" cy="47" r="3" fill="var(--fog)" />
 
           {/* Console Title */}
           <text
-            x="90"
-            y="39"
+            x="86"
+            y="50.5"
             fill="var(--ink)"
             fontFamily="var(--font-mono)"
-            fontSize="9"
+            fontSize="9.5"
             fontWeight="700"
             letterSpacing="0.08em"
           >
-            DREAM ADVENTURE · CMS CONSOLE
+            YOUR ADMIN CONSOLE
           </text>
 
-          {/* READ ONLY pill (Initial State) */}
+          {/* READ ONLY pill (Initial State, hides when key arrives) */}
           <motion.g
             initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
             animate={
@@ -74,13 +74,13 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
               delay: isPlaying ? delay : 0,
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
-              times: [0, 0.40, 0.44, 0.94, 1],
+              times: [0, 0.38, 0.42, 0.85, 1],
             }}
           >
             <rect
-              x="456"
-              y="26"
-              width="96"
+              x="464"
+              y="37"
+              width="92"
               height="20"
               rx="4"
               fill="var(--paper)"
@@ -88,12 +88,12 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
               strokeWidth="1"
             />
             <text
-              x="504"
-              y="39"
+              x="510"
+              y="50.5"
               textAnchor="middle"
               fill="var(--mist)"
               fontFamily="var(--font-mono)"
-              fontSize="7.5"
+              fontSize="8.5"
               fontWeight="600"
               letterSpacing="0.04em"
             >
@@ -118,24 +118,24 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
               delay: isPlaying ? delay : 0,
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
-              times: [0, 0.40, 0.44, 0.94, 1],
+              times: [0, 0.38, 0.42, 0.85, 1],
             }}
           >
             <rect
-              x="456"
-              y="26"
-              width="96"
+              x="464"
+              y="37"
+              width="92"
               height="20"
               rx="4"
               fill="var(--ink)"
             />
             <text
-              x="504"
-              y="39"
+              x="510"
+              y="50.5"
               textAnchor="middle"
               fill="var(--paper)"
               fontFamily="var(--font-mono)"
-              fontSize="7.5"
+              fontSize="8.5"
               fontWeight="700"
               letterSpacing="0.06em"
             >
@@ -144,28 +144,28 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
           </motion.g>
 
           {/* Divider below header */}
-          <line x1="36" y1="52" x2="564" y2="52" stroke="var(--hairline)" strokeWidth="1" />
+          <line x1="32" y1="62" x2="568" y2="62" stroke="var(--hairline)" strokeWidth="1" />
         </g>
 
         {/* ── SIDEBAR (LEFT) ── */}
-        {/* Width: 114px (x=36 to x=150) */}
+        {/* Width: 114px (x=32 to x=146) */}
         <g>
           {/* Vertical divider */}
-          <line x1="150" y1="52" x2="150" y2="222" stroke="var(--hairline)" strokeWidth="1" />
+          <line x1="146" y1="62" x2="146" y2="226" stroke="var(--hairline)" strokeWidth="1" />
 
-          {/* 5 Nav Items: Bookings, Availability, Pricing, Promos, Settings */}
+          {/* 5 Generic Nav Items: Dashboard, Content, Customers, Orders, Settings */}
           {[
-            { label: 'Bookings', y: 72, active: true },
-            { label: 'Availability', y: 102, active: false },
-            { label: 'Pricing', y: 132, active: false },
-            { label: 'Promos', y: 162, active: false },
-            { label: 'Settings', y: 192, active: false },
+            { label: 'Dashboard', y: 82, active: true },
+            { label: 'Content', y: 110, active: false },
+            { label: 'Customers', y: 138, active: false },
+            { label: 'Orders', y: 166, active: false },
+            { label: 'Settings', y: 194, active: false },
           ].map((nav) => (
             <g key={nav.label}>
               {/* Active nav indicator */}
               {nav.active && (
                 <motion.rect
-                  x="44"
+                  x="40"
                   y={nav.y - 10}
                   width="98"
                   height="18"
@@ -173,33 +173,33 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
                   initial={
                     shouldReduceMotion
                       ? { fill: 'var(--paper)', opacity: 1 }
-                      : { fill: 'var(--paper)', opacity: 0.5 }
+                      : { fill: 'var(--paper)', opacity: 0.4 }
                   }
                   animate={
                     isPlaying
                       ? {
-                          opacity: [0.5, 0.5, 1, 1, 0.5],
+                          opacity: [0.4, 0.4, 1, 1, 0.4],
                         }
                       : shouldReduceMotion
                         ? { opacity: 1 }
-                        : { opacity: 0.5 }
+                        : { opacity: 0.4 }
                   }
                   transition={{
                     duration: DURATION,
                     delay: isPlaying ? delay : 0,
                     repeat: isPlaying ? Infinity : 0,
                     repeatDelay: REPEAT_DELAY,
-                    times: [0, 0.40, 0.44, 0.94, 1],
+                    times: [0, 0.38, 0.42, 0.85, 1],
                   }}
                 />
               )}
 
-              {/* Nav item text: transitions from --fog/--mist to --ink when key arrives */}
+              {/* Nav item text */}
               <motion.text
-                x="52"
-                y={nav.y + 2}
+                x="48"
+                y={nav.y + 2.5}
                 fontFamily="var(--font-mono)"
-                fontSize="8.5"
+                fontSize="9"
                 fontWeight={nav.active ? '700' : '500'}
                 letterSpacing="0.04em"
                 initial={
@@ -227,7 +227,7 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
                   delay: isPlaying ? delay : 0,
                   repeat: isPlaying ? Infinity : 0,
                   repeatDelay: REPEAT_DELAY,
-                  times: [0, 0.40, 0.44, 0.94, 1],
+                  times: [0, 0.38, 0.42, 0.85, 1],
                 }}
               >
                 {nav.label}
@@ -237,27 +237,26 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
         </g>
 
         {/* ── TABLE AREA (RIGHT OF SIDEBAR) ── */}
-        {/* x=150 to x=564 */}
+        {/* x=146 to x=568 */}
         <g>
           {/* Table Column Headers */}
-          <text x="166" y="68" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="7.5" fontWeight="600" letterSpacing="0.06em">REF</text>
-          <text x="236" y="68" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="7.5" fontWeight="600" letterSpacing="0.06em">CUSTOMER</text>
-          <text x="330" y="68" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="7.5" fontWeight="600" letterSpacing="0.06em">TOUR / DATES</text>
-          <text x="490" y="68" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="7.5" fontWeight="600" letterSpacing="0.06em">STATUS</text>
-          <line x1="150" y1="76" x2="564" y2="76" stroke="var(--hairline)" strokeWidth="0.8" />
+          <text x="162" y="78" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="8" fontWeight="600" letterSpacing="0.06em">REF</text>
+          <text x="240" y="78" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="8" fontWeight="600" letterSpacing="0.06em">RECORD</text>
+          <text x="496" y="78" fill="var(--mist)" fontFamily="var(--font-mono)" fontSize="8" fontWeight="600" letterSpacing="0.06em">STATUS</text>
+          <line x1="146" y1="86" x2="568" y2="86" stroke="var(--hairline)" strokeWidth="0.8" />
 
-          {/* Three Table Rows */}
+          {/* Three Table Rows with REF, Neutral Bar, and Status Pill (NO invented people) */}
           {[
-            { ref: '#DA-1042', guest: 'S. Tanaka', tour: 'Fuji Sunrise (4pax)', status: 'CONFIRMED', y: 94 },
-            { ref: '#DA-1043', guest: 'K. Miller', tour: 'Kyoto Trail (2pax)', status: 'CONFIRMED', y: 132 },
-            { ref: '#DA-1044', guest: 'A. Dupont', tour: 'Alpine Pass (6pax)', status: 'CONFIRMED', y: 170 },
+            { ref: '#1042', barW: 150, status: 'ACTIVE', y: 104 },
+            { ref: '#1043', barW: 130, status: 'ACTIVE', y: 140 },
+            { ref: '#1044', barW: 165, status: 'PENDING', y: 176 },
           ].map((row, idx) => (
             <g key={row.ref}>
               {idx > 0 && (
                 <line
-                  x1="160"
+                  x1="156"
                   y1={row.y - 18}
-                  x2="554"
+                  x2="558"
                   y2={row.y - 18}
                   stroke="var(--hairline)"
                   strokeWidth="0.6"
@@ -265,16 +264,16 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
                 />
               )}
 
-              {/* Row container background (subtle highlight when active) */}
+              {/* Row container background */}
               <motion.rect
-                x="160"
+                x="156"
                 y={row.y - 14}
-                width="394"
+                width="402"
                 height="28"
                 rx="4"
                 initial={
                   shouldReduceMotion
-                    ? { fill: 'var(--paper)', opacity: 0.8 }
+                    ? { fill: 'var(--paper)', opacity: 0.85 }
                     : { fill: 'var(--paper)', opacity: 0.3 }
                 }
                 animate={
@@ -291,11 +290,11 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
                   delay: isPlaying ? delay : 0,
                   repeat: isPlaying ? Infinity : 0,
                   repeatDelay: REPEAT_DELAY,
-                  times: [0, 0.40, 0.44, 0.94, 1],
+                  times: [0, 0.38, 0.42, 0.85, 1],
                 }}
               />
 
-              {/* Row text content: transitions from --fog to --ink upon handover */}
+              {/* Row text & neutral bars: brighten from --fog to --ink upon handover */}
               <motion.g
                 initial={
                   shouldReduceMotion
@@ -322,24 +321,20 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
                   delay: isPlaying ? delay : 0,
                   repeat: isPlaying ? Infinity : 0,
                   repeatDelay: REPEAT_DELAY,
-                  times: [0, 0.40, 0.44, 0.94, 1],
+                  times: [0, 0.38, 0.42, 0.85, 1],
                 }}
               >
-                {/* Ref */}
-                <text x="170" y={row.y + 4} fontFamily="var(--font-mono)" fontSize="8.5" fontWeight="600">
+                {/* REF Column */}
+                <text x="166" y={row.y + 4} fontFamily="var(--font-mono)" fontSize="9" fontWeight="600">
                   {row.ref}
                 </text>
-                {/* Guest */}
-                <text x="236" y={row.y + 4} fontFamily="var(--font-mono)" fontSize="8.5" fontWeight="500">
-                  {row.guest}
-                </text>
-                {/* Tour */}
-                <text x="330" y={row.y + 4} fontFamily="var(--font-mono)" fontSize="8.5" fontWeight="500">
-                  {row.tour}
-                </text>
+
+                {/* Neutral Data Bar where an invented name would be */}
+                <rect x="240" y={row.y - 2} width={row.barW} height="7" rx="2" fill="currentColor" opacity="0.8" />
+
                 {/* Status Pill */}
-                <rect x="486" y={row.y - 8} width="62" height="16" rx="3" fill="var(--paper-2)" stroke="currentColor" strokeWidth="0.8" />
-                <text x="517" y={row.y + 3} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="7" fontWeight="700">
+                <rect x="490" y={row.y - 8} width="58" height="16" rx="3" fill="var(--paper-2)" stroke="currentColor" strokeWidth="0.8" />
+                <text x="519" y={row.y + 3.5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="7.5" fontWeight="700">
                   {row.status}
                 </text>
               </motion.g>
@@ -348,15 +343,15 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
         </g>
       </g>
 
-      {/* ── BOTTOM ROW: ACCOUNT CHIPS & KEY TRANSFER + WARRANTY ARC ── */}
-      {/* Target ~88% of canvas, y=242 to y=308 */}
+      {/* ── 2. BOTTOM ROW: ACCOUNT CHIPS & KEY TRANSFER + WARRANTY ARC ── */}
+      {/* y=244 to y=306 (Internal padding: 32 units, within y_max: 306) */}
       <g>
-        {/* ── ACCOUNT CHIP 1: zetroxy (LEFT) ── */}
-        <g transform="translate(36, 248)">
+        {/* ── ACCOUNT CHIP 1: zetroxy · DEVELOPER (LEFT) ── */}
+        <g transform="translate(32, 246)">
           <rect
             x="0"
             y="0"
-            width="150"
+            width="146"
             height="38"
             rx="19"
             fill="var(--paper-2)"
@@ -367,7 +362,7 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
           <circle cx="20" cy="19" r="11" fill="var(--ink)" />
           <text
             x="20"
-            y="23"
+            y="22.5"
             textAnchor="middle"
             fill="var(--paper)"
             fontFamily="var(--font-mono)"
@@ -402,32 +397,32 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
 
         {/* ── TRANSFER TRACK (BETWEEN CHIPS) ── */}
         <line
-          x1="186"
-          y1="267"
-          x2="276"
-          y2="267"
+          x1="178"
+          y1="265"
+          x2="242"
+          y2="265"
           stroke="var(--fog)"
           strokeWidth="1.5"
           strokeDasharray="3 3"
         />
 
         {/* ── SLIDING KEY GLYPH ── */}
-        {/* Slides from zetroxy (x=188) to Dream Adventure (x=272) */}
+        {/* Slides from zetroxy (x=182) to You (x=240) */}
         <motion.g
           initial={
             shouldReduceMotion
-              ? { x: 272, y: 267, opacity: 1 }
-              : { x: 190, y: 267, opacity: 1 }
+              ? { x: 240, y: 265, opacity: 1 }
+              : { x: 182, y: 265, opacity: 1 }
           }
           animate={
             isPlaying
               ? {
-                  x: [190, 190, 272, 272, 190],
+                  x: [182, 182, 240, 240, 182],
                   opacity: [1, 1, 1, 1, 0],
                 }
               : shouldReduceMotion
-                ? { x: 272, y: 267, opacity: 1 }
-                : { x: 190, y: 267, opacity: 0 }
+                ? { x: 240, y: 265, opacity: 1 }
+                : { x: 182, y: 265, opacity: 0 }
           }
           transition={{
             duration: DURATION,
@@ -435,7 +430,7 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
             repeat: isPlaying ? Infinity : 0,
             repeatDelay: REPEAT_DELAY,
             ease: [0.16, 1, 0.3, 1],
-            times: [0, 0.16, 0.40, 0.94, 1],
+            times: [0, 0.16, 0.38, 0.85, 1],
           }}
         >
           {/* Key Head */}
@@ -447,13 +442,13 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
           <line x1="20" y1="0" x2="20" y2="4" stroke="var(--ink)" strokeWidth="1.8" strokeLinecap="round" />
         </motion.g>
 
-        {/* ── ACCOUNT CHIP 2: Dream Adventure (RIGHT) ── */}
-        <g transform="translate(276, 248)">
+        {/* ── ACCOUNT CHIP 2: You · OWNER (RIGHT OF TRACK) ── */}
+        <g transform="translate(242, 246)">
           {/* Border brightens to ink when key arrives */}
           <motion.rect
             x="0"
             y="0"
-            width="170"
+            width="134"
             height="38"
             rx="19"
             fill="var(--paper-2)"
@@ -483,21 +478,21 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
               delay: isPlaying ? delay : 0,
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
-              times: [0, 0.38, 0.42, 0.94, 1],
+              times: [0, 0.36, 0.40, 0.85, 1],
             }}
           />
           {/* Avatar */}
           <circle cx="20" cy="19" r="11" fill="var(--ink)" />
           <text
             x="20"
-            y="23"
+            y="22.5"
             textAnchor="middle"
             fill="var(--paper)"
             fontFamily="var(--font-mono)"
-            fontSize="7.5"
+            fontSize="9"
             fontWeight="700"
           >
-            DA
+            Y
           </text>
           {/* Account name */}
           <text
@@ -505,10 +500,10 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
             y="17"
             fill="var(--ink)"
             fontFamily="var(--font-mono)"
-            fontSize="8.5"
+            fontSize="9"
             fontWeight="700"
           >
-            Dream Adventure
+            You
           </text>
           {/* Role badge */}
           <text
@@ -524,9 +519,9 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
         </g>
 
         {/* ── 2 WEEKS WARRANTY CIRCULAR ARC (FAR RIGHT) ── */}
-        {/* Center: x=510, y=267 */}
-        <g transform="translate(510, 267)">
-          {/* Track Circle */}
+        {/* Center: x=494, y=265 (Radius 28 -> spans 466..522, well inside x_max: 568) */}
+        <g transform="translate(494, 265)">
+          {/* Track Circle (Permanent structure) */}
           <circle
             cx="0"
             cy="0"
@@ -574,7 +569,7 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
               repeat: isPlaying ? Infinity : 0,
               repeatDelay: REPEAT_DELAY,
               ease: [0.16, 1, 0.3, 1],
-              times: [0, 0.44, 0.68, 0.94, 1],
+              times: [0, 0.42, 0.62, 0.85, 1],
             }}
           />
 
@@ -597,7 +592,7 @@ export function YoursAnim({ inView, delay = 0 }: AnimProps) {
             textAnchor="middle"
             fill="var(--mist)"
             fontFamily="var(--font-mono)"
-            fontSize="6.5"
+            fontSize="7"
             fontWeight="600"
             letterSpacing="0.08em"
           >

@@ -83,15 +83,15 @@ function ProcessRow({
           : { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }
       }
     >
-      {/* Numbered Stage Marker on the vertical spine */}
-      <div className="process-row__marker" aria-hidden="true">
-        <span className="process-row__marker-num">{stage.num}</span>
-      </div>
-
       {/* Two-column layout (Text Left, Animation Right) */}
       <div className="process-row__layout">
         {/* Text column (~42%) */}
         <div className="process-row__text">
+          {/* Numbered Stage Marker on the vertical spine, aligned with badge line */}
+          <div className="process-row__marker" aria-hidden="true">
+            <span className="process-row__marker-num">{stage.num}</span>
+          </div>
+
           <span className="process-row__badge">{stage.duration}</span>
           <h3 className="process-row__name">{stage.name}</h3>
 
