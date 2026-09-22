@@ -15,7 +15,7 @@ interface ProcessStage {
   deliverable: string;
   desc: string;
   ariaLabel: string;
-  anim: React.ComponentType<{ inView: boolean }>;
+  anim: React.ComponentType<{ inView: boolean; delay?: number }>;
 }
 
 const stages: ProcessStage[] = [
@@ -69,12 +69,11 @@ function ProcessRow({
   const rowRef = useRef<HTMLLIElement | null>(null);
   const isInView = useInView(rowRef, { margin: '-60px' });
   const Anim = stage.anim;
-  const isReversed = index % 2 === 1;
 
   return (
     <motion.li
       ref={rowRef}
-      className={`process-row ${isReversed ? 'process-row--reversed' : ''}`}
+      className="process-row"
       initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
@@ -84,10 +83,12 @@ function ProcessRow({
           : { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }
       }
     >
-      {/* Stage Marker on the vertical spine */}
-      <div className="process-row__marker" aria-hidden="true" />
+      {/* Numbered Stage Marker on the vertical spine */}
+      <div className="process-row__marker" aria-hidden="true">
+        <span className="process-row__marker-num">{stage.num}</span>
+      </div>
 
-      {/* Two-column layout */}
+      {/* Two-column layout (Text Left, Animation Right) */}
       <div className="process-row__layout">
         {/* Text column (~42%) */}
         <div className="process-row__text">
@@ -108,7 +109,7 @@ function ProcessRow({
           role="img"
           aria-label={stage.ariaLabel}
         >
-          <Anim inView={isInView} />
+          <Anim inView={isInView} delay={index * 0.4} />
         </div>
       </div>
     </motion.li>

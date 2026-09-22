@@ -5,344 +5,385 @@ import { motion, useReducedMotion } from 'framer-motion';
 
 interface AnimProps {
   inView: boolean;
+  delay?: number;
 }
 
-export function ShipAnim({ inView }: AnimProps) {
+export function ShipAnim({ inView, delay = 0 }: AnimProps) {
   const shouldReduceMotion = useReducedMotion();
   const isPlaying = inView && !shouldReduceMotion;
 
+  const DURATION = 7.2;
+  const REPEAT_DELAY = 0.6;
+
   return (
     <svg
-      viewBox="0 0 600 375"
+      viewBox="0 0 600 338"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="process-diagram-svg"
       preserveAspectRatio="xMidYMid meet"
     >
       {/* ── LOCAL PLINTH (BOTTOM LEFT) ── */}
+      {/* Target ~88% canvas width, plinth sits at x=36, y=254 */}
       <g>
         <rect
-          x="70"
-          y="270"
-          width="140"
-          height="24"
-          rx="5"
+          x="36"
+          y="254"
+          width="154"
+          height="38"
+          rx="6"
           fill="var(--paper-2)"
           stroke="var(--fog)"
           strokeWidth="1.2"
         />
         <text
-          x="140"
-          y="285"
+          x="113"
+          y="277"
           textAnchor="middle"
           fill="var(--mist)"
           fontFamily="var(--font-mono)"
-          fontSize="8.5"
+          fontSize="9.5"
+          fontWeight="600"
           letterSpacing="0.08em"
-          aria-hidden="true"
         >
-          LOCAL BUILD
+          LOCAL
         </text>
       </g>
 
-      {/* ── DEPLOYMENT TRAJECTORY PATH ── */}
+      {/* ── DEPLOYMENT TRAJECTORY PATH (ACROSS THE CANVAS) ── */}
+      {/* Cuts across center of canvas from (113, 210) to (350, 56) */}
       <path
-        d="M 140 235 C 140 135, 230 75, 340 75"
+        d="M 113 210 C 150 120, 230 65, 350 56"
         stroke="var(--fog)"
-        strokeWidth="1.75"
+        strokeWidth="1.5"
         strokeDasharray="4 4"
         fill="none"
       />
 
-      {/* ── MOVING THREE-FILE STACK ── */}
+      {/* ── MOVING THREE-BLOCK STACK (BUILD, DB, ASSETS) ── */}
       <motion.g
         initial={
           shouldReduceMotion
             ? { opacity: 0 }
-            : { opacity: 1, x: 95, y: 215, scale: 1 }
+            : { opacity: 1, x: 49, y: 176, scale: 1 }
         }
         animate={
           isPlaying
             ? {
                 opacity: [1, 1, 1, 0, 0, 1],
-                x: [95, 95, 305, 350, 95, 95],
-                y: [215, 205, 75, 75, 215, 215],
+                x: [49, 49, 290, 345, 49, 49],
+                y: [176, 170, 56, 56, 176, 176],
                 scale: [1, 1, 0.85, 0.5, 1, 1],
               }
             : shouldReduceMotion
               ? { opacity: 0 }
-              : { opacity: 1, x: 95, y: 215 }
+              : { opacity: 1, x: 49, y: 176 }
         }
         transition={{
-          duration: 7,
+          duration: DURATION,
+          delay: isPlaying ? delay : 0,
           repeat: isPlaying ? Infinity : 0,
-          repeatDelay: 0.6,
+          repeatDelay: REPEAT_DELAY,
           ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.1, 0.38, 0.44, 0.94, 1],
+          times: [0, 0.1, 0.36, 0.44, 0.94, 1],
         }}
       >
-        {/* Block 3 (Base) */}
-        <rect x="0" y="26" width="90" height="12" rx="3" fill="var(--fog)" stroke="var(--hairline)" />
-        {/* Block 2 (Middle) */}
-        <rect x="0" y="13" width="90" height="12" rx="3" fill="var(--graphite)" />
-        {/* Block 1 (Top) */}
-        <rect x="0" y="0" width="90" height="12" rx="3" fill="var(--ink)" />
-      </motion.g>
-
-      {/* ── PRODUCTION CLOUD NODE (TOP RIGHT) ── */}
-      <g>
+        {/* Block 3: ASSETS (Base) */}
         <rect
-          x="330"
-          y="50"
-          width="200"
-          height="52"
-          rx="8"
-          fill="var(--paper-2)"
-          stroke="var(--ink)"
-          strokeWidth="1.5"
+          x="0"
+          y="46"
+          width="128"
+          height="20"
+          rx="4"
+          fill="var(--fog)"
+          stroke="var(--hairline)"
         />
-        {/* Cloud/Server Rack Lines */}
-        <line x1="346" y1="62" x2="380" y2="62" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="505" cy="62" r="3" fill="var(--ink)" />
         <text
-          x="346"
-          y="84"
-          fill="var(--ink)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="600"
-          letterSpacing="0.08em"
-          aria-hidden="true"
-        >
-          PRODUCTION SERVER
-        </text>
-        <text
-          x="508"
-          y="84"
-          textAnchor="end"
-          fill="var(--mist)"
-          fontFamily="var(--font-mono)"
-          fontSize="8"
-          letterSpacing="0.05em"
-          aria-hidden="true"
-        >
-          LIVE
-        </text>
-      </g>
-
-      {/* ── DOMAIN PILL + SNAPPING PADLOCK ── */}
-      <motion.g
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0],
-                y: [8, 8, 0, 0, 8],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: 7,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: 0.6,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.42, 0.5, 0.92, 1],
-        }}
-      >
-        <rect
-          x="330"
-          y="118"
-          width="200"
-          height="30"
-          rx="15"
-          fill="var(--paper)"
-          stroke="var(--fog)"
-          strokeWidth="1.2"
-        />
-
-        {/* Padlock Icon */}
-        <g transform="translate(348, 133)">
-          {/* Padlock Shackle */}
-          <motion.path
-            d="M -3.5 -3 L -3.5 -8 C -3.5 -12, 3.5 -12, 3.5 -8 L 3.5 -3"
-            fill="none"
-            stroke="var(--ink)"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            initial={shouldReduceMotion ? { y: 0 } : { y: -4 }}
-            animate={
-              isPlaying
-                ? {
-                    y: [-4, -4, 0, 0, -4],
-                  }
-                : shouldReduceMotion
-                  ? { y: 0 }
-                  : { y: -4 }
-            }
-            transition={{
-              duration: 7,
-              repeat: isPlaying ? Infinity : 0,
-              repeatDelay: 0.6,
-              ease: [0.16, 1, 0.3, 1],
-              times: [0, 0.48, 0.54, 0.92, 1],
-            }}
-          />
-          {/* Padlock Body */}
-          <rect x="-5.5" y="-3" width="11" height="9" rx="2" fill="var(--ink)" />
-        </g>
-
-        {/* Domain Name */}
-        <text
-          x="368"
-          y="137"
-          fill="var(--ink)"
-          fontFamily="var(--font-mono)"
-          fontSize="9"
-          fontWeight="600"
-          letterSpacing="0.04em"
-          aria-hidden="true"
-        >
-          clientdomain.com
-        </text>
-
-        <rect x="480" y="125" width="38" height="16" rx="3" fill="var(--fog)" />
-        <text
-          x="499"
-          y="136"
+          x="64"
+          y="59"
           textAnchor="middle"
           fill="var(--ink)"
           fontFamily="var(--font-mono)"
-          fontSize="7"
+          fontSize="8"
           fontWeight="600"
-          letterSpacing="0.04em"
-          aria-hidden="true"
+          letterSpacing="0.08em"
         >
-          SSL
+          ASSETS
         </text>
-      </motion.g>
 
-      {/* ── PHONE OUTLINE & MOBILE QA CHECKMARK ── */}
-      <motion.g
-        initial={
-          shouldReduceMotion
-            ? { opacity: 1, x: 380, y: 168 }
-            : { opacity: 0, x: 420, y: 168 }
-        }
-        animate={
-          isPlaying
-            ? {
-                opacity: [0, 0, 1, 1, 0],
-                x: [420, 420, 380, 380, 420],
-              }
-            : shouldReduceMotion
-              ? { opacity: 1, x: 380, y: 168 }
-              : { opacity: 0 }
-        }
-        transition={{
-          duration: 7,
-          repeat: isPlaying ? Infinity : 0,
-          repeatDelay: 0.6,
-          ease: [0.16, 1, 0.3, 1],
-          times: [0, 0.54, 0.64, 0.92, 1],
-        }}
-      >
-        {/* Phone Frame */}
+        {/* Block 2: DB (Middle) */}
+        <rect
+          x="0"
+          y="23"
+          width="128"
+          height="20"
+          rx="4"
+          fill="var(--graphite)"
+        />
+        <text
+          x="64"
+          y="36"
+          textAnchor="middle"
+          fill="var(--paper)"
+          fontFamily="var(--font-mono)"
+          fontSize="8"
+          fontWeight="600"
+          letterSpacing="0.08em"
+        >
+          DB
+        </text>
+
+        {/* Block 1: BUILD (Top) */}
         <rect
           x="0"
           y="0"
-          width="100"
-          height="160"
+          width="128"
+          height="20"
+          rx="4"
+          fill="var(--ink)"
+        />
+        <text
+          x="64"
+          y="13"
+          textAnchor="middle"
+          fill="var(--paper)"
+          fontFamily="var(--font-mono)"
+          fontSize="8"
+          fontWeight="700"
+          letterSpacing="0.08em"
+        >
+          BUILD
+        </text>
+      </motion.g>
+
+      {/* ── VERCEL · PRODUCTION NODE (TOP RIGHT) ── */}
+      {/* x=334, y=24, w=230, h=66 */}
+      <g>
+        <rect
+          x="334"
+          y="24"
+          width="230"
+          height="66"
+          rx="8"
+          fill="var(--paper-2)"
+          stroke="var(--hairline)"
+          strokeWidth="1.2"
+        />
+
+        {/* Production Node Label */}
+        <text
+          x="350"
+          y="42"
+          fill="var(--ink)"
+          fontFamily="var(--font-mono)"
+          fontSize="9"
+          fontWeight="700"
+          letterSpacing="0.08em"
+        >
+          VERCEL · PRODUCTION
+        </text>
+
+        {/* Status Indicator */}
+        <circle cx="546" cy="38" r="3.5" fill="var(--ink)" />
+
+        {/* Domain Pill (thedreamadventure.com) */}
+        <g transform="translate(348, 50)">
+          <rect
+            x="0"
+            y="0"
+            width="202"
+            height="26"
+            rx="13"
+            fill="var(--paper)"
+            stroke="var(--fog)"
+            strokeWidth="1"
+          />
+
+          {/* Padlock Icon (snaps shut when deployment lands) */}
+          <g transform="translate(12, 6)">
+            {/* Shackle: Open state */}
+            <motion.path
+              d="M 3 6 L 3 3 A 3 3 0 0 1 9 3 L 9 5"
+              fill="none"
+              stroke="var(--ink)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 1 }}
+              animate={
+                isPlaying
+                  ? {
+                      opacity: [1, 1, 0, 0, 1],
+                    }
+                  : { opacity: 0 }
+              }
+              transition={{
+                duration: DURATION,
+                delay: isPlaying ? delay : 0,
+                repeat: isPlaying ? Infinity : 0,
+                repeatDelay: REPEAT_DELAY,
+                times: [0, 0.44, 0.46, 0.94, 1],
+              }}
+            />
+
+            {/* Shackle: Closed state (snapped shut) */}
+            <motion.path
+              d="M 3 6 L 3 3 A 3 3 0 0 1 9 3 L 9 6"
+              fill="none"
+              stroke="var(--ink)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+              animate={
+                isPlaying
+                  ? {
+                      opacity: [0, 0, 1, 1, 0],
+                    }
+                  : shouldReduceMotion
+                    ? { opacity: 1 }
+                    : { opacity: 0 }
+              }
+              transition={{
+                duration: DURATION,
+                delay: isPlaying ? delay : 0,
+                repeat: isPlaying ? Infinity : 0,
+                repeatDelay: REPEAT_DELAY,
+                times: [0, 0.44, 0.46, 0.94, 1],
+              }}
+            />
+
+            {/* Lock Body */}
+            <rect x="1" y="6" width="10" height="7" rx="1.5" fill="var(--ink)" />
+          </g>
+
+          {/* Domain text */}
+          <text
+            x="32"
+            y="17"
+            fill="var(--ink)"
+            fontFamily="var(--font-mono)"
+            fontSize="8.5"
+            fontWeight="600"
+            letterSpacing="0.02em"
+          >
+            thedreamadventure.com
+          </text>
+        </g>
+      </g>
+
+      {/* ── MOBILE PHONE QA VERIFICATION (BOTTOM RIGHT) ── */}
+      {/* Position: x=420, y=106, w=128, h=200 */}
+      <g>
+        {/* Phone Frame */}
+        <rect
+          x="420"
+          y="106"
+          width="128"
+          height="198"
           rx="18"
           fill="var(--paper)"
           stroke="var(--ink)"
           strokeWidth="1.5"
         />
-        {/* Screen */}
+
+        {/* Phone Top Speaker Notch */}
+        <rect x="466" y="113" width="36" height="4" rx="2" fill="var(--fog)" />
+
+        {/* ── MINIATURE OF THE SITE'S OWN HERO ── */}
+        {/* Nav header line */}
+        <line x1="432" y1="126" x2="536" y2="126" stroke="var(--hairline)" strokeWidth="0.8" />
+        <rect x="432" y="121" width="28" height="3" rx="1.5" fill="var(--ink)" />
+
+        {/* Hero Banner: permitted muted neutral fill */}
         <rect
-          x="6"
-          y="6"
-          width="88"
-          height="148"
-          rx="13"
-          fill="var(--paper-2)"
+          x="430"
+          y="132"
+          width="108"
+          height="48"
+          rx="4"
+          fill="var(--fog)"
+          opacity="0.6"
         />
-        {/* Notch */}
-        <rect x="36" y="11" width="28" height="4" rx="2" fill="var(--fog)" />
 
-        {/* QA Verified Stamp / Checkmark inside Phone */}
-        <g transform="translate(50, 75)">
-          <motion.circle
-            cx="0"
-            cy="0"
-            r="18"
-            fill="var(--paper)"
-            stroke="var(--ink)"
-            strokeWidth="1.5"
-            initial={shouldReduceMotion ? { scale: 1 } : { scale: 0.7 }}
-            animate={
-              isPlaying
-                ? {
-                    scale: [0.7, 0.7, 1, 1, 0.7],
-                  }
-                : shouldReduceMotion
-                  ? { scale: 1 }
-                  : { scale: 0.7 }
-            }
-            transition={{
-              duration: 7,
-              repeat: isPlaying ? Infinity : 0,
-              repeatDelay: 0.6,
-              ease: [0.16, 1, 0.3, 1],
-              times: [0, 0.66, 0.72, 0.92, 1],
-            }}
-          />
-          {/* Checkmark */}
-          <motion.path
-            d="M -7 0 L -2 5 L 7 -4"
-            fill="none"
-            stroke="var(--ink)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={shouldReduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
-            animate={
-              isPlaying
-                ? {
-                    pathLength: [0, 0, 1, 1, 0],
-                  }
-                : shouldReduceMotion
-                  ? { pathLength: 1 }
-                  : { pathLength: 0 }
-            }
-            transition={{
-              duration: 7,
-              repeat: isPlaying ? Infinity : 0,
-              repeatDelay: 0.6,
-              ease: 'easeOut',
-              times: [0, 0.72, 0.78, 0.92, 1],
-            }}
-          />
-        </g>
+        {/* Hero Title & Subhead Lines */}
+        <rect x="430" y="188" width="78" height="6" rx="2" fill="var(--ink)" />
+        <rect x="430" y="198" width="98" height="4" rx="2" fill="var(--graphite)" />
+        <rect x="430" y="206" width="60" height="4" rx="2" fill="var(--mist)" opacity="0.6" />
 
+        {/* Mini CTA button */}
+        <rect x="430" y="218" width="46" height="12" rx="3" fill="var(--ink)" />
         <text
-          x="50"
-          y="115"
+          x="453"
+          y="227"
           textAnchor="middle"
-          fill="var(--ink)"
+          fill="var(--paper)"
           fontFamily="var(--font-mono)"
-          fontSize="7.5"
+          fontSize="6"
           fontWeight="600"
-          letterSpacing="0.05em"
-          aria-hidden="true"
         >
-          MOBILE QA OK
+          EXPLORE
         </text>
 
-        {/* Home Bar */}
-        <rect x="35" y="146" width="30" height="2.5" rx="1.25" fill="var(--fog)" />
-      </motion.g>
+        {/* ── PHONE QA VERIFIED BADGE ── */}
+        {/* Enters at ~0.54, stays on hold */}
+        <motion.g
+          initial={
+            shouldReduceMotion
+              ? { opacity: 1, scale: 1 }
+              : { opacity: 0, scale: 0.9 }
+          }
+          animate={
+            isPlaying
+              ? {
+                  opacity: [0, 0, 1, 1, 0],
+                  scale: [0.9, 0.9, 1, 1, 0.9],
+                }
+              : shouldReduceMotion
+                ? { opacity: 1, scale: 1 }
+                : { opacity: 0 }
+          }
+          transition={{
+            duration: DURATION,
+            delay: isPlaying ? delay : 0,
+            repeat: isPlaying ? Infinity : 0,
+            repeatDelay: REPEAT_DELAY,
+            ease: [0.16, 1, 0.3, 1],
+            times: [0, 0.52, 0.58, 0.94, 1],
+          }}
+          style={{ transformOrigin: '484px 260px' }}
+        >
+          <rect
+            x="428"
+            y="248"
+            width="112"
+            height="24"
+            rx="12"
+            fill="var(--paper)"
+            stroke="var(--ink)"
+            strokeWidth="1"
+          />
+          {/* Checkmark icon */}
+          <path
+            d="M 440 260 L 443 263 L 449 257"
+            stroke="var(--ink)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          <text
+            x="480"
+            y="263"
+            textAnchor="middle"
+            fill="var(--ink)"
+            fontFamily="var(--font-mono)"
+            fontSize="7.5"
+            fontWeight="700"
+            letterSpacing="0.04em"
+          >
+            VERIFIED · 60FPS
+          </text>
+        </motion.g>
+      </g>
     </svg>
   );
 }

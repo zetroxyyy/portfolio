@@ -1533,6 +1533,10 @@ button {
 
 /* ── PROCESS VERTICAL STEPPER ─────────────────────────────── */
 .process-stepper-wrap {
+  --spine-x: 10px;
+  --marker-size: 28px;
+  --marker-gap: 16px;
+  --gutter: calc(var(--spine-x) + (var(--marker-size) / 2) + var(--marker-gap));
   position: relative;
   width: 100%;
 }
@@ -1542,7 +1546,7 @@ button {
   position: absolute;
   top: 18px;
   bottom: 24px;
-  left: 17px;
+  left: calc(var(--spine-x) - 1px);
   width: 2px;
   background-color: var(--graphite);
   opacity: 0.25;
@@ -1553,7 +1557,7 @@ button {
   position: absolute;
   top: 18px;
   bottom: 24px;
-  left: 17px;
+  left: calc(var(--spine-x) - 1px);
   width: 2px;
   background-color: var(--ink);
   z-index: 1;
@@ -1572,8 +1576,8 @@ button {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
-  padding-left: 48px;
+  gap: var(--space-16);
+  padding-left: var(--gutter);
   position: relative;
   z-index: 2;
 }
@@ -1586,15 +1590,27 @@ button {
 /* Stage marker sitting on vertical spine */
 .process-row__marker {
   position: absolute;
-  left: -35px; /* (48px - 35px) = 13px; center at 13 + 5 = 18px */
-  top: 14px;
-  width: 10px;
-  height: 10px;
+  left: calc(var(--spine-x) - var(--gutter) - (var(--marker-size) / 2));
+  top: 4px;
+  width: var(--marker-size);
+  height: var(--marker-size);
   border-radius: 50%;
-  background-color: var(--ink);
+  border: 1px solid var(--fog);
+  background-color: var(--paper);
   box-shadow: 0 0 0 4px var(--paper);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.process-row__marker-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1;
 }
 
 /* Two-column layout: text (~42%) & animation stage (~58%) */
@@ -1604,18 +1620,6 @@ button {
   gap: var(--space-12);
   align-items: center;
   width: 100%;
-}
-
-.process-row--reversed .process-row__layout {
-  grid-template-columns: 1.38fr 1fr;
-}
-
-.process-row--reversed .process-row__text {
-  order: 2;
-}
-
-.process-row--reversed .process-row__stage {
-  order: 1;
 }
 
 /* Text Column */
@@ -1681,7 +1685,7 @@ button {
 /* Animation Column Stage */
 .process-row__stage {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
   background: var(--paper);
@@ -2090,33 +2094,20 @@ button {
 }
 
 @media (max-width: 900px) {
+  .process-stepper-wrap {
+    --spine-x: 10px;
+    --marker-size: 26px;
+    --marker-gap: 14px;
+  }
+
   .process-stepper {
-    padding-left: 32px;
-    gap: var(--space-14);
+    gap: var(--space-12);
   }
 
-  .process-stepper__spine-bg,
-  .process-stepper__spine-fill {
-    left: 11px;
-  }
-
-  .process-row__marker {
-    left: -25px;
-  }
-
-  .process-row__layout,
-  .process-row--reversed .process-row__layout {
+  .process-row__layout {
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
-  }
-
-  .process-row--reversed .process-row__text {
-    order: 1;
-  }
-
-  .process-row--reversed .process-row__stage {
-    order: 2;
   }
 }
 
