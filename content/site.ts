@@ -24,9 +24,9 @@ export const site = {
 
   nav: [
     { label: 'Work', href: '/#work' },
+    { label: 'Capabilities', href: '/#capabilities' },
     { label: 'Process', href: '/#process' },
-    { label: 'FAQ', href: '/#faq' },
-    { label: 'Start a project', href: '/#contact' },
+    { label: 'Contact', href: '/#contact' },
   ],
 
   // SEO / meta

@@ -3,131 +3,76 @@
 import { motion } from 'framer-motion';
 import { duration, ease } from '@/lib/motionConfig';
 
-// Three shapes an engagement actually takes, with what each includes and how
-// long it really runs. No figures: scope decides cost, and a price card next
-// to a booking platform and a five-page site prices neither of them honestly.
-const TIERS = [
+const steps = [
   {
-    name: 'Site',
-    forWhom: 'A business that needs to exist online properly.',
-    weeks: '1–2 weeks',
-    includes: [
-      'Design and build, mobile-first',
-      'Up to about five pages',
-      'Contact form and map',
-      'Search metadata and social cards',
-      'Your domain, SSL, deployed',
-    ],
+    num: '01',
+    name: 'Scope',
+    desc: 'Clarify data models, user flows, and the exact admin tooling required to run the business.',
   },
   {
-    name: 'Site + CMS',
-    forWhom: 'You need to change the content yourself, without calling anyone.',
-    weeks: '3–5 weeks',
-    highlight: true,
-    includes: [
-      'Everything in Site',
-      'Admin panel built for your content',
-      'Image uploads and galleries',
-      'Two languages if you need them',
-      'Enquiries stored, not just emailed',
-    ],
+    num: '02',
+    name: 'Build',
+    desc: 'Develop the public customer interface and the private back office concurrently on Next.js and PostgreSQL.',
   },
   {
-    name: 'Platform',
-    forWhom: 'The site has to run the business, not describe it.',
-    weeks: '6–10 weeks',
-    includes: [
-      'Everything in Site + CMS',
-      'Bookings, orders or inventory',
-      'Live availability and capacity rules',
-      'Staff accounts and permissions',
-      'Reporting, exports and documents',
-    ],
+    num: '03',
+    name: 'Ship',
+    desc: 'Deploy to production with custom domains, DNS, SSL, metadata, and zero-downtime database migrations.',
   },
-] as const;
-
-const STEPS = [
-  { num: '01', name: 'Scope', when: 'Day 1–2', desc: 'A conversation about what the business does and what the system has to handle. You get honest scope and timing back, in writing.' },
-  { num: '02', name: 'Build', when: 'The bulk of it', desc: 'Public side and back office built together. You see a live preview link from the first week and comment on it as it grows.' },
-  { num: '03', name: 'Ship', when: 'Launch week', desc: 'Your domain, SSL, search metadata, and the database moved across. Nothing goes live until it works on a phone.' },
-  { num: '04', name: 'Hand over', when: 'Launch + 2 weeks', desc: 'Admin credentials, a walkthrough, and two weeks of fixes included. After that the system is yours to run.' },
-] as const;
+  {
+    num: '04',
+    name: 'Maintain',
+    desc: 'Client receives full admin credentials to manage content, prices, and bookings independently.',
+  },
+];
 
 export function Process() {
   return (
     <section className="process" id="process" aria-labelledby="process-heading">
       <div className="process__inner">
         <header className="process__header">
-          <span className="process__eyebrow">HOW IT WORKS</span>
-          <h2 id="process-heading" className="process__title">
-            Three shapes a project takes.
+          <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--mist)', letterSpacing: 'var(--tracking-wider)' }}>
+            PROCESS
+          </span>
+          <h2 id="process-heading" style={{ fontSize: 'clamp(var(--text-2xl), 4vw, var(--text-3xl))', color: 'var(--ink)' }}>
+            From scope to self-serve production.
           </h2>
-          <p className="process__qualifier serif-italic">
-            Timelines are the real ones, not the optimistic ones.
+          <p className="serif-italic" style={{ fontSize: '1.25rem', color: 'var(--graphite)' }}>
+            Every build includes the admin tooling needed to operate without ongoing developer friction.
           </p>
         </header>
 
-        {/* Scope tiers */}
-        <div className="tiers">
-          {TIERS.map((tier, i) => (
+        <div className="process__steps">
+          {steps.map((step, i) => (
             <motion.div
-              key={tier.name}
-              className={`tier ${'highlight' in tier && tier.highlight ? 'tier--highlight' : ''}`}
+              key={step.name}
+              className="process__step"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: duration.slow, ease, delay: i * 0.07 }}
+              transition={{ duration: duration.slow, ease, delay: i * 0.08 }}
             >
-              {'highlight' in tier && tier.highlight && (
-                <span className="tier__flag">Most projects</span>
-              )}
-              <div className="tier__head">
-                <h3 className="tier__name">{tier.name}</h3>
-                <span className="tier__weeks">{tier.weeks}</span>
+              <div className="process__step-header">
+                <span className="process__step-num">{step.num}</span>
+                {i < steps.length - 1 && <span className="process__step-arrow" aria-hidden="true">→</span>}
               </div>
-              <p className="tier__for">{tier.forWhom}</p>
-              <ul className="tier__list">
-                {tier.includes.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <a href="#contact" className="tier__cta">
-                <span>Start here</span>
-                <span className="arrow" aria-hidden="true">→</span>
-              </a>
+              <h3 className="process__step-name">{step.name}</h3>
+              <p className="process__step-desc">{step.desc}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* The four steps */}
-        <div className="process__steps-wrap">
-          <h3 className="process__steps-title">From first message to live</h3>
-          <ol className="process__steps">
-            {STEPS.map((step, i) => (
-              <motion.li
-                key={step.name}
-                className="process__step"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: duration.base, ease, delay: i * 0.06 }}
-              >
-                <div className="process__step-top">
-                  <span className="process__step-num">{step.num}</span>
-                  <span className="process__step-when">{step.when}</span>
-                </div>
-                <h4 className="process__step-name">{step.name}</h4>
-                <p className="process__step-desc">{step.desc}</p>
-              </motion.li>
-            ))}
-          </ol>
-        </div>
-
-        <p className="process__statement">
-          <strong>What is different:</strong> most builds hand over a site someone else has to
-          maintain. Every one of these hands over the admin screens too, so the people running the
-          business can change prices, dates, stock and copy without a developer in the loop.
-        </p>
+        <motion.div
+          className="process__statement"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: duration.slow, ease, delay: 0.3 }}
+        >
+          <p className="process__statement-text">
+            <strong>The differentiator:</strong> Most agencies deliver a static brochure. Every system here includes a custom admin back office so non-technical staff can update prices, dates, media, and copy autonomously.
+          </p>
+        </motion.div>
       </div>
     </section>
   );

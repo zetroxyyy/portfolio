@@ -28,32 +28,20 @@ export function Nav() {
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  /**
-   * These are real anchors, so the default behaviour already works: crawlable,
-   * Cmd-clickable, and functional with JavaScript off. This only intercepts the
-   * plain left-click on a target that exists on the current page, to hand the
-   * scroll to Lenis. Everything else — modified clicks, and links followed from
-   * a case study page back to a homepage section — falls through to the browser.
-   */
-  function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-    if (!href.startsWith('/#')) return;
-
-    const el = document.getElementById(href.slice(2));
-    if (!el) return; // not on this page — let the browser navigate
-
-    e.preventDefault();
+  function handleNavClick(href: string) {
     setMenuOpen(false);
-
-    const lenis = (window as unknown as {
-      lenis?: { scrollTo: (el: Element, opts?: object) => void };
-    }).lenis;
-
-    if (lenis) lenis.scrollTo(el, { offset: -70 });
-    else el.scrollIntoView({ behavior: 'smooth' });
-
-    // Keep the URL and the back button honest about where the reader is.
-    window.history.pushState(null, '', href.slice(1));
+    if (href.startsWith('/#')) {
+      const id = href.replace('/#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
+        if (lenis) {
+          lenis.scrollTo(el, { offset: -70 });
+        } else {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
   }
 
   return (
@@ -73,13 +61,14 @@ export function Nav() {
           <ul className="nav__links" role="list">
             {site.nav.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
+                <button
+                  type="button"
                   className="nav__link"
-                  onClick={(e) => handleNavClick(e, item.href)}
+                  onClick={() => handleNavClick(item.href)}
+                  aria-label={`Navigate to ${item.label}`}
                 >
                   {item.label}
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
@@ -118,13 +107,13 @@ export function Nav() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: duration.base, ease } }}
                 >
-                  <Link
-                    href={item.href}
+                  <button
+                    type="button"
                     className="nav__mobile-link"
-                    onClick={(e) => handleNavClick(e, item.href)}
+                    onClick={() => handleNavClick(item.href)}
                   >
                     {item.label}
-                  </Link>
+                  </button>
                 </motion.li>
               ))}
             </ul>
