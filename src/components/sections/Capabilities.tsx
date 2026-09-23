@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { capabilityGroups } from '@/../content/capabilities';
+import { capabilityLayers } from '@/../content/capabilities';
 
 export function Capabilities() {
   const shouldReduceMotion = useReducedMotion();
@@ -21,19 +20,20 @@ export function Capabilities() {
             id="capabilities-heading"
             className="section-heading section-heading--major"
           >
-            What I build <span className="serif-italic">is not one thing.</span>
+            What I work with{' '}
+            <span className="serif-italic">and what I reach for first.</span>
           </h2>
           <p className="section-subhead">
-            Websites, mobile apps, internal tools, and the systems behind them.
-            Underlined items link to something already running.
+            Six layers. Core is what most projects are built on — the rest has
+            shipped too, just less often.
           </p>
         </header>
 
-        <div className="capabilities__list">
-          {capabilityGroups.map((group, groupIndex) => (
+        <div className="capabilities__grid">
+          {capabilityLayers.map((layer, index) => (
             <motion.div
-              key={group.label}
-              className="capabilities__group"
+              key={layer.label}
+              className="capabilities__layer"
               initial={
                 shouldReduceMotion
                   ? { opacity: 1, y: 0 }
@@ -47,43 +47,27 @@ export function Capabilities() {
                   : {
                       duration: 0.5,
                       ease: [0.16, 1, 0.3, 1],
-                      delay: groupIndex * 0.09,
+                      delay: index * 0.08,
                     }
               }
             >
-              <h3 className="capabilities__group-label">{group.label}</h3>
-              <ul className="capabilities__items">
-                {group.items.map((item) => {
-                  const isExternal = item.href?.startsWith('http');
-
-                  return (
-                    <li key={item.label} className="capabilities__item">
-                      {item.href ? (
-                        isExternal ? (
-                          <a
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="capabilities__item-link"
-                          >
-                            {item.label}
-                          </a>
-                        ) : (
-                          <Link
-                            href={item.href}
-                            className="capabilities__item-link"
-                          >
-                            {item.label}
-                          </Link>
-                        )
-                      ) : (
-                        <span className="capabilities__item-text">
-                          {item.label}
-                        </span>
-                      )}
-                    </li>
-                  );
-                })}
+              <h3 className="capabilities__layer-label">{layer.label}</h3>
+              <ul
+                className="capabilities__tier capabilities__tier--core"
+                aria-label="Core"
+              >
+                {layer.core.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <div className="capabilities__tier-divider" aria-hidden="true" />
+              <ul
+                className="capabilities__tier capabilities__tier--also"
+                aria-label="Also shipped with"
+              >
+                {layer.also.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
               </ul>
             </motion.div>
           ))}

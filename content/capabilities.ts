@@ -1,67 +1,38 @@
-export interface CapabilityItem {
-  label: string;
-  /** Internal route or external URL. Present = this has been built and shipped. */
-  href?: string;
-}
-
-export interface CapabilityGroup {
+export interface CapabilityLayer {
   label: string; // mono, uppercase
-  items: CapabilityItem[];
+  core: string[];
+  also: string[];
 }
 
-export const capabilityGroups: CapabilityGroup[] = [
+export const capabilityLayers: CapabilityLayer[] = [
   {
-    label: 'SITES & STORES',
-    items: [
-      { label: 'A business website', href: '/work/manjushree' },
-      { label: 'An online store', href: '/work/mydarlingfood' },
-      { label: 'A product catalogue', href: '/work/nexus-mcu' },
-      { label: 'A bilingual site', href: '/work/nischal-legal' },
-      { label: 'A site your team can edit', href: '/work/nischal-legal' },
-    ],
+    label: 'INTERFACE',
+    core: ['React 19', 'Next.js App Router', 'TypeScript', 'Tailwind CSS v4', 'Framer Motion'],
+    also: ['Radix UI', 'Recharts', 'React Hook Form', 'Zod', 'Lenis'],
   },
   {
-    label: 'SYSTEMS THAT RUN A BUSINESS',
-    items: [
-      { label: 'A booking system with live availability', href: '/work/dream-adventure' },
-      { label: 'An inventory and pricing tool', href: '/work/didee' },
-      { label: 'A customer portal' },
-      { label: 'An internal dashboard' },
-      { label: 'An order and fulfilment flow' },
-      { label: 'Role-based staff accounts', href: '/work/dream-adventure' },
-    ],
+    label: 'SERVER & DATA',
+    core: ['Node.js', 'PostgreSQL', 'Prisma', 'Server Actions', 'REST route handlers'],
+    also: ['Python', 'Neon serverless', 'Supabase', 'Cloud Firestore', 'Raw SQL'],
+  },
+  {
+    label: 'AUTH & SECURITY',
+    core: ['NextAuth', 'JWT (jose)', 'bcrypt', 'Role-based access'],
+    also: ['Google OAuth 2.0', 'Brute-force lockout', 'CSP headers', 'Client-side encryption'],
   },
   {
     label: 'MOBILE',
-    items: [
-      { label: 'An Android app', href: 'https://github.com/zetroxyyy/resumiq' },
-      { label: 'A cross-platform app', href: 'https://github.com/zetroxyyy/resumiq' },
-      { label: 'Voice input instead of typing', href: 'https://github.com/zetroxyyy/resumiq' },
-      { label: 'A mobile front-end on the same database as your site' },
-    ],
+    core: ['Flutter', 'Dart', 'Android'],
+    also: ['Firebase Auth', 'Firestore', 'Speech-to-text', 'On-device PDF export'],
   },
   {
-    label: 'AI & SEARCH',
-    items: [
-      { label: 'A chatbot that answers from your own documents', href: 'https://github.com/zetroxyyy/reels-second-brain' },
-      { label: 'Semantic search across your content', href: 'https://github.com/zetroxyyy/reels-second-brain' },
-      { label: 'Automatic transcription and summaries', href: 'https://github.com/zetroxyyy/reels-second-brain' },
-      { label: 'An AI document generator', href: 'https://github.com/zetroxyyy/resumiq' },
-      { label: 'A model running on your own server, not an API', href: 'https://github.com/zetroxyyy/reels-second-brain' },
-    ],
+    label: 'AI & RETRIEVAL',
+    core: ['LLM integration', 'RAG pipelines', 'Vector search'],
+    also: ['Groq / Llama 3.3', 'Ollama (self-hosted)', 'OpenAI Whisper', 'pgvector', 'Vercel AI SDK'],
   },
   {
-    label: 'UNDER THE HOOD',
-    items: [
-      { label: 'A custom admin panel', href: '/work/didee' },
-      { label: 'A REST API' },
-      { label: 'Authentication and user roles', href: '/work/nischal-legal' },
-      { label: 'PDF and report generation', href: '/work/dream-adventure' },
-      { label: 'Transactional email', href: '/work/dream-adventure' },
-      { label: 'A Chrome extension', href: 'https://github.com/zetroxyyy/reels-second-brain' },
-      { label: 'A background worker on a schedule', href: 'https://github.com/zetroxyyy/reels-second-brain' },
-      { label: 'File upload and storage', href: '/work/nischal-legal' },
-      { label: 'A database built for the actual business' },
-    ],
+    label: 'SHIP & OPERATE',
+    core: ['Vercel', 'Git', 'Custom domains & DNS', 'SSL', 'Core Web Vitals'],
+    also: ['Docker', 'Vercel Blob', 'Resend', 'Cloudinary', 'Chrome MV3', 'next-intl (i18n)'],
   },
 ];
