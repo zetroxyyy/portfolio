@@ -16,12 +16,23 @@ export function Nav() {
   const isClickScrollingRef = useRef(false);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
+  const isHome = pathname === '/';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30);
+      if (isHome && !isClickScrollingRef.current) {
+        const atBottom =
+          window.innerHeight + Math.ceil(window.scrollY) >=
+          document.documentElement.scrollHeight - 2;
+        if (atBottom) {
+          setActiveSection('contact');
+        }
+      }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [isHome]);
 
   // Close menu on ESC
   useEffect(() => {
@@ -59,8 +70,6 @@ export function Nav() {
     };
   }, []);
 
-  const isHome = pathname === '/';
-
   // Active section indicator via IntersectionObserver
   useEffect(() => {
     if (!isHome) return;
@@ -82,6 +91,15 @@ export function Nav() {
           entriesMap.set(entry.target.id, entry);
         });
 
+        const atBottom =
+          window.innerHeight + Math.ceil(window.scrollY) >=
+          document.documentElement.scrollHeight - 2;
+
+        if (atBottom) {
+          setActiveSection(sectionIds[sectionIds.length - 1]);
+          return;
+        }
+
         // Pick intersecting entry minimising distance from section centre to viewport centre
         const viewportCenter = window.innerHeight / 2;
         let nearestId: string | null = null;
@@ -89,7 +107,7 @@ export function Nav() {
 
         entriesMap.forEach((entry, id) => {
           if (entry.isIntersecting) {
-            const rect = entry.boundingClientRect;
+            const rect = entry.target.getBoundingClientRect();
             const sectionCenter = rect.top + rect.height / 2;
             const distance = Math.abs(sectionCenter - viewportCenter);
             if (distance < minDistance) {

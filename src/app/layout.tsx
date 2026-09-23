@@ -51,20 +51,11 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} — Full-Stack Developer`,
     description: site.ogDescription,
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: `${site.name} — Full-Stack Developer`,
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${site.name} — Full-Stack Developer`,
     description: site.ogDescription,
-    images: ['/og-image.png'],
   },
   robots: {
     index: true,
