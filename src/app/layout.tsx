@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { LenisProvider } from '@/components/layout/LenisProvider';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { ScrollProgress } from '@/components/ui/ScrollProgress';
+import { Analytics } from '@vercel/analytics/next';
 import { site } from '../../content/site';
 
 const jetbrainsMono = JetBrains_Mono({
@@ -157,6 +158,8 @@ export default function RootLayout({
           {/* Footer */}
           <Footer />
         </LenisProvider>
+
+        <Analytics />
       </body>
     </html>
   );

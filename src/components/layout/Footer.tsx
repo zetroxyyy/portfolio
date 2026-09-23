@@ -36,7 +36,7 @@ export function Footer() {
         {/* Bottom bar */}
         <motion.div className="footer__bottom" variants={fadeIn}>
           <span className="footer__copy">
-            © {currentYear} {site.name} · Full-Stack Web Development
+            © {currentYear} {site.name} · Full-Stack Developer
           </span>
 
           <nav aria-label="Footer links">

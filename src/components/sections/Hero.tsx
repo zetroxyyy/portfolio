@@ -52,7 +52,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: duration.slow, ease, delay: 0.4 }}
         >
-          Booking engines, custom CMSs, storefronts, and admin dashboards — front to back, database to interface, deployed and maintained.
+          Websites, mobile apps, and the systems that run them — database to interface, deployed and maintained.
         </motion.p>
 
         {/* Live proof strip */}
@@ -64,9 +64,7 @@ export function Hero() {
           aria-label="Verified delivery record: 6 products shipped, 3 client domains, web, mobile, and AI capabilities"
         >
           <span className="hero__proof-item">6 PRODUCTS SHIPPED</span>
-          <span className="hero__proof-sep" aria-hidden="true">·</span>
           <span className="hero__proof-item">3 CLIENT DOMAINS</span>
-          <span className="hero__proof-sep" aria-hidden="true">·</span>
           <span className="hero__proof-item">WEB · MOBILE · AI</span>
         </motion.div>
 
