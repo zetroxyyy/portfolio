@@ -49,6 +49,16 @@ export function Nav() {
     };
   }, [menuOpen]);
 
+  // Clear pending click timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   const isHome = pathname === '/';
 
   // Active section indicator via IntersectionObserver
@@ -62,25 +72,37 @@ export function Nav() {
 
     if (elements.length === 0) return;
 
-    const visibleSections = new Set<string>();
+    const entriesMap = new Map<string, IntersectionObserverEntry>();
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (isClickScrollingRef.current) return;
 
         entries.forEach((entry) => {
+          entriesMap.set(entry.target.id, entry);
+        });
+
+        // Pick intersecting entry minimising distance from section centre to viewport centre
+        const viewportCenter = window.innerHeight / 2;
+        let nearestId: string | null = null;
+        let minDistance = Infinity;
+
+        entriesMap.forEach((entry, id) => {
           if (entry.isIntersecting) {
-            visibleSections.add(entry.target.id);
-          } else {
-            visibleSections.delete(entry.target.id);
+            const rect = entry.boundingClientRect;
+            const sectionCenter = rect.top + rect.height / 2;
+            const distance = Math.abs(sectionCenter - viewportCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              nearestId = id;
+            }
           }
         });
 
-        if (visibleSections.size === 0) {
-          setActiveSection(null);
-        } else {
-          const active = sectionIds.find((id) => visibleSections.has(id)) || null;
-          setActiveSection(active);
+        // Sticky highlight: if a tracked section is active, update state.
+        // If visible sections empty (e.g. over Testimonials), do not clear state.
+        if (nearestId) {
+          setActiveSection(nearestId);
         }
       },
       {
@@ -130,16 +152,35 @@ export function Nav() {
     if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
     clickTimeoutRef.current = setTimeout(() => {
       isClickScrollingRef.current = false;
-    }, 800);
+      clickTimeoutRef.current = null;
+    }, 1500);
 
     const lenis = (window as unknown as {
-      lenis?: { scrollTo: (el: Element, opts?: object) => void };
+      lenis?: {
+        scrollTo: (
+          el: Element,
+          opts?: { offset?: number; onComplete?: () => void }
+        ) => void;
+      };
     }).lenis;
 
-    if (lenis) lenis.scrollTo(el, { offset: -70 });
-    else el.scrollIntoView({ behavior: 'smooth' });
+    if (lenis) {
+      lenis.scrollTo(el, {
+        offset: -70,
+        onComplete: () => {
+          isClickScrollingRef.current = false;
+          if (clickTimeoutRef.current) {
+            clearTimeout(clickTimeoutRef.current);
+            clickTimeoutRef.current = null;
+          }
+        },
+      });
+    } else {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
 
-    window.history.pushState(null, '', href.slice(1));
+    // A6: Use replaceState so back button leaves page cleanly in one press
+    window.history.replaceState(null, '', href.slice(1));
   }
 
   return (
@@ -166,7 +207,7 @@ export function Nav() {
                   <Link
                     href={item.href}
                     className={`nav__link ${isActive ? 'nav__link--active' : ''}`}
-                    aria-current={isActive ? 'true' : undefined}
+                    aria-current={isActive ? 'location' : undefined}
                     onClick={(e) => handleNavClick(e, item.href)}
                   >
                     {item.label}
@@ -217,7 +258,7 @@ export function Nav() {
                     <Link
                       href={item.href}
                       className={`nav__mobile-link ${isActive ? 'nav__mobile-link--active' : ''}`}
-                      aria-current={isActive ? 'true' : undefined}
+                      aria-current={isActive ? 'location' : undefined}
                       onClick={(e) => handleNavClick(e, item.href)}
                     >
                       {item.label}

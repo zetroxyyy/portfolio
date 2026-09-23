@@ -1,6 +1,7 @@
 import { Hero } from '@/components/sections/Hero';
 import { Work } from '@/components/sections/Work';
 import { Testimonials } from '@/components/sections/Testimonials';
+import { MidContact } from '@/components/sections/MidContact';
 import { Capabilities } from '@/components/sections/Capabilities';
 import { Process } from '@/components/sections/Process';
 import type { Metadata } from 'next';
@@ -17,6 +18,7 @@ export default function HomePage() {
       <Hero />
       <Work />
       <Testimonials />
+      <MidContact />
       <Capabilities />
       <Process />
     </>

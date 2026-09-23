@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { LenisProvider } from '@/components/layout/LenisProvider';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { ScrollProgress } from '@/components/ui/ScrollProgress';
+import { BackToTop } from '@/components/ui/BackToTop';
 import { Analytics } from '@vercel/analytics/next';
 import { site } from '../../content/site';
 
@@ -154,6 +155,9 @@ export default function RootLayout({
               {children}
             </main>
           </PageTransition>
+
+          {/* Back to top */}
+          <BackToTop />
 
           {/* Footer */}
           <Footer />
