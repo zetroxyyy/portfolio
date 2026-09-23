@@ -4,8 +4,15 @@ import { motion } from 'framer-motion';
 import { StatusReadout } from '@/components/ui/StatusReadout';
 import { duration, ease } from '@/lib/motionConfig';
 import { site } from '../../../content/site';
+import { projects, getClientProjects } from '../../../content/projects';
 
 export function Hero() {
+  const productCount = projects.length;
+  const clientCount = getClientProjects().length;
+  const productLabel = `${productCount} ${productCount === 1 ? 'PRODUCT' : 'PRODUCTS'} SHIPPED`;
+  const clientLabel = `${clientCount} ${clientCount === 1 ? 'CLIENT DOMAIN' : 'CLIENT DOMAINS'}`;
+  const proofAriaLabel = `Verified delivery record: ${productCount} ${productCount === 1 ? 'product' : 'products'} shipped, ${clientCount} client ${clientCount === 1 ? 'domain' : 'domains'}, web, mobile, and AI capabilities`;
+
   const handleScrollToWork = () => {
     const el = document.getElementById('work');
     if (el) {
@@ -61,10 +68,10 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: duration.slow, ease, delay: 0.55 }}
-          aria-label="Verified delivery record: 6 products shipped, 3 client domains, web, mobile, and AI capabilities"
+          aria-label={proofAriaLabel}
         >
-          <span className="hero__proof-item">6 PRODUCTS SHIPPED</span>
-          <span className="hero__proof-item">3 CLIENT DOMAINS</span>
+          <span className="hero__proof-item">{productLabel}</span>
+          <span className="hero__proof-item">{clientLabel}</span>
           <span className="hero__proof-item">WEB · MOBILE · AI</span>
         </motion.div>
 

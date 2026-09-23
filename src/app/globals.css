@@ -327,12 +327,20 @@ button {
   color: var(--graphite);
   padding: var(--space-1) 0;
   position: relative;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
   display: inline-block;
-  transition: color 0.2s ease;
+  transition: color 250ms ease, text-decoration-color 250ms ease;
 }
 .nav__link:hover {
   color: var(--ink);
+}
+.nav__link.nav__link--active,
+.nav__link[aria-current="true"] {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
 }
 
 .theme-toggle {
@@ -404,12 +412,24 @@ button {
   font-size: var(--text-sm);
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--graphite);
   text-align: left;
-  width: 100%;
+  width: fit-content;
   padding: var(--space-2) 0;
-  text-decoration: none;
-  display: block;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  display: inline-block;
+  transition: color 250ms ease, text-decoration-color 250ms ease;
+}
+.nav__mobile-link:hover {
+  color: var(--ink);
+}
+.nav__mobile-link.nav__mobile-link--active,
+.nav__mobile-link[aria-current="true"] {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
 }
 
 /* ── HERO SECTION ─────────────────────────────────────────── */

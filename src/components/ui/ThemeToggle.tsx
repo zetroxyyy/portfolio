@@ -3,20 +3,22 @@
 import { useSyncExternalStore } from 'react';
 
 function subscribe(callback: () => void) {
-  const mq = window.matchMedia('(prefers-color-scheme: dark)');
-  mq.addEventListener('change', callback);
+  const observer = new MutationObserver(callback);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+  // still needed so a change in another tab is reflected here
   window.addEventListener('storage', callback);
   return () => {
-    mq.removeEventListener('change', callback);
+    observer.disconnect();
     window.removeEventListener('storage', callback);
   };
 }
 
 function getSnapshot(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light';
-  const stored = localStorage.getItem('theme');
-  if (stored === 'dark' || stored === 'light') return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (typeof document === 'undefined') return 'light';
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 }
 
 function getServerSnapshot(): 'light' | 'dark' {
@@ -30,7 +32,6 @@ export function ThemeToggle() {
     const next = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
-    window.dispatchEvent(new Event('storage'));
   };
 
   return (
@@ -40,11 +41,18 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      suppressHydrationWarning
     >
-      <span className="theme-toggle__icon" aria-hidden="true">
+      <span
+        className="theme-toggle__icon"
+        aria-hidden="true"
+        suppressHydrationWarning
+      >
         {theme === 'dark' ? '☀' : '☾'}
       </span>
-      <span className="theme-toggle__label">{theme === 'dark' ? 'LIGHT' : 'DARK'}</span>
+      <span className="theme-toggle__label" suppressHydrationWarning>
+        {theme === 'dark' ? 'LIGHT' : 'DARK'}
+      </span>
     </button>
   );
 }

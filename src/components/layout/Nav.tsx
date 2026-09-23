@@ -11,7 +11,10 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
+  const isClickScrollingRef = useRef(false);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -29,6 +32,68 @@ export function Nav() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
+
+  // Lock scrolling while menuOpen is true, restoring previous overflow and Lenis state
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const lenis = (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis;
+    const previousOverflow = document.body.style.overflow;
+
+    lenis?.stop();
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      lenis?.start();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  const isHome = pathname === '/';
+
+  // Active section indicator via IntersectionObserver
+  useEffect(() => {
+    if (!isHome) return;
+
+    const sectionIds = ['work', 'capabilities', 'process', 'contact'];
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (elements.length === 0) return;
+
+    const visibleSections = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isClickScrollingRef.current) return;
+
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.add(entry.target.id);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
+
+        if (visibleSections.size === 0) {
+          setActiveSection(null);
+        } else {
+          const active = sectionIds.find((id) => visibleSections.has(id)) || null;
+          setActiveSection(active);
+        }
+      },
+      {
+        rootMargin: '-45% 0px -45% 0px',
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isHome]);
 
   // Handle on-load or route-change hash scroll
   useEffect(() => {
@@ -52,11 +117,20 @@ export function Nav() {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     if (!href.startsWith('/#')) return;
 
-    const el = document.getElementById(href.slice(2));
+    const targetId = href.slice(2);
+    const el = document.getElementById(targetId);
     if (!el) return; // not on this page — let the browser navigate to it
 
     e.preventDefault();
     setMenuOpen(false);
+
+    // Clicking must win immediately
+    setActiveSection(targetId);
+    isClickScrollingRef.current = true;
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 800);
 
     const lenis = (window as unknown as {
       lenis?: { scrollTo: (el: Element, opts?: object) => void };
@@ -83,17 +157,23 @@ export function Nav() {
         {/* Desktop links + Theme toggle */}
         <div className="nav__right">
           <ul className="nav__links" role="list">
-            {site.nav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="nav__link"
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {site.nav.map((item) => {
+              const targetId = item.href.replace('/#', '');
+              const isActive = isHome && activeSection === targetId;
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`nav__link ${isActive ? 'nav__link--active' : ''}`}
+                    aria-current={isActive ? 'true' : undefined}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           <ThemeToggle />
@@ -124,21 +204,27 @@ export function Nav() {
             aria-label="Mobile navigation"
           >
             <ul role="list">
-              {site.nav.map((item, i) => (
-                <motion.li
-                  key={item.href}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: duration.base, ease } }}
-                >
-                  <Link
-                    href={item.href}
-                    className="nav__mobile-link"
-                    onClick={(e) => handleNavClick(e, item.href)}
+              {site.nav.map((item, i) => {
+                const targetId = item.href.replace('/#', '');
+                const isActive = isHome && activeSection === targetId;
+
+                return (
+                  <motion.li
+                    key={item.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: duration.base, ease } }}
                   >
-                    {item.label}
-                  </Link>
-                </motion.li>
-              ))}
+                    <Link
+                      href={item.href}
+                      className={`nav__mobile-link ${isActive ? 'nav__mobile-link--active' : ''}`}
+                      aria-current={isActive ? 'true' : undefined}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.li>
+                );
+              })}
             </ul>
           </motion.div>
         )}
