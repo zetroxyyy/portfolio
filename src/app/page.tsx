@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
 import { site } from '../../content/site';
+import { projects } from '../../content/projects';
+import { Header } from '@/components/site/Header';
+import { ProjectRow } from '@/components/site/ProjectRow';
+import { SideProjects } from '@/components/site/SideProjects';
+import { Contact } from '@/components/site/Contact';
 
 export const metadata: Metadata = {
   title: site.title,
@@ -8,49 +13,50 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div
-      className="dot-grid"
-      style={{
-        minHeight: '100vh',
-        padding: '3rem 2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem',
-      }}
-    >
-      <h1
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'var(--t-name)',
-          fontWeight: 700,
-          color: 'var(--ink)',
-          lineHeight: 1,
-        }}
-      >
-        zetroxy
-      </h1>
-      <p
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'var(--t-label)',
-          fontWeight: 500,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-dim)',
-        }}
-      >
-        Full-stack developer · Kathmandu
-      </p>
-      <p
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 'var(--t-meta)',
-          color: 'var(--ink-faint)',
-          marginTop: '1rem',
-        }}
-      >
-        window manager init
-      </p>
+    <div className="wrap">
+      <Header />
+
+      <section className="intro" aria-label="Introduction">
+        <h1 className="intro__heading">
+          Full-stack developer in Kathmandu, building web products end to end.
+        </h1>
+        <div className="intro__status-row">
+          <span className="intro__dot" aria-hidden="true" />
+          <p className="intro__status-text">
+            Available for work ·{' '}
+            <a href="mailto:hello@zetroxy.me" className="intro__status-link">
+              hello@zetroxy.me
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <section className="projects-section" id="work" aria-label="Selected Projects">
+        {projects.map((project, index) => {
+          const primaryStack = project.stack[0] || 'Next.js';
+          const secondaryStack = project.stack[3] || project.stack[1] || 'PostgreSQL';
+          const stackLine = `${primaryStack}, ${secondaryStack}`;
+
+          return (
+            <ProjectRow
+              key={project.slug}
+              slug={project.slug}
+              title={project.title}
+              year={project.year}
+              shortSummary={project.shortSummary}
+              stackLine={stackLine}
+              liveUrl={project.liveUrl}
+              homeImage={project.homeImage}
+              homeImageAlt={project.homeImageAlt}
+              priority={index === 0}
+            />
+          );
+        })}
+      </section>
+
+      <SideProjects />
+
+      <Contact />
     </div>
   );
 }

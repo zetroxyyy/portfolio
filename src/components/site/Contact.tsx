@@ -1,0 +1,29 @@
+import { site } from '../../../content/site';
+
+export function Contact() {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="contact-block" id="contact">
+      <div>
+        <a href={`mailto:${site.email}`} className="contact-block__email">
+          {site.email}
+        </a>
+      </div>
+      <p className="contact-block__sub">
+        Available for work · Kathmandu, Nepal ·{' '}
+        <a
+          href={site.socials.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="contact-block__sub-link"
+        >
+          GitHub
+        </a>
+      </p>
+      <p className="contact-block__legal">
+        © {currentYear} {site.name} · Full-Stack Developer
+      </p>
+    </footer>
+  );
+}

@@ -35,6 +35,8 @@ export interface Project {
   stack: string[];
   cover: string;
   coverAlt: string;
+  homeImage: string;
+  homeImageAlt: string;
   problem: string[];
   built: ProjectBuiltItem[];
   decisions: ProjectDecision[];
@@ -57,7 +59,7 @@ export const projects: Project[] = [
     accentContrast: '#FFFFFF',
     accentWash: 'rgba(13, 148, 136, 0.08)',
     shortSummary:
-      'Booking platform for a Japanese whitewater operator.',
+      'Booking and operations platform for a Japanese rafting operator.',
     summary:
       'A bilingual booking and operations platform for a Japanese rafting and canyoning operator — public reservation flow, live availability, and a full admin back office.',
     stack: [
@@ -76,6 +78,8 @@ export const projects: Project[] = [
     ],
     cover: '/images/projects/dream-adventure/cover.webp',
     coverAlt: 'Dream Adventure homepage — English hero showcasing Tone River rafting in Minakami, Japan',
+    homeImage: '/images/projects/dream-adventure/booking.webp',
+    homeImageAlt: 'Dream Adventure booking wizard, step one of six',
     problem: [
       'The business took every reservation by phone and email, tracked daily capacity on paper, and operated a static HTML site that could not display real-time availability.',
       'Double-bookings were a recurring operational risk during peak season. The owner — who is not a developer — needed the autonomy to adjust seasonal pricing, block out dates, launch promotional discounts, and generate daily guide manifests without relying on outside technical help.',
@@ -175,7 +179,7 @@ export const projects: Project[] = [
     accentContrast: '#FFFFFF',
     accentWash: 'rgba(139, 38, 62, 0.08)',
     shortSummary:
-      'Editorial identity and client portal for a legal practice.',
+      'Bilingual legal practice site with a custom Nepali CMS.',
     summary:
       'A bilingual Nepali/English site for a legal practice, with a purpose-built CMS that lets non-technical office staff edit every section of the site themselves.',
     stack: [
@@ -191,6 +195,8 @@ export const projects: Project[] = [
     ],
     cover: '/images/projects/nischal-legal/cover.webp',
     coverAlt: 'Nischal Legal Service homepage — bilingual hero in Nepali and English with legal practice areas',
+    homeImage: '/images/projects/nischal-legal/admin-dashboard.webp',
+    homeImageAlt: 'Nischal Legal Service admin dashboard',
     problem: [
       'A multi-disciplinary legal office needed a credible, modern web presence in both Devanagari Nepali and English to serve local clients and overseas Nepalese.',
       'The practice required frequent updates to practice areas, court procedural guides, photo galleries, and contact channels. WordPress was rejected due to heavy maintenance overhead, plugin vulnerabilities, and an English-only admin interface that alienated staff working primarily in Nepali.',
@@ -272,7 +278,7 @@ export const projects: Project[] = [
     accentContrast: '#FFFFFF',
     accentWash: 'rgba(193, 30, 46, 0.08)',
     shortSummary:
-      'Streaming catalog for the Marvel Cinematic Universe.',
+      'Marvel catalogue and timeline, with its own CMS.',
     summary:
       'A streaming-grade catalogue interface for the Marvel Cinematic Universe, backed by a custom CMS for managing titles, phases, episodes, and release timelines.',
     stack: [
@@ -288,6 +294,8 @@ export const projects: Project[] = [
     ],
     cover: '/images/projects/nexus-mcu/cover.webp',
     coverAlt: 'NEXUS homepage hero showcasing Marvel Cinematic Universe streaming interface',
+    homeImage: '/images/projects/nexus-mcu/timeline.webp',
+    homeImageAlt: 'Nexus MCU timeline catalogue',
     problem: [
       'Presenting a massive, multi-decade cinematic catalogue — spanning 40+ films, dozens of television series, chronological storylines, and evolving phase structures — in a smooth, cinematic web interface.',
       'Maintaining this interlinked dataset required a purpose-built editorial CMS allowing administrators to manage cast lists, trailer embeds, chronological timelines, and release schedules.',
@@ -349,101 +357,7 @@ export const projects: Project[] = [
       'A responsive, streaming-grade media catalog with an administrative management dashboard running on its own production domain.',
   },
 
-  // ─── 04 · Manjushree Overseas ──────────────────────────────────────────────
-  {
-    slug: 'manjushree',
-    title: 'Manjushree Overseas',
-    client: 'Manjushree Overseas (P.) Ltd. — international recruitment agency, Kathmandu, Nepal',
-    year: '2026',
-    kind: 'independent',
-    role: 'Solo — design, build, deployment',
-    status: 'Live · manjushree.zetroxy.me',
-    liveUrl: 'https://manjushree.zetroxy.me',
-    accent: '#9B2226',
-    accentContrast: '#FFFFFF',
-    accentWash: 'rgba(155, 34, 38, 0.08)',
-    shortSummary:
-      'Recruitment portal for an accredited overseas agency.',
-    summary:
-      'A corporate site for a Nepalese overseas recruitment agency placing technical and professional workers across the GCC, Malaysia, Japan, and Europe.',
-    stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
-    cover: '/images/projects/manjushree/cover.webp',
-    coverAlt: 'Manjushree Overseas corporate homepage — institutional header and workforce recruitment overview',
-    problem: [
-      'Overseas recruitment agencies must establish instant credibility and institutional compliance with international HR directors and foreign hiring managers who will never visit the physical Kathmandu headquarters.',
-      'Generic recruitment templates with stock photos fail to communicate government licensing, ethical recruitment standards, trade-testing capabilities, and deployment capacity.',
-    ],
-    built: [
-      {
-        heading: 'End-to-End Workforce Solutions',
-        body: 'Detailed breakdowns of technical, hospitality, security, and industrial recruitment pipelines, outlining candidate screening and pre-departure orientation.',
-        image: '/images/projects/manjushree/services.webp',
-        imageAlt: 'Manjushree Overseas recruitment services and sector categories',
-        caption: 'Recruitment sectors — technical trades, hospitality, healthcare, and security.',
-      },
-      {
-        heading: 'The Sourcing Advantage & Trade Verification',
-        body: 'Comprehensive value proposition detailing Nepal\'s workforce strengths, skills testing certifications, and institutional compliance standards.',
-        image: '/images/projects/manjushree/why-nepalese.webp',
-        imageAlt: 'Why Nepalese workers section explaining workforce reliability and work ethic',
-        caption: 'Sourcing advantage and skill-verification protocols.',
-      },
-      {
-        heading: 'Executive Leadership & Compliance',
-        body: 'Board of directors, executive management profiles, and verified government licensing credentials establishing organizational transparency.',
-        image: '/images/projects/manjushree/team.webp',
-        imageAlt: 'Board of directors and management profiles',
-        caption: 'Executive management and compliance leadership.',
-      },
-      {
-        heading: 'Trade Testing & Training Gallery',
-        body: 'Photographic documentation of candidate interviews, vocational skills testing, pre-deployment medical assessments, and training facilities.',
-        image: '/images/projects/manjushree/gallery.webp',
-        imageAlt: 'Trade testing, vocational interviews, and deployment gallery',
-        caption: 'Operations gallery — trade testing, candidate interviews, and pre-departure briefings.',
-      },
-      {
-        heading: 'Company Profile & Institutional Vision',
-        body: 'In-depth overview of company history, ethical recruitment charter, international partnerships, and operational roadmap.',
-        image: '/images/projects/manjushree/about.webp',
-        imageAlt: 'About page detailing company history and ethical recruitment values',
-        caption: 'Company background, licensing details, and ethical recruitment charter.',
-      },
-      {
-        heading: 'Structured Corporate Sourcing Inquiry',
-        body: 'A purposeful B2B inquiry form capturing target destination country, required job categories, worker headcount, and project timeline.',
-        image: '/images/projects/manjushree/contact.webp',
-        imageAlt: 'Corporate sourcing inquiry form with sector and headcount fields',
-        caption: 'B2B inquiry form tailored for employer manpower demands.',
-      },
-      {
-        heading: 'Full Corporate Layout',
-        body: 'Full-height scroll capture of the corporate homepage showing hero, services, licensing credentials, and client contact.',
-        image: '/images/projects/manjushree/home-full.webp',
-        imageAlt: 'Full page scroll capture of Manjushree Overseas homepage',
-        caption: 'Complete corporate homepage scroll layout.',
-        isFullScroll: true,
-      },
-    ],
-    decisions: [
-      {
-        heading: 'Institutional restraint over agency polish',
-        body: 'Utilized deep corporate navy, crimson accents, dense structured typography, and authentic operational photography to project regulatory stability and professionalism for corporate enterprise clients.',
-      },
-      {
-        heading: 'B2B sales-shaped inquiry architecture',
-        body: 'Structured the inquiry form around destination market, industry sector, and headcount requirements, ensuring inbound inquiries provide all necessary quotation data in the initial contact.',
-      },
-      {
-        heading: 'Multi-page static architecture',
-        body: 'Implemented a 7-page static route structure (Home, About, Services, Why Nepalese, Team, Gallery, Contact) optimizing crawlability and international loading speeds.',
-      },
-    ],
-    outcome:
-      'A complete 7-page institutional web presence deployed as a working proposal, ready for operational deployment.',
-  },
-
-  // ─── 05 · Didee ────────────────────────────────────────────────────────────
+  // ─── 04 · Didee ────────────────────────────────────────────────────────────
   {
     slug: 'didee',
     title: 'Didee',
@@ -457,12 +371,14 @@ export const projects: Project[] = [
     accentContrast: '#FFFFFF',
     accentWash: 'rgba(26, 26, 24, 0.08)',
     shortSummary:
-      'Lookbook storefront and inventory back office for a boutique.',
+      'Fashion storefront with a full product and price admin.',
     summary:
       'A dark editorial storefront for a Kathmandu fashion retailer, with an admin back office for catalogue, categories, bulk pricing, and site settings.',
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
     cover: '/images/projects/didee/cover.webp',
     coverAlt: 'Didee fashion storefront homepage — dark editorial aesthetic with contemporary lookbook',
+    homeImage: '/images/projects/didee/admin-prices.webp',
+    homeImageAlt: 'Didee admin price and variant table',
     problem: [
       'A physical streetwear boutique in Kathmandu operated with no digital catalogue. Stock drops, pricing, and collections rotated weekly.',
       'A complex e-commerce platform would be abandoned due to tedious single-item price editing after wholesale shipments. The retailer required a dark editorial lookbook coupled with an ultra-efficient bulk administration interface.',
@@ -540,7 +456,7 @@ export const projects: Project[] = [
       'A live fashion storefront and back-office management system ready for full catalog deployment.',
   },
 
-  // ─── 06 · My Darling Food ──────────────────────────────────────────────────
+  // ─── 05 · My Darling Food ──────────────────────────────────────────────────
   {
     slug: 'mydarlingfood',
     title: 'My Darling Food',
@@ -554,12 +470,14 @@ export const projects: Project[] = [
     accentContrast: '#12110F',
     accentWash: 'rgba(217, 122, 43, 0.08)',
     shortSummary:
-      'Artisanal storefront with dietary filters for a pickle brand.',
+      'Food storefront with ordering and a product catalogue.',
     summary:
       'A warm product storefront for a Nepali pickle and achar brand, with filterable categories and product detail.',
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
     cover: '/images/projects/mydarlingfood/cover.webp',
     coverAlt: 'My Darling Food storefront — warm artisanal pickle and achar product showcase',
+    homeImage: '/images/projects/mydarlingfood/products.webp',
+    homeImageAlt: 'My Darling Food product catalogue',
     problem: [
       'An artisanal food producer creating traditional Nepali achar and pickles with premium shelf appeal lacked a focused online presence to present product ingredients, spice profiles, and variety packs.',
       'The brand required a warm, appetizing interface that highlights jar packaging, ingredient authenticity, and easy dietary categorization (vegetarian, meat, fish).',
@@ -594,6 +512,103 @@ export const projects: Project[] = [
     outcome:
       'A live, high-conversion product catalog demonstrating artisanal food merchandising on a dedicated subdomain.',
   },
+
+  // ─── 06 · Manjushree Overseas ──────────────────────────────────────────────
+  {
+    slug: 'manjushree',
+    title: 'Manjushree Overseas',
+    client: 'Manjushree Overseas (P.) Ltd. — international recruitment agency, Kathmandu, Nepal',
+    year: '2026',
+    kind: 'independent',
+    role: 'Solo — design, build, deployment',
+    status: 'Live · manjushree.zetroxy.me',
+    liveUrl: 'https://manjushree.zetroxy.me',
+    accent: '#9B2226',
+    accentContrast: '#FFFFFF',
+    accentWash: 'rgba(155, 34, 38, 0.08)',
+    shortSummary:
+      'Recruitment agency site for overseas Nepali hiring.',
+    summary:
+      'A corporate site for a Nepalese overseas recruitment agency placing technical and professional workers across the GCC, Malaysia, Japan, and Europe.',
+    stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
+    cover: '/images/projects/manjushree/cover.webp',
+    coverAlt: 'Manjushree Overseas corporate homepage — institutional header and workforce recruitment overview',
+    homeImage: '/images/projects/manjushree/services.webp',
+    homeImageAlt: 'Manjushree recruitment services page',
+    problem: [
+      'Overseas recruitment agencies must establish instant credibility and institutional compliance with international HR directors and foreign hiring managers who will never visit the physical Kathmandu headquarters.',
+      'Generic recruitment templates with stock photos fail to communicate government licensing, ethical recruitment standards, trade-testing capabilities, and deployment capacity.',
+    ],
+    built: [
+      {
+        heading: 'End-to-End Workforce Solutions',
+        body: 'Detailed breakdowns of technical, hospitality, security, and industrial recruitment pipelines, outlining candidate screening and pre-departure orientation.',
+        image: '/images/projects/manjushree/services.webp',
+        imageAlt: 'Manjushree Overseas recruitment services and sector categories',
+        caption: 'Recruitment sectors — technical trades, hospitality, healthcare, and security.',
+      },
+      {
+        heading: 'The Sourcing Advantage & Trade Verification',
+        body: 'Comprehensive value proposition detailing Nepal\'s workforce strengths, skills testing certifications, and institutional compliance standards.',
+        image: '/images/projects/manjushree/why-nepalese.webp',
+        imageAlt: 'Why Nepalese workers section explaining workforce reliability and work ethic',
+        caption: 'Sourcing advantage and skill-verification protocols.',
+      },
+      {
+        heading: 'Executive Leadership & Compliance',
+        body: 'Board of directors, executive management profiles, and verified government licensing credentials establishing organizational transparency.',
+        image: '/images/projects/manjushree/team.webp',
+        imageAlt: 'Board of directors and management profiles',
+        caption: 'Executive management and compliance leadership.',
+      },
+      {
+        heading: 'Trade Testing & Training Gallery',
+        body: 'Photographic documentation of candidate interviews, vocational skills testing, pre-deployment medical assessments, and training facilities.',
+        image: '/images/projects/manjushree/gallery.webp',
+        imageAlt: 'Trade testing, vocational interviews, and deployment gallery',
+        caption: 'Operations gallery — trade testing, candidate interviews, and pre-departure briefings.',
+      },
+      {
+        heading: 'Company Profile & Institutional Vision',
+        body: 'In-depth overview of company history, ethical recruitment charter, international partnerships, and operational roadmap.',
+        image: '/images/projects/manjushree/about.webp',
+        imageAlt: 'About page detailing company history and ethical recruitment values',
+        caption: 'Company background, licensing details, and ethical recruitment charter.',
+      },
+      {
+        heading: 'Structured Corporate Sourcing Inquiry',
+        body: 'A purposeful B2B inquiry form capturing target destination country, required job categories, worker headcount, and project timeline.',
+        image: '/images/projects/manjushree/contact.webp',
+        imageAlt: 'Corporate sourcing inquiry form with sector and headcount fields',
+        caption: 'B2B inquiry form tailored for employer manpower demands.',
+      },
+      {
+        heading: 'Full Corporate Layout',
+        body: 'Full-height scroll capture of the corporate homepage showing hero, services, licensing credentials, and client contact.',
+        image: '/images/projects/manjushree/home-full.webp',
+        imageAlt: 'Full page scroll capture of Manjushree Overseas homepage',
+        caption: 'Complete corporate homepage scroll layout.',
+        isFullScroll: true,
+      },
+    ],
+    decisions: [
+      {
+        heading: 'Institutional restraint over agency polish',
+        body: 'Utilized deep corporate navy, crimson accents, dense structured typography, and authentic operational photography to project regulatory stability and professionalism for corporate enterprise clients.',
+      },
+      {
+        heading: 'B2B sales-shaped inquiry architecture',
+        body: 'Structured the inquiry form around destination market, industry sector, and headcount requirements, ensuring inbound inquiries provide all necessary quotation data in the initial contact.',
+      },
+      {
+        heading: 'Multi-page static architecture',
+        body: 'Implemented a 7-page static route structure (Home, About, Services, Why Nepalese, Team, Gallery, Contact) optimizing crawlability and international loading speeds.',
+      },
+    ],
+    outcome:
+      'A complete 7-page institutional web presence deployed as a working proposal, ready for operational deployment.',
+  }
+
 ];
 
 export function getProjectBySlug(slug: string): Project | undefined {

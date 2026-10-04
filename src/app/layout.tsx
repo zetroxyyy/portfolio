@@ -1,11 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Nav } from '@/components/layout/Nav';
-import { Footer } from '@/components/layout/Footer';
 import { LenisProvider } from '@/components/layout/LenisProvider';
-import { PageTransition } from '@/components/layout/PageTransition';
-import { ScrollProgress } from '@/components/ui/ScrollProgress';
-import { BackToTop } from '@/components/ui/BackToTop';
 import { Analytics } from '@vercel/analytics/next';
 import { site } from '../../content/site';
 
@@ -55,34 +50,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const jsonLdWebsite = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: site.name,
-    url: site.siteUrl,
-    description: site.ogDescription,
-  };
-
-  const jsonLdPerson = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: site.name,
-    url: site.siteUrl,
-    jobTitle: 'Full-Stack Developer',
-    description: site.ogDescription,
-    email: site.email,
-    sameAs: [site.socials.github],
-    knowsAbout: [
-      'Full-Stack Development',
-      'Mobile Application Development (Flutter & Android)',
-      'LLM Integration & Retrieval-Augmented Generation (RAG)',
-      'Next.js & React',
-      'PostgreSQL & pgvector',
-      'TypeScript',
-      'System Architecture',
-    ],
-  };
-
   return (
     <html
       lang="en"
@@ -93,14 +60,6 @@ export default function RootLayout({
         {/* Preconnect for Fontshare CDN */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.fontshare.com" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
-        />
       </head>
       <body>
         {/* Skip link */}
@@ -108,25 +67,10 @@ export default function RootLayout({
           Skip to main content
         </a>
 
-        {/* 1px scroll progress bar at top edge */}
-        <ScrollProgress />
-
         <LenisProvider>
-          {/* Main navigation */}
-          <Nav />
-
-          {/* Page transition */}
-          <PageTransition>
-            <main id="main-content" tabIndex={-1}>
-              {children}
-            </main>
-          </PageTransition>
-
-          {/* Back to top */}
-          <BackToTop />
-
-          {/* Footer */}
-          <Footer />
+          <main id="main-content" tabIndex={-1}>
+            {children}
+          </main>
         </LenisProvider>
 
         <Analytics />
