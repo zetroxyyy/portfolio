@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Instrument_Serif } from 'next/font/google';
 import './globals.css';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
@@ -9,15 +8,6 @@ import { ScrollProgress } from '@/components/ui/ScrollProgress';
 import { BackToTop } from '@/components/ui/BackToTop';
 import { Analytics } from '@vercel/analytics/next';
 import { site } from '../../content/site';
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  variable: '--font-serif-italic',
-  display: 'swap',
-  weight: ['400'],
-  style: ['italic'],
-  preload: true,
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
@@ -96,17 +86,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={instrumentSerif.variable}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
-        {/* Immediate theme initialization to avoid FOUC */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
-          }}
-        />
         {/* Preconnect for Fontshare CDN */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.fontshare.com" />

@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { site } from '../../../content/site';
 import { ease, duration } from '@/lib/motionConfig';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -236,8 +235,6 @@ export function Nav() {
               );
             })}
           </ul>
-
-          <ThemeToggle />
 
           {/* Mobile menu toggle */}
           <button

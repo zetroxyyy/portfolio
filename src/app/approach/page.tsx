@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import { Process } from '@/components/sections/Process';
-import { Capabilities } from '@/components/sections/Capabilities';
-import { Testimonials } from '@/components/sections/Testimonials';
+import { Process } from '@/components/approach/Process';
+import { Capabilities } from '@/components/approach/Capabilities';
 
 export const metadata: Metadata = {
   title: 'Approach & Capabilities — zetroxy',
@@ -14,7 +13,6 @@ export default function ApproachPage() {
     <div className="approach-page">
       <Process />
       <Capabilities />
-      <Testimonials />
     </div>
   );
 }

@@ -3,10 +3,10 @@
 import React, { useRef } from 'react';
 import { motion, useReducedMotion, useInView } from 'framer-motion';
 import { duration, ease } from '@/lib/motionConfig';
-import { ScopeAnim } from '@/components/ui/process-anim/ScopeAnim';
-import { BuildAnim } from '@/components/ui/process-anim/BuildAnim';
-import { ShipAnim } from '@/components/ui/process-anim/ShipAnim';
-import { YoursAnim } from '@/components/ui/process-anim/YoursAnim';
+import { ScopeAnim } from '@/components/approach/process-anim/ScopeAnim';
+import { BuildAnim } from '@/components/approach/process-anim/BuildAnim';
+import { ShipAnim } from '@/components/approach/process-anim/ShipAnim';
+import { YoursAnim } from '@/components/approach/process-anim/YoursAnim';
 
 interface ProcessStage {
   num: string;
