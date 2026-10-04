@@ -9,6 +9,14 @@ export const site = {
   tagline: 'Full-stack developer building web and mobile applications, and the systems that run them.',
 
   email: 'hello@zetroxy.me',
+  mailtoHref:
+    'mailto:hello@zetroxy.me' +
+    '?subject=' +
+    encodeURIComponent('Project enquiry — zetroxy.me') +
+    '&body=' +
+    encodeURIComponent(
+      'Hi Aaditya,\n\nWhat I need built:\n\n\nRough timeline:\n\n\nBudget range:\n\n\n'
+    ),
 
   bio: [
     'I build complete web platforms, mobile applications, and AI-backed systems — from database to interface, deployed and maintained.',
@@ -23,9 +31,8 @@ export const site = {
   },
 
   nav: [
-    { label: 'Work', href: '/#work' },
-    { label: 'Approach', href: '/approach' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'Work', href: '/work' },
+    { label: 'About', href: '/about' },
   ],
 
   // SEO / meta

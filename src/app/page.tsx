@@ -24,7 +24,7 @@ export default function HomePage() {
           <span className="intro__dot" aria-hidden="true" />
           <p className="intro__status-text">
             Available for work ·{' '}
-            <a href="mailto:hello@zetroxy.me" className="intro__status-link">
+            <a href={site.mailtoHref} className="intro__status-link">
               hello@zetroxy.me
             </a>
           </p>
@@ -46,8 +46,8 @@ export default function HomePage() {
               shortSummary={project.shortSummary}
               stackLine={stackLine}
               liveUrl={project.liveUrl}
-              homeImage={project.homeImage}
-              homeImageAlt={project.homeImageAlt}
+              cover={project.cover}
+              coverAlt={project.coverAlt}
               priority={index === 0}
             />
           );

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { site } from '../../../content/site';
 
 export function Header() {
   return (
@@ -10,17 +11,17 @@ export function Header() {
         <nav aria-label="Main navigation">
           <ul className="site-header__links">
             <li>
-              <a href="#work" className="site-header__link">
+              <Link href="/work" className="site-header__link">
                 Work
-              </a>
+              </Link>
             </li>
             <li>
-              <Link href="/approach" className="site-header__link">
+              <Link href="/about" className="site-header__link">
                 About
               </Link>
             </li>
             <li>
-              <a href="mailto:hello@zetroxy.me" className="site-header__link">
+              <a href={site.mailtoHref} className="site-header__link">
                 Email
               </a>
             </li>

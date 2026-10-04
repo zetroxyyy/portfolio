@@ -35,8 +35,6 @@ export interface Project {
   stack: string[];
   cover: string;
   coverAlt: string;
-  homeImage: string;
-  homeImageAlt: string;
   problem: string[];
   built: ProjectBuiltItem[];
   decisions: ProjectDecision[];
@@ -78,8 +76,6 @@ export const projects: Project[] = [
     ],
     cover: '/images/projects/dream-adventure/cover.webp',
     coverAlt: 'Dream Adventure homepage — English hero showcasing Tone River rafting in Minakami, Japan',
-    homeImage: '/images/projects/dream-adventure/booking.webp',
-    homeImageAlt: 'Dream Adventure booking wizard, step one of six',
     problem: [
       'The business took every reservation by phone and email, tracked daily capacity on paper, and operated a static HTML site that could not display real-time availability.',
       'Double-bookings were a recurring operational risk during peak season. The owner — who is not a developer — needed the autonomy to adjust seasonal pricing, block out dates, launch promotional discounts, and generate daily guide manifests without relying on outside technical help.',
@@ -195,8 +191,6 @@ export const projects: Project[] = [
     ],
     cover: '/images/projects/nischal-legal/cover.webp',
     coverAlt: 'Nischal Legal Service homepage — bilingual hero in Nepali and English with legal practice areas',
-    homeImage: '/images/projects/nischal-legal/admin-dashboard.webp',
-    homeImageAlt: 'Nischal Legal Service admin dashboard',
     problem: [
       'A multi-disciplinary legal office needed a credible, modern web presence in both Devanagari Nepali and English to serve local clients and overseas Nepalese.',
       'The practice required frequent updates to practice areas, court procedural guides, photo galleries, and contact channels. WordPress was rejected due to heavy maintenance overhead, plugin vulnerabilities, and an English-only admin interface that alienated staff working primarily in Nepali.',
@@ -294,8 +288,6 @@ export const projects: Project[] = [
     ],
     cover: '/images/projects/nexus-mcu/cover.webp',
     coverAlt: 'NEXUS homepage hero showcasing Marvel Cinematic Universe streaming interface',
-    homeImage: '/images/projects/nexus-mcu/timeline.webp',
-    homeImageAlt: 'Nexus MCU timeline catalogue',
     problem: [
       'Presenting a massive, multi-decade cinematic catalogue — spanning 40+ films, dozens of television series, chronological storylines, and evolving phase structures — in a smooth, cinematic web interface.',
       'Maintaining this interlinked dataset required a purpose-built editorial CMS allowing administrators to manage cast lists, trailer embeds, chronological timelines, and release schedules.',
@@ -377,8 +369,6 @@ export const projects: Project[] = [
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
     cover: '/images/projects/didee/cover.webp',
     coverAlt: 'Didee fashion storefront homepage — dark editorial aesthetic with contemporary lookbook',
-    homeImage: '/images/projects/didee/admin-prices.webp',
-    homeImageAlt: 'Didee admin price and variant table',
     problem: [
       'A physical streetwear boutique in Kathmandu operated with no digital catalogue. Stock drops, pricing, and collections rotated weekly.',
       'A complex e-commerce platform would be abandoned due to tedious single-item price editing after wholesale shipments. The retailer required a dark editorial lookbook coupled with an ultra-efficient bulk administration interface.',
@@ -476,8 +466,6 @@ export const projects: Project[] = [
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
     cover: '/images/projects/mydarlingfood/cover.webp',
     coverAlt: 'My Darling Food storefront — warm artisanal pickle and achar product showcase',
-    homeImage: '/images/projects/mydarlingfood/products.webp',
-    homeImageAlt: 'My Darling Food product catalogue',
     problem: [
       'An artisanal food producer creating traditional Nepali achar and pickles with premium shelf appeal lacked a focused online presence to present product ingredients, spice profiles, and variety packs.',
       'The brand required a warm, appetizing interface that highlights jar packaging, ingredient authenticity, and easy dietary categorization (vegetarian, meat, fish).',
@@ -533,8 +521,6 @@ export const projects: Project[] = [
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
     cover: '/images/projects/manjushree/cover.webp',
     coverAlt: 'Manjushree Overseas corporate homepage — institutional header and workforce recruitment overview',
-    homeImage: '/images/projects/manjushree/services.webp',
-    homeImageAlt: 'Manjushree recruitment services page',
     problem: [
       'Overseas recruitment agencies must establish instant credibility and institutional compliance with international HR directors and foreign hiring managers who will never visit the physical Kathmandu headquarters.',
       'Generic recruitment templates with stock photos fail to communicate government licensing, ethical recruitment standards, trade-testing capabilities, and deployment capacity.',

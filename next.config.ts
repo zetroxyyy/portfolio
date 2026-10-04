@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
     // All local project images are pre-compressed and pre-sized WebP assets.
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/approach',
+        destination: '/about',
+        permanent: true,
+      },
+    ];
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

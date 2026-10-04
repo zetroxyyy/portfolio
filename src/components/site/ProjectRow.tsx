@@ -13,8 +13,8 @@ export interface ProjectRowProps {
   stackLine: string;
   shortSummary: string;
   liveUrl: string;
-  homeImage: string;
-  homeImageAlt: string;
+  cover: string;
+  coverAlt: string;
   priority?: boolean;
 }
 
@@ -25,12 +25,12 @@ export function ProjectRow({
   stackLine,
   shortSummary,
   liveUrl,
-  homeImage,
-  homeImageAlt,
+  cover,
+  coverAlt,
   priority = false,
 }: ProjectRowProps) {
   const prefersReduced = useReducedMotion();
-  const dimensions = getImageSize(homeImage);
+  const dimensions = getImageSize(cover);
 
   return (
     <motion.article
@@ -47,8 +47,8 @@ export function ProjectRow({
         aria-hidden="true"
       >
         <Image
-          src={homeImage}
-          alt={homeImageAlt}
+          src={cover}
+          alt={coverAlt}
           width={dimensions.width}
           height={dimensions.height}
           priority={priority}

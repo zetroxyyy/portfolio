@@ -6,7 +6,7 @@ export function Contact() {
   return (
     <footer className="contact-block" id="contact">
       <div>
-        <a href={`mailto:${site.email}`} className="contact-block__email">
+        <a href={site.mailtoHref} className="contact-block__email">
           {site.email}
         </a>
       </div>

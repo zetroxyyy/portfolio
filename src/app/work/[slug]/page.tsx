@@ -1,10 +1,12 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { Header } from '@/components/site/Header';
+import { Contact } from '@/components/site/Contact';
+import { CaseBuiltItem } from '@/components/case/CaseBuiltItem';
+import { CaseTestimonial } from '@/components/case/CaseTestimonial';
 import { projects, getProjectBySlug, getAdjacentProjects } from '../../../../content/projects';
-import { BrowserFrame } from '@/components/ui/BrowserFrame';
 import { site } from '../../../../content/site';
-import React, { CSSProperties } from 'react';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -23,11 +25,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${project.title} — Case Study`,
-    description: project.summary,
+    title: project.title,
+    description: project.shortSummary,
     openGraph: {
-      title: `${project.title} — Case Study | ${site.name}`,
-      description: project.summary,
+      title: `${project.title} — ${site.name}`,
+      description: project.shortSummary,
       images: [
         {
           url: project.cover,
@@ -48,127 +50,89 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
   const { prev, next } = getAdjacentProjects(slug);
 
-  const customStyle: CSSProperties = {
-    '--project-accent': project.accent,
-  } as CSSProperties;
-
   return (
-    <article className="case-study" style={customStyle} aria-label={`${project.title} case study`}>
-      <div className="case-study__inner">
-        {/* Back navigation */}
-        <Link href="/#work" className="case-study__back" aria-label="Back to all projects">
-          <span aria-hidden="true">←</span>
-          <span>All work</span>
+    <div className="wrap">
+      <Header />
+
+      <article className="case-study">
+        <Link href="/work" className="case-study__back">
+          ← All work
         </Link>
 
-        {/* Header */}
-        <header className="case-study__header">
-          <div className="case-study__top-meta">
-            <span>{project.kind === 'client' ? 'CLIENT ENGAGEMENT' : 'INDEPENDENT BUILD'}</span>
-            <span aria-hidden="true">·</span>
-            <span>{project.year}</span>
-          </div>
+        <h1 className="case-study__title">{project.title}</h1>
+        <p className="case-study__summary">{project.shortSummary}</p>
 
-          <h1 className="case-study__title">{project.title}</h1>
-          <p className="case-study__client">{project.client}</p>
-          <p className="case-study__summary">{project.summary}</p>
-        </header>
-
-        {/* Meta Bar */}
-        <div className="case-study__meta-bar" role="region" aria-label="Project details">
-          <div className="case-study__meta-item">
-            <span className="case-study__meta-label">Role</span>
-            <span className="case-study__meta-value">{project.role}</span>
+        {/* Meta grid — 4 columns desktop, 2 columns mobile */}
+        <div className="case-study__meta-grid">
+          <div className="case-meta-cell">
+            <span className="case-meta-cell__label">Client</span>
+            <span className="case-meta-cell__value">{project.client}</span>
           </div>
-          <div className="case-study__meta-item">
-            <span className="case-study__meta-label">Year</span>
-            <span className="case-study__meta-value">{project.year}</span>
+          <div className="case-meta-cell">
+            <span className="case-meta-cell__label">Year</span>
+            <span className="case-meta-cell__value">{project.year}</span>
           </div>
-          <div className="case-study__meta-item">
-            <span className="case-study__meta-label">Status</span>
-            <span className="case-study__meta-value">{project.status}</span>
+          <div className="case-meta-cell">
+            <span className="case-meta-cell__label">Role</span>
+            <span className="case-meta-cell__value">{project.role}</span>
           </div>
-          <div className="case-study__meta-item">
-            <span className="case-study__meta-label">Live URL</span>
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="case-study__meta-value case-study__meta-value--link"
-              aria-label={`Visit live site for ${project.title} (opens in new tab)`}
-            >
-              {project.liveUrl.replace(/^https?:\/\//, '')} ↗
-            </a>
+          <div className="case-meta-cell">
+            <span className="case-meta-cell__label">Status</span>
+            <span className="case-meta-cell__value">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="case-meta-cell__link"
+              >
+                {project.status} ↗
+              </a>
+            </span>
           </div>
-        </div>
-
-        {/* Hero cover in BrowserFrame */}
-        <div className="case-study__hero-frame">
-          <BrowserFrame
-            src={project.cover}
-            alt={project.coverAlt}
-            url={project.liveUrl}
-            accent={project.accent}
-            priority
-          />
         </div>
 
         {/* Section: The Problem */}
-        <section className="case-study__section" aria-labelledby="problem-heading">
-          <h2 id="problem-heading" className="case-study__section-heading">
+        <section aria-labelledby="problem-label">
+          <h2 id="problem-label" className="case-section-label">
             The Problem
           </h2>
-          <div className="case-study__prose">
-            {project.problem.map((p, idx) => (
-              <p key={idx}>{p}</p>
+          <div className="case-problem__prose">
+            {project.problem.map((paragraph, idx) => (
+              <p key={idx} className="case-problem__p">
+                {paragraph}
+              </p>
             ))}
           </div>
         </section>
 
         {/* Section: What I Built */}
-        <section className="case-study__section" aria-labelledby="built-heading">
-          <h2 id="built-heading" className="case-study__section-heading">
+        <section aria-labelledby="built-label">
+          <h2 id="built-label" className="case-section-label">
             What I Built
           </h2>
-
-          <div className="case-study__built-list">
+          <div className="case-built-list">
             {project.built.map((item, idx) => (
-              <div key={idx} className="case-study__built-item">
-                <h3 className="case-study__built-title">{item.heading}</h3>
-                <p className="case-study__built-desc">{item.body}</p>
-
-                {item.image && (
-                  <figure style={{ margin: 0 }}>
-                    <BrowserFrame
-                      src={item.image}
-                      alt={item.imageAlt || item.heading}
-                      url={project.liveUrl}
-                      accent={project.accent}
-                      expandable={item.isFullScroll}
-                    />
-                    {item.caption && (
-                      <figcaption className="case-study__caption" style={{ marginTop: 'var(--space-3)' }}>
-                        {item.caption}
-                      </figcaption>
-                    )}
-                  </figure>
-                )}
-              </div>
+              <CaseBuiltItem key={idx} item={item} liveUrl={project.liveUrl} />
             ))}
           </div>
         </section>
 
-        {/* Section: Technical Decisions */}
+        {/* Section: Key Decisions */}
         {project.decisions.length > 0 && (
-          <section className="case-study__section" aria-labelledby="decisions-heading">
-            <h2 id="decisions-heading" className="case-study__section-heading">
-              Technical Decisions
+          <section aria-labelledby="decisions-label">
+            <h2 id="decisions-label" className="case-section-label">
+              Key Decisions
             </h2>
-            <div className="case-study__decisions-grid">
+            <div className="case-decisions-list">
               {project.decisions.map((dec, idx) => (
-                <div key={idx} className="case-study__decision-card">
-                  <h3 className="case-study__decision-title">{dec.heading}</h3>
-                  <p className="case-study__decision-body">{dec.body}</p>
+                <div key={idx} className="case-decision-row">
+                  <div className="case-decision-row__left">
+                    <span className="case-decision-row__index">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="case-decision-row__heading">{dec.heading}</h3>
+                  </div>
+                  <p className="case-decision-row__body">{dec.body}</p>
                 </div>
               ))}
             </div>
@@ -176,61 +140,45 @@ export default async function CaseStudyPage({ params }: PageProps) {
         )}
 
         {/* Section: Outcome */}
-        <section className="case-study__section" aria-labelledby="outcome-heading">
-          <h2 id="outcome-heading" className="case-study__section-heading">
+        <section aria-labelledby="outcome-label">
+          <h2 id="outcome-label" className="case-section-label">
             Outcome
           </h2>
-          <div className="case-study__outcome-card">
-            <span className="case-study__outcome-title">Delivered State</span>
-            <p className="case-study__outcome-text">{project.outcome}</p>
-          </div>
+          <p className="case-outcome__text">{project.outcome}</p>
+
+          {/* Testimonial if matched */}
+          <CaseTestimonial slug={project.slug} />
         </section>
 
-        {/* Navigation & Live Link */}
-        <div className="case-study__bottom-actions">
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary"
-            aria-label={`Visit live site for ${project.title}`}
-          >
-            <span>Visit live site</span>
-            <span aria-hidden="true">↗</span>
-          </a>
+        {/* Section: Built With */}
+        <section aria-labelledby="stack-label">
+          <h2 id="stack-label" className="case-section-label">
+            Built With
+          </h2>
+          <p className="case-stack-text">{project.stack.join(' · ')}</p>
+        </section>
 
-          <Link href="/#work" className="btn-secondary">
-            <span>Back to all work</span>
-          </Link>
-        </div>
-
-        {/* Prev / Next Pagination */}
-        <nav className="case-study__nav-links" aria-label="Adjacent projects">
+        {/* Adjacent Navigation */}
+        <nav className="case-adjacent-nav" aria-label="Adjacent projects">
           {prev ? (
-            <Link
-              href={`/work/${prev.slug}`}
-              className="case-study__nav-card"
-              aria-label={`Previous project: ${prev.title}`}
-            >
-              <span className="case-study__nav-dir">← Previous</span>
-              <span className="case-study__nav-name">{prev.title}</span>
+            <Link href={`/work/${prev.slug}`} className="case-adjacent-nav__link">
+              ← {prev.title}
             </Link>
           ) : (
             <div />
           )}
-
           {next && (
             <Link
               href={`/work/${next.slug}`}
-              className="case-study__nav-card case-study__nav-card--next"
-              aria-label={`Next project: ${next.title}`}
+              className="case-adjacent-nav__link case-adjacent-nav__link--next"
             >
-              <span className="case-study__nav-dir">Next →</span>
-              <span className="case-study__nav-name">{next.title}</span>
+              {next.title} →
             </Link>
           )}
         </nav>
-      </div>
-    </article>
+      </article>
+
+      <Contact />
+    </div>
   );
 }
