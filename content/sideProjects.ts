@@ -35,7 +35,7 @@ export const sideProjects: SideProject[] = [
     slug: 'reels-second-brain',
     title: 'Reels Second Brain',
     summary:
-      'Makes a saved Instagram Reels library searchable by what was actually said in the video.',
+      'Search saved Reels transcripts with Whisper.',
     detail:
       'Instagram lets you save Reels but gives you no search, no tags, and no transcripts — so a saved library becomes write-only. A Chrome extension scrapes the saved list, a Dockerised Python worker pulls just the audio stream, transcribes it locally with Whisper, and generates summaries and 768-dimension embeddings through a local Ollama instance. A Next.js dashboard then answers questions against the whole library over pgvector.',
     repoUrl: 'https://github.com/zetroxyyy/reels-second-brain',
@@ -58,7 +58,7 @@ export const sideProjects: SideProject[] = [
     slug: 'resumiq',
     title: 'Resumiq',
     summary:
-      'An Android app that turns a filled-in form and a spoken description into a formatted, exportable CV.',
+      'Dictate or type work history into a CV.',
     detail:
       'Built for job seekers who need a credible CV without design skills — including the Nepal foreign-employment formats that generic resume builders do not carry. Experience can be dictated rather than typed, which matters when the alternative is thumb-typing a career history on a phone. Generation runs on Llama 3.3 70B via Groq; the result stays fully editable section by section before PDF export.',
     repoUrl: 'https://github.com/zetroxyyy/resumiq',
@@ -72,7 +72,7 @@ export const sideProjects: SideProject[] = [
     slug: 'fileaxa-to-drive',
     title: 'FileAxa to Drive',
     summary:
-      'Moves files from a FileAxa account straight into Google Drive without ever writing them to disk.',
+      'Stream files directly into Google Drive.',
     detail:
       'The obvious build downloads a file, then uploads it — which needs as much free disk as the largest file and falls over on a small server. This one authenticates with FileAxa, resolves the direct link, and pipes the download stream into the Google Drive upload in one pass, so memory stays flat regardless of file size. Credentials are encrypted client-side before they reach the server.',
     repoUrl: 'https://github.com/zetroxyyy/fileaxa-to-drive',

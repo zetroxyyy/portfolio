@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { JetBrains_Mono, Instrument_Serif } from 'next/font/google';
+import { Instrument_Serif } from 'next/font/google';
 import './globals.css';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
@@ -9,14 +9,6 @@ import { ScrollProgress } from '@/components/ui/ScrollProgress';
 import { BackToTop } from '@/components/ui/BackToTop';
 import { Analytics } from '@vercel/analytics/next';
 import { site } from '../../content/site';
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-  weight: ['400', '500'],
-  preload: true,
-});
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -104,7 +96,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetbrainsMono.variable} ${instrumentSerif.variable}`}
+      className={instrumentSerif.variable}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >

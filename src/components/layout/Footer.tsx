@@ -5,8 +5,14 @@ import { motion } from 'framer-motion';
 import { site } from '../../../content/site';
 import { fadeIn } from '@/lib/motionConfig';
 
+import { usePathname } from 'next/navigation';
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const pathname = usePathname();
+
+  // On homepage, Contact is the dedicated full-viewport 4th block with legal line
+  if (pathname === '/') return null;
 
   return (
     <footer className="footer" id="contact" aria-label="Contact and site footer">
@@ -41,6 +47,15 @@ export function Footer() {
 
           <nav aria-label="Footer links">
             <ul className="footer__links" role="list">
+              <li>
+                <Link
+                  href="/approach"
+                  className="footer__link"
+                  aria-label="Approach and capabilities"
+                >
+                  How I work →
+                </Link>
+              </li>
               <li>
                 <Link
                   href={site.socials.github}

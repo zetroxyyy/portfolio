@@ -74,7 +74,7 @@ export function Nav() {
   useEffect(() => {
     if (!isHome) return;
 
-    const sectionIds = ['work', 'capabilities', 'process', 'contact'];
+    const sectionIds = ['work', 'contact'];
     const elements = sectionIds
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
@@ -117,8 +117,6 @@ export function Nav() {
           }
         });
 
-        // Sticky highlight: if a tracked section is active, update state.
-        // If visible sections empty (e.g. over Testimonials), do not clear state.
         if (nearestId) {
           setActiveSection(nearestId);
         }
@@ -155,14 +153,16 @@ export function Nav() {
   function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
     // Let the browser handle modified clicks — new tab, new window, download.
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    setMenuOpen(false);
+
     if (!href.startsWith('/#')) return;
+    if (!isHome) return; // Navigate cleanly across pages to /#section
 
     const targetId = href.slice(2);
     const el = document.getElementById(targetId);
-    if (!el) return; // not on this page — let the browser navigate to it
+    if (!el) return;
 
     e.preventDefault();
-    setMenuOpen(false);
 
     // Clicking must win immediately
     setActiveSection(targetId);
@@ -204,7 +204,7 @@ export function Nav() {
   return (
     <header
       ref={navRef}
-      className={`nav ${scrolled ? 'nav--scrolled' : ''}`}
+      className={`nav ${scrolled ? 'nav--scrolled' : ''} ${isHome && !scrolled ? 'nav--home-hero' : ''}`}
       role="banner"
     >
       <nav className="nav__inner" aria-label="Main navigation">
@@ -217,15 +217,17 @@ export function Nav() {
         <div className="nav__right">
           <ul className="nav__links" role="list">
             {site.nav.map((item) => {
-              const targetId = item.href.replace('/#', '');
-              const isActive = isHome && activeSection === targetId;
+              const isPageActive = pathname === item.href;
+              const isSectionActive = isHome && item.href.startsWith('/#') && activeSection === item.href.slice(2);
+              const isActive = isPageActive || isSectionActive;
+              const ariaCurrent = isPageActive ? 'page' : isSectionActive ? 'location' : undefined;
 
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     className={`nav__link ${isActive ? 'nav__link--active' : ''}`}
-                    aria-current={isActive ? 'location' : undefined}
+                    aria-current={ariaCurrent}
                     onClick={(e) => handleNavClick(e, item.href)}
                   >
                     {item.label}
@@ -264,8 +266,10 @@ export function Nav() {
           >
             <ul role="list">
               {site.nav.map((item, i) => {
-                const targetId = item.href.replace('/#', '');
-                const isActive = isHome && activeSection === targetId;
+                const isPageActive = pathname === item.href;
+                const isSectionActive = isHome && item.href.startsWith('/#') && activeSection === item.href.slice(2);
+                const isActive = isPageActive || isSectionActive;
+                const ariaCurrent = isPageActive ? 'page' : isSectionActive ? 'location' : undefined;
 
                 return (
                   <motion.li
@@ -276,7 +280,7 @@ export function Nav() {
                     <Link
                       href={item.href}
                       className={`nav__mobile-link ${isActive ? 'nav__mobile-link--active' : ''}`}
-                      aria-current={isActive ? 'location' : undefined}
+                      aria-current={ariaCurrent}
                       onClick={(e) => handleNavClick(e, item.href)}
                     >
                       {item.label}

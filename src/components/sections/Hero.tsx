@@ -1,105 +1,93 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { StatusReadout } from '@/components/ui/StatusReadout';
-import { duration, ease } from '@/lib/motionConfig';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion, useReducedMotion } from 'framer-motion';
+import { projects } from '../../../content/projects';
 import { site } from '../../../content/site';
-import { projects, getClientProjects } from '../../../content/projects';
 
 export function Hero() {
-  const productCount = projects.length;
-  const clientCount = getClientProjects().length;
-  const productLabel = `${productCount} ${productCount === 1 ? 'PRODUCT' : 'PRODUCTS'} SHIPPED`;
-  const clientLabel = `${clientCount} ${clientCount === 1 ? 'CLIENT DOMAIN' : 'CLIENT DOMAINS'}`;
-  const proofAriaLabel = `Verified delivery record: ${productCount} ${productCount === 1 ? 'product' : 'products'} shipped, ${clientCount} client ${clientCount === 1 ? 'domain' : 'domains'}, web, mobile, and AI capabilities`;
+  const shouldReduceMotion = useReducedMotion();
 
-  const handleScrollToWork = () => {
-    const el = document.getElementById('work');
-    if (el) {
-      const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element, opts?: object) => void } }).lenis;
+  const handleScrollCue = () => {
+    const workEl = document.getElementById('work');
+    if (workEl) {
+      const lenis = (window as unknown as { lenis?: { scrollTo: (el: Element | number, opts?: object) => void } }).lenis;
       if (lenis) {
-        lenis.scrollTo(el, { offset: -60 });
+        lenis.scrollTo(workEl, { offset: -30 });
       } else {
-        el.scrollIntoView({ behavior: 'smooth' });
+        workEl.scrollIntoView({ behavior: 'smooth' });
       }
     }
   };
 
   return (
-    <section className="hero" id="hero" aria-label="Introduction">
-      <div className="hero__inner">
-        {/* Top metadata bar */}
-        <motion.div
-          className="hero__top-meta"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: duration.base, ease, delay: 0.1 }}
-        >
-          <span className="hero__eyebrow">FULL-STACK DEVELOPMENT · NEPAL</span>
-          <StatusReadout />
-        </motion.div>
+    <section className="hero-mosaic" id="hero" aria-label="Selected production projects showcase">
+      {/* Top Left: Brand and subtitle */}
+      <div className="hero-mosaic__brand">
+        <span className="hero-mosaic__name">{site.name}</span>
+        <span className="hero-mosaic__role">Full-stack developer · {site.location}</span>
+      </div>
 
-        {/* Display headline */}
-        <div className="hero__heading-wrap">
-          <motion.h1
-            className="hero__heading"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: duration.slow, ease, delay: 0.25 }}
+      {/* Top Right: Availability & direct email */}
+      <div className="hero-mosaic__top-right">
+        <span className="hero-mosaic__avail-dot" aria-hidden="true" />
+        <a href={`mailto:${site.email}`} className="hero-mosaic__email" aria-label={`Email ${site.email}`}>
+          {site.email}
+        </a>
+      </div>
+
+      {/* Bottom Right: Scroll Cue */}
+      <button
+        type="button"
+        className="hero-mosaic__scroll-cue"
+        onClick={handleScrollCue}
+        aria-label="Scroll down to work"
+      >
+        <span>Scroll ↓</span>
+      </button>
+
+      {/* Asymmetric 6-Cell Grid */}
+      <div className="hero-mosaic__grid">
+        {projects.map((project, index) => (
+          <motion.div
+            key={project.slug}
+            className={`hero-mosaic__cell hero-mosaic__cell--${index + 1}`}
+            initial={shouldReduceMotion ? false : { clipPath: 'inset(100% 0% 0% 0%)' }}
+            animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }
+            }
           >
-            The website is the easy half.{' '}
-            <span className="serif-italic">I build what&apos;s underneath.</span>
-          </motion.h1>
-        </div>
+            <Link
+              href={`/work/${project.slug}`}
+              className="hero-mosaic__link"
+              aria-label={`View ${project.title} case study`}
+            >
+              <div className="hero-mosaic__img-wrap">
+                <Image
+                  src={project.cover}
+                  alt={project.coverAlt}
+                  fill
+                  sizes="(max-width: 820px) 50vw, (max-width: 1400px) 33vw, 50vw"
+                  className="hero-mosaic__img"
+                  priority
+                />
+                <div
+                  className="hero-mosaic__color-wash"
+                  style={{ backgroundColor: project.accent }}
+                  aria-hidden="true"
+                />
+              </div>
 
-        {/* Subtitle */}
-        <motion.p
-          className="hero__subhead"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: duration.slow, ease, delay: 0.4 }}
-        >
-          Websites, mobile apps, and the systems that run them — database to interface, deployed and maintained.
-        </motion.p>
-
-        {/* Live proof strip */}
-        <motion.div
-          className="hero__proof-strip"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: duration.slow, ease, delay: 0.55 }}
-          aria-label={proofAriaLabel}
-        >
-          <span className="hero__proof-item">{productLabel}</span>
-          <span className="hero__proof-item">{clientLabel}</span>
-          <span className="hero__proof-item">WEB · MOBILE · AI</span>
-        </motion.div>
-
-        {/* Actions */}
-        <motion.div
-          className="hero__actions"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: duration.slow, ease, delay: 0.7 }}
-        >
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={handleScrollToWork}
-            aria-label="Scroll to selected work"
-          >
-            <span>Explore the work</span>
-            <span aria-hidden="true">↓</span>
-          </button>
-
-          <a
-            href={`mailto:${site.email}`}
-            className="btn-secondary"
-            aria-label={`Email ${site.email}`}
-          >
-            <span>{site.email}</span>
-          </a>
-        </motion.div>
+              <div className="hero-mosaic__title-wrap">
+                <span className="hero-mosaic__title">{project.title}</span>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
       </div>
     </section>
   );

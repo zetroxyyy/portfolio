@@ -28,6 +28,9 @@ export interface Project {
   status: string;
   liveUrl: string;
   accent: string;
+  accentContrast: string;
+  accentWash: string;
+  shortSummary: string;
   summary: string;
   stack: string[];
   cover: string;
@@ -51,6 +54,10 @@ export const projects: Project[] = [
     status: 'Live · thedreamadventure.com',
     liveUrl: 'https://thedreamadventure.com',
     accent: '#0D9488',
+    accentContrast: '#FFFFFF',
+    accentWash: 'rgba(13, 148, 136, 0.08)',
+    shortSummary:
+      'Booking platform for a Japanese whitewater operator.',
     summary:
       'A bilingual booking and operations platform for a Japanese rafting and canyoning operator — public reservation flow, live availability, and a full admin back office.',
     stack: [
@@ -164,7 +171,11 @@ export const projects: Project[] = [
     role: 'Solo — front-end, back-end, CMS, deployment',
     status: 'Live · nischallegalservice.com',
     liveUrl: 'https://nischallegalservice.com',
-    accent: '#B3222C',
+    accent: '#8B263E',
+    accentContrast: '#FFFFFF',
+    accentWash: 'rgba(139, 38, 62, 0.08)',
+    shortSummary:
+      'Editorial identity and client portal for a legal practice.',
     summary:
       'A bilingual Nepali/English site for a legal practice, with a purpose-built CMS that lets non-technical office staff edit every section of the site themselves.',
     stack: [
@@ -257,7 +268,11 @@ export const projects: Project[] = [
     role: 'Solo — product design, front-end, back-end, deployment',
     status: 'Live · nexus-mcu.online',
     liveUrl: 'https://nexus-mcu.online',
-    accent: '#E11D2F',
+    accent: '#C11E2E',
+    accentContrast: '#FFFFFF',
+    accentWash: 'rgba(193, 30, 46, 0.08)',
+    shortSummary:
+      'Streaming catalog for the Marvel Cinematic Universe.',
     summary:
       'A streaming-grade catalogue interface for the Marvel Cinematic Universe, backed by a custom CMS for managing titles, phases, episodes, and release timelines.',
     stack: [
@@ -344,7 +359,11 @@ export const projects: Project[] = [
     role: 'Solo — design, build, deployment',
     status: 'Live · manjushree.zetroxy.me',
     liveUrl: 'https://manjushree.zetroxy.me',
-    accent: '#C8322B',
+    accent: '#9B2226',
+    accentContrast: '#FFFFFF',
+    accentWash: 'rgba(155, 34, 38, 0.08)',
+    shortSummary:
+      'Recruitment portal for an accredited overseas agency.',
     summary:
       'A corporate site for a Nepalese overseas recruitment agency placing technical and professional workers across the GCC, Malaysia, Japan, and Europe.',
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
@@ -435,6 +454,10 @@ export const projects: Project[] = [
     status: 'Live · didee.zetroxy.me',
     liveUrl: 'https://didee.zetroxy.me',
     accent: '#1A1A18',
+    accentContrast: '#FFFFFF',
+    accentWash: 'rgba(26, 26, 24, 0.08)',
+    shortSummary:
+      'Lookbook storefront and inventory back office for a boutique.',
     summary:
       'A dark editorial storefront for a Kathmandu fashion retailer, with an admin back office for catalogue, categories, bulk pricing, and site settings.',
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
@@ -528,6 +551,10 @@ export const projects: Project[] = [
     status: 'Live · mydarlingfood.zetroxy.me',
     liveUrl: 'https://mydarlingfood.zetroxy.me',
     accent: '#D97A2B',
+    accentContrast: '#12110F',
+    accentWash: 'rgba(217, 122, 43, 0.08)',
+    shortSummary:
+      'Artisanal storefront with dietary filters for a pickle brand.',
     summary:
       'A warm product storefront for a Nepali pickle and achar brand, with filterable categories and product detail.',
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind v4', 'Vercel'],
