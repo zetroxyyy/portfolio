@@ -5,7 +5,7 @@ import path from 'path';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-export const alt = `${site.name} — Full-Stack Developer`;
+export const alt = 'zetroxy — full-stack developer in Kathmandu';
 
 export default async function OpenGraphImage() {
   let fonts: {
@@ -17,11 +17,7 @@ export default async function OpenGraphImage() {
 
   try {
     const fontDir = path.join(process.cwd(), 'public', 'fonts');
-    const [satoshiBuffer, serifBuffer, monoBuffer] = await Promise.all([
-      fs.readFile(path.join(fontDir, 'Satoshi-Bold.ttf')),
-      fs.readFile(path.join(fontDir, 'InstrumentSerif-Italic.ttf')),
-      fs.readFile(path.join(fontDir, 'JetBrainsMono-Regular.ttf')),
-    ]);
+    const satoshiBuffer = await fs.readFile(path.join(fontDir, 'Satoshi-Bold.ttf'));
 
     const toArrayBuffer = (b: Buffer): ArrayBuffer =>
       b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
@@ -33,27 +29,12 @@ export default async function OpenGraphImage() {
         weight: 700,
         style: 'normal',
       },
-      {
-        name: 'Instrument Serif',
-        data: toArrayBuffer(serifBuffer),
-        weight: 400,
-        style: 'italic',
-      },
-      {
-        name: 'JetBrains Mono',
-        data: toArrayBuffer(monoBuffer),
-        weight: 400,
-        style: 'normal',
-      },
     ];
   } catch (err) {
     console.warn('Custom fonts unavailable for OG image, falling back to system fonts:', err);
   }
 
-  const hasFonts = fonts.length > 0;
-  const monoFont = hasFonts ? 'JetBrains Mono, monospace' : 'monospace';
-  const displayFont = hasFonts ? 'Satoshi, sans-serif' : 'sans-serif';
-  const serifFont = hasFonts ? 'Instrument Serif, Georgia, serif' : 'Georgia, serif';
+  const displayFont = fonts.length > 0 ? 'Satoshi, sans-serif' : 'sans-serif';
 
   return new ImageResponse(
     (
@@ -64,92 +45,61 @@ export default async function OpenGraphImage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          backgroundColor: '#0E0E0D',
-          padding: '72px',
+          backgroundColor: '#FFFFFF',
+          padding: '80px',
         }}
       >
-        {/* Top-left: small mono, letter-spaced, #85837B */}
+        {/* Top: name */}
         <div
           style={{
             display: 'flex',
-            fontFamily: monoFont,
-            fontSize: 16,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: '#85837B',
+            fontFamily: displayFont,
+            fontSize: 30,
+            fontWeight: 700,
+            color: '#111111',
           }}
         >
-          FULL-STACK DEVELOPMENT · NEPAL
+          {site.name}
         </div>
 
-        {/* Center: Two-line headline */}
+        {/* Middle: headline sentence */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: 8,
+            fontFamily: displayFont,
+            fontSize: 64,
+            fontWeight: 700,
+            color: '#111111',
+            lineHeight: 1.15,
+            letterSpacing: '-0.02em',
+            maxWidth: 1000,
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              fontFamily: displayFont,
-              fontSize: 74,
-              fontWeight: 700,
-              color: '#EDEDEA',
-              lineHeight: 1.05,
-              letterSpacing: '-0.025em',
-            }}
-          >
-            The website is the easy half.
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              fontFamily: serifFont,
-              fontSize: 76,
-              fontStyle: 'italic',
-              color: '#EDEDEA',
-              lineHeight: 1.05,
-            }}
-          >
-            I build what&#39;s underneath.
-          </div>
+          Full-stack developer in Kathmandu, building web products end to end.
         </div>
 
-        {/* Bottom row + divider rule */}
+        {/* Bottom: dot + domain */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: 24,
-            width: '100%',
+            alignItems: 'center',
+            gap: 12,
+            fontFamily: displayFont,
+            fontSize: 26,
+            fontWeight: 700,
+            color: '#737373',
           }}
         >
-          {/* 1px rule in rgba(237,237,234,0.12) */}
           <div
             style={{
-              width: '100%',
-              height: 1,
-              backgroundColor: 'rgba(237, 237, 234, 0.12)',
+              width: 14,
+              height: 14,
+              borderRadius: '50%',
+              backgroundColor: '#0E6E4E',
+              flexShrink: 0,
             }}
           />
-
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              fontFamily: monoFont,
-              fontSize: 18,
-              color: '#85837B',
-              letterSpacing: '0.08em',
-            }}
-          >
-            <div style={{ display: 'flex' }}>zetroxy.me</div>
-            <div style={{ display: 'flex' }}>WEB · MOBILE · AI</div>
-          </div>
+          zetroxy.me
         </div>
       </div>
     ),

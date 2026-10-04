@@ -11,7 +11,7 @@ export function Contact() {
         </a>
       </div>
       <p className="contact-block__sub">
-        Available for work · Kathmandu, Nepal ·{' '}
+        Taking on freelance projects · Kathmandu, Nepal ·{' '}
         <a
           href={site.socials.github}
           target="_blank"

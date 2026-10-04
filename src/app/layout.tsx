@@ -13,15 +13,6 @@ export const metadata: Metadata = {
   description: site.ogDescription,
   authors: [{ name: site.name, url: site.siteUrl }],
   creator: site.name,
-  keywords: [
-    'Full-stack developer',
-    'Flutter Android developer',
-    'Mobile app development',
-    'LLM integration & RAG',
-    'Next.js developer',
-    'PostgreSQL & pgvector',
-    'Web & mobile developer Nepal',
-  ],
   openGraph: {
     type: 'website',
     url: site.siteUrl,

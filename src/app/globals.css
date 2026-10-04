@@ -1025,6 +1025,51 @@ body {
   line-height: 1.3;
 }
 
+/* ── NOT FOUND PAGE (/404) ───────────────────────────────── */
+.not-found__section {
+  padding-top: var(--s-8);
+}
+
+.not-found__label {
+  font-size: var(--t-6);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.3;
+}
+
+.not-found__heading {
+  font-size: var(--t-2);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-top: var(--s-3);
+}
+
+.not-found__body {
+  font-size: var(--t-4);
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-width: 480px;
+  margin-top: var(--s-3);
+}
+
+.not-found__back {
+  display: inline-block;
+  font-size: var(--t-5);
+  color: var(--accent);
+  line-height: 1.3;
+  text-decoration: none;
+  margin-top: var(--s-4);
+  transition: opacity 200ms var(--ease);
+}
+
+.not-found__back:hover {
+  opacity: 0.75;
+}
+
 /* ── REDUCED MOTION ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   * {

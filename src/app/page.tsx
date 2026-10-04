@@ -23,7 +23,7 @@ export default function HomePage() {
         <div className="intro__status-row">
           <span className="intro__dot" aria-hidden="true" />
           <p className="intro__status-text">
-            Available for work ·{' '}
+            Taking on freelance projects ·{' '}
             <a href={site.mailtoHref} className="intro__status-link">
               hello@zetroxy.me
             </a>
